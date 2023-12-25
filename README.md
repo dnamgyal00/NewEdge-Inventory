@@ -21,15 +21,14 @@ Follow the following steps to set up backend project:
 7.Create .env file
 
 Follow the following steps to connect with prisma:
-1.Install the prisma
+1. Install the prisma
     npm i prisma
-2.Invoke prisma CLI 
+2. Invoke prisma CLI 
     npx prisma
-3.Create prisma project (prisma folder will be created and .env file will be updated)
+3. Create prisma project (prisma folder will be created and .env file will be updated)
     npx prisma init
-4.In .env file update the DATABASE URL 
-5.Create a folder named DB and file called db.config.js
-6.Install prisma client
+4. In .env file update the DATABASE URL 
+6. Install prisma client
      npm install @prisma/client
 
 SET UP COMPLETE :))
