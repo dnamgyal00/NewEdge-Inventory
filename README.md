@@ -35,6 +35,3 @@ SET UP COMPLETE :))
 To run server use command: -
     npm run server
 
--------------------B.To set up frontend 
-
-
