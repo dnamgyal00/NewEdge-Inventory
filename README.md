@@ -1,6 +1,6 @@
 ﻿# NewEdge-Inventory
 
-## Set up for frontend
+## Set up for frontend [React.js]
 
 1. Clone the repository and navigate to the `frontend` directory:
 2. Install the dependencies: npm install
@@ -35,6 +35,6 @@ SET UP COMPLETE :))
 To run server use command: -
     npm run server
 
--------------------B.To set up frontend for react [React.js]
+-------------------B.To set up frontend 
 
 
