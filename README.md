@@ -12,9 +12,9 @@ Install the following library:
 
 Follow the following steps to connect with prisma:
 1. Install the prisma
-    npm i prisma
+     npm i prisma
 2. Invoke prisma CLI 
-    npx prisma
+     npx prisma
 3. Make sure you have installed postgres database
 4. In .env file update the DATABASE URL ( replace with your own User and Password)
 6. Install prisma client
