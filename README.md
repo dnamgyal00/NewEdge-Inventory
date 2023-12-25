@@ -1,6 +1,14 @@
 ﻿# NewEdge-Inventory
 
- ------------------A. To set backend for [Node.js , Express.js and Postgres connection with Prisma ORM]---------------------------------------------------------
+## Set up for frontend
+
+1. Clone the repository and navigate to the `frontend` directory:
+2. Install the dependencies: npm install
+3. Start the development server: npm run dev
+4. This will start the development server at `http://localhost:3000`.
+
+
+ ------------------B. To set backend for [Node.js , Express.js and Postgres connection with Prisma ORM]---------------------------------------------------------
 main reference video :https://www.youtube.com/watch?v=GReoWKUnwAg (or follow the following steps)
 
 Install the following library:
