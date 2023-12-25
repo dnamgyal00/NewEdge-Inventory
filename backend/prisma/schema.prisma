@@ -11,59 +11,61 @@ datasource db {
 }
 
 //For Inventory
-model Category{
-  id Int @id @default(autoincrement())
-  name String
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
   description String?
-  item Item[]
-  created_at DateTime @default(now())
+  item        Item[]
+  item_count  Int      @default(0)
+  created_at  DateTime @default(now())
 }
-model Item{
-  id Int @id @default(autoincrement())
-  category Category @relation(fields: [category_id],references: [id],onDelete: Cascade)
-  category_id Int
-  name String
-  unit String
-  description String?
-  qty_on_hand Int
+
+model Item {
+  id            Int            @id @default(autoincrement())
+  category      Category       @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category_id   Int
+  name          String
+  brand         String?
+  unit          String
+  unit_price    Int
+  description   String?
+  qty_on_hand   Int            @default(0)
   item_instance ItemInstance[]
-  stock_in StockIn[]
-  stock_out StockOut[]
-  created_at DateTime @default(now())
+  stock_in      StockIn[]
+  stock_out     StockOut[]
+  created_at    DateTime       @default(now())
 }
-model ItemInstance{
-  id Int @id @default(autoincrement())
-  status String @default("inStock") 
-  item Item @relation(fields: [item_id], references: [id],onDelete: Cascade)
+
+model ItemInstance {
+  id      Int    @id @default(autoincrement())
+  status  String @default("inStock")
+  item    Item   @relation(fields: [item_id], references: [id], onDelete: Cascade)
   item_id Int
 
-  stockOut StockOut? @relation(fields: [stock_out_id], references: [id])
+  stockOut     StockOut? @relation(fields: [stock_out_id], references: [id])
   stock_out_id String?
 
-  stockIn StockIn @relation(fields: [stock_in_id], references: [id])
+  stockIn     StockIn @relation(fields: [stock_in_id], references: [id])
   stock_in_id String
 }
 
-
 //For Transaction: Stock in / Stock out
-model StockIn{
-  id String @id @default(uuid()) 
-  item Item @relation(fields: [item_id], references: [id],onDelete: Cascade)
-  item_id Int
-  price Int
-  qty Int
+model StockIn {
+  id               String         @id @default(uuid())
+  item             Item           @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id          Int
+  qty              Int
   ItemInstance_ids ItemInstance[]
-  type String @default("Purchased")
-  created_at DateTime @default(now())
+  type             String         @default("Purchased")
+  created_at       DateTime       @default(now())
 }
 
-model StockOut{
-  id String @id @default(uuid())
-  item Item @relation(fields: [item_id], references: [id],onDelete: Cascade)
-  item_id Int
-  price Int
-  qty Int
+model StockOut {
+  id               String         @id @default(uuid())
+  item             Item           @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id          Int
+  qty              Int
   ItemInstance_ids ItemInstance[]
-  type String @default("Sales")
-  created_at DateTime @default(now())
+  type             String         @default("Sales")
+  created_at       DateTime       @default(now())
 }
