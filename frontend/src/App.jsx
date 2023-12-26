@@ -1,10 +1,11 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';  // Add Col for grid layout
-import { Outlet } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Sidebar from './components/Sidebar';  // Import Sidebar component
-import './assets/styles/index.css';  // Create an App.css file for custom styles
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap"; // Add Col for grid layout
+// import "./App.scss";
+import { Outlet } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Sidebar from "./components/Sidebar"; // Import Sidebar component
+import "./assets/styles/index.css"; // Create an App.css file for custom styles
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
 
           {/* Main Content */}
           <Col md={9} className="main-content">
-            <main className='py-3'>
+            <main className="py-3">
               <Outlet />
             </main>
           </Col>
@@ -30,6 +31,6 @@ const App = () => {
       <Footer />
     </div>
   );
-}
+};
 
 export default App;

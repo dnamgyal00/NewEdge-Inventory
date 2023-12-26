@@ -1,15 +1,15 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 // import logo from '../assets/logo.png'
 
 const Header = () => {
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
+      <Navbar className="navbar navbar-expand bg-dark navbar-dark sticky-top px-4 py-0">
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand >
+            <Navbar.Brand>
               {/* <img src={logo} alt="logo" /> */}
               Inventory
             </Navbar.Brand>
@@ -23,11 +23,16 @@ const Header = () => {
                 </Nav.Link>
               </LinkContainer> */}
               <LinkContainer to="/login">
-                <Nav.Link >
-                  <FaUser /> Sign In
+                <Nav.Link>
+                  <div className="d-flex align-items-center text-white">
+                    <FaUser className="me-2 " />
+                    <div>
+                      Dechen Namgyal
+                      <div>Admin</div>
+                    </div>
+                  </div>
                 </Nav.Link>
               </LinkContainer>
-              
             </Nav>
           </Navbar.Collapse>
         </Container>

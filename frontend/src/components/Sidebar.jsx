@@ -1,23 +1,26 @@
 // Sidebar.js
-import React from 'react';
-import { Nav } from 'react-bootstrap';
+import React from "react";
+import { Nav } from "react-bootstrap";
 import {
   AiOutlineShopping,
   AiOutlineStock,
   AiOutlineFileText,
-} from 'react-icons/ai';
-import { BsPlus, BsListUl, BsClipboardData } from 'react-icons/bs';
+} from "react-icons/ai";
+import { BsPlus, BsListUl, BsClipboardData } from "react-icons/bs";
 
 const Sidebar = () => {
   return (
-    <Nav className="flex-column sidebar bg-secondary bg-gradient" style={{ backgroundColor: 'gray' }}>
+    <Nav
+      className="flex-column sidebar bg-white navbar-light"
+      // style={{ backgroundColor: "white" }}
+    >
       {/* Product Section */}
       <Nav.Item>
         <Nav.Link href="#">
           <AiOutlineShopping className="ml-1" />
           Product
         </Nav.Link>
-        <Nav className="ml-0 flex-column">
+        <Nav className="ml-2 flex-column">
           <Nav.Item>
             <Nav.Link href="#" className="ml-auto pl-0">
               Item List

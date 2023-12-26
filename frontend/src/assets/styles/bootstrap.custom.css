@@ -12118,3 +12118,9 @@ fieldset:disabled .btn {
     display: none !important;
   }
 }
+
+/* custom styles of my own */
+.text-white{
+  color:white;
+}
+
