@@ -61,10 +61,14 @@ table th {
 }
 
 .sidebar {
-  background-color: #7a7878;  
-  padding: 0px; 
+  background-color: #ffffff;
+  padding-top: 1rem;
 }
 
 .main-content {
   flex: 1;
+}
+
+.sub-list {
+  margin-left: 1rem;
 }

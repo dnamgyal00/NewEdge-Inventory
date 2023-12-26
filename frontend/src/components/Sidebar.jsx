@@ -16,13 +16,13 @@ const Sidebar = () => {
     >
       {/* Product Section */}
       <Nav.Item>
-        <Nav.Link href="#">
-          <AiOutlineShopping className="ml-1" />
+        <Nav.Link href="#" className="fw-bold">
+          <AiOutlineShopping className="ml-2" />
           Product
         </Nav.Link>
-        <Nav className="ml-2 flex-column">
+        <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-auto pl-0">
+            <Nav.Link href="#" className="ml-3">
               Item List
             </Nav.Link>
           </Nav.Item>
@@ -46,11 +46,11 @@ const Sidebar = () => {
 
       {/* Transaction Section */}
       <Nav.Item>
-        <Nav.Link href="#">
+        <Nav.Link href="#" className="fw-bold">
           <AiOutlineStock className="mr-2" />
           Transaction
         </Nav.Link>
-        <Nav className="ml-3 flex-column">
+        <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
             <Nav.Link href="#" className="ml-3">
               Transaction History
@@ -71,11 +71,11 @@ const Sidebar = () => {
 
       {/* Report Section */}
       <Nav.Item>
-        <Nav.Link href="#">
+        <Nav.Link href="#" className="fw-bold">
           <AiOutlineFileText className="mr-2" />
           Report
         </Nav.Link>
-        <Nav className="ml-3 flex-column">
+        <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
             <Nav.Link href="#" className="ml-3">
               Inventory Report
