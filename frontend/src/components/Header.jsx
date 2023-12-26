@@ -24,13 +24,7 @@ const Header = () => {
               </LinkContainer> */}
               <LinkContainer to="/login">
                 <Nav.Link>
-                  <div className="d-flex align-items-center text-white">
-                    <FaUser className="me-2 " />
-                    <div>
-                      Dechen Namgyal
-                      <div>Admin</div>
-                    </div>
-                  </div>
+                  <FaUser /> Sign In
                 </Nav.Link>
               </LinkContainer>
             </Nav>
