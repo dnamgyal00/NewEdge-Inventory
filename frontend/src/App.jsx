@@ -15,7 +15,7 @@ const App = () => {
       <Container fluid>
         <Row style={{ background: "gainsboro" }}>
           {/* Sidebar */}
-          <Col md={2} style={{ paddingLeft: "0px", background: "white" }}>
+          <Col md={3} className="bg-white p-1">
             <Sidebar />
           </Col>
 
