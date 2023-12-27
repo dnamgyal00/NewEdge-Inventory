@@ -5,11 +5,10 @@ import Sidebar from "../components/Sidebar";
 const HomeScreen = () => {
   return (
     <div className="content">
-
       <div className="container-fluid pt-4 px-4">
         <div className="row g-4">
           <div className="col-sm-6 col-xl-3">
-            <div className="bg-light rounded d-flex align-items-center justify-content-between p-4">
+            <div className="bg-white rounded d-flex align-items-center justify-content-between p-4">
               <i className="fa fa-chart-line fa-3x text-primary"></i>
               <div className="ms-3">
                 <p className="mb-2">Today Sale</p>
@@ -18,7 +17,7 @@ const HomeScreen = () => {
             </div>
           </div>
           <div className="col-sm-6 col-xl-3">
-            <div className="bg-light rounded d-flex align-items-center justify-content-between p-4">
+            <div className="bg-white rounded d-flex align-items-center justify-content-between p-4">
               <i className="fa fa-chart-bar fa-3x text-primary"></i>
               <div className="ms-3">
                 <p className="mb-2">Total Sale</p>
@@ -27,7 +26,7 @@ const HomeScreen = () => {
             </div>
           </div>
           <div className="col-sm-6 col-xl-3">
-            <div className="bg-light rounded d-flex align-items-center justify-content-between p-4">
+            <div className="bg-white rounded d-flex align-items-center justify-content-between p-4">
               <i className="fa fa-chart-area fa-3x text-primary"></i>
               <div className="ms-3">
                 <p className="mb-2">Today Revenue</p>
@@ -36,7 +35,7 @@ const HomeScreen = () => {
             </div>
           </div>
           <div className="col-sm-6 col-xl-3">
-            <div className="bg-light rounded d-flex align-items-center justify-content-between p-4">
+            <div className="bg-white rounded d-flex align-items-center justify-content-between p-4">
               <i className="fa fa-chart-pie fa-3x text-primary"></i>
               <div className="ms-3">
                 <p className="mb-2">Total Revenue</p>
@@ -51,7 +50,7 @@ const HomeScreen = () => {
       <div className="container-fluid pt-4 px-4">
         <div className="row g-4">
           <div className="col-sm-12 col-xl-6">
-            <div className="bg-light text-center rounded p-4">
+            <div className="bg-white text-center rounded p-4">
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h6 className="mb-0">Worldwide Sales</h6>
                 <a href="">Show All</a>
@@ -60,7 +59,7 @@ const HomeScreen = () => {
             </div>
           </div>
           <div className="col-sm-12 col-xl-6">
-            <div className="bg-light text-center rounded p-4">
+            <div className="bg-white text-center rounded p-4">
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h6 className="mb-0">Sales & Revenue</h6>
                 <a href="">Show All</a>
@@ -74,7 +73,7 @@ const HomeScreen = () => {
 
       {/* Recent Sales Start */}
       <div className="container-fluid pt-4 px-4">
-        <div className="bg-light text-center rounded p-4">
+        <div className="bg-white text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h6 className="mb-0">Recent Salse</h6>
             <a href="">Show All</a>
