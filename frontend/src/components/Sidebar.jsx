@@ -16,9 +16,9 @@ const Sidebar = () => {
       style={{ lineHeight: "1" }}
       // style={{ backgroundColor: "white" }}
     >
-      {/* Product Section */}
+      {/* Dashboard Section */}
       <Nav.Item>
-        <Nav.Link to="#" className="fw-bold pb-0">
+        <Nav.Link to="#" className="fw-bold pb-0 NavLink">
           <AiOutlineAppstore className="me-1" size={19} />
           Dashboard
         </Nav.Link>
@@ -35,22 +35,22 @@ const Sidebar = () => {
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Item List
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Add Item
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Category List
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/category/add" className="ml-3">
+            <Nav.Link href="#" className="ml-3">
               Add Category
             </Nav.Link>
           </Nav.Item>
@@ -66,17 +66,17 @@ const Sidebar = () => {
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Transaction History
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Stock In
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Stock Out
             </Nav.Link>
           </Nav.Item>
@@ -92,12 +92,12 @@ const Sidebar = () => {
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Inventory Report
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="#" className="ml-3 NavLink">
               Schedule Report
             </Nav.Link>
           </Nav.Item>

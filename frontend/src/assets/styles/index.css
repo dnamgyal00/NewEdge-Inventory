@@ -72,3 +72,7 @@ table th {
 .sub-list {
   margin: 0rem 1.4rem;
 }
+
+.NavLink:active {
+  color: blue;
+}
