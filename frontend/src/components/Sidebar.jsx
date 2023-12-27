@@ -18,7 +18,7 @@ const Sidebar = () => {
     >
       {/* Product Section */}
       <Nav.Item>
-        <Nav.Link href="#" className="fw-bold pb-0">
+        <Nav.Link to="#" className="fw-bold pb-0">
           <AiOutlineAppstore className="me-1" size={19} />
           Dashboard
         </Nav.Link>
@@ -50,7 +50,7 @@ const Sidebar = () => {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="/category/add" className="ml-3">
               Add Category
             </Nav.Link>
           </Nav.Item>
