@@ -29,7 +29,7 @@ const Sidebar = () => {
 
       {/* Product Section */}
       <Nav.Item>
-        <Nav.Link href="#" className="fw-bold">
+        <Nav.Link href="#" className="fw-bold py-0">
           <AiOutlineShopping className="me-1 mb-1" size={19} />
           Product
         </Nav.Link>
@@ -60,7 +60,7 @@ const Sidebar = () => {
 
       {/* Transaction Section */}
       <Nav.Item>
-        <Nav.Link href="#" className="fw-bold py-0 NavLink">
+        <Nav.Link href="#" className="fw-bold py-0">
           <AiOutlineStock className="me-1 mb-1" size={19} />
           Transaction
         </Nav.Link>
