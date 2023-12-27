@@ -16,7 +16,7 @@ const Sidebar = () => {
       style={{ lineHeight: "1" }}
       // style={{ backgroundColor: "white" }}
     >
-      {/* Product Section */}
+      {/* Dashboard Section */}
       <Nav.Item>
         <Nav.Link href="#" className="fw-bold pb-0 NavLink">
           <AiOutlineAppstore className="me-1" size={19} />
@@ -29,7 +29,7 @@ const Sidebar = () => {
 
       {/* Product Section */}
       <Nav.Item>
-        <Nav.Link href="#" className="fw-bold py-0 NavLink">
+        <Nav.Link href="#" className="fw-bold">
           <AiOutlineShopping className="me-1 mb-1" size={19} />
           Product
         </Nav.Link>
