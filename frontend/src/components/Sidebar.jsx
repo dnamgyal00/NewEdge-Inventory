@@ -50,7 +50,7 @@ const Sidebar = () => {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3">
+            <Nav.Link href="/category/add" className="ml-3">
               Add Category
             </Nav.Link>
           </Nav.Item>

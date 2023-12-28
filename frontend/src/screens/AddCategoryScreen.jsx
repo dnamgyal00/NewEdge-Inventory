@@ -1,6 +1,6 @@
 import React from "react";
 
-const AddCategory = () => {
+const AddCategoryScreen = () => {
   return (
     <div className="col-sm-12 col-xl-6">
       <div className="bg-light rounded h-100 p-4">
@@ -57,4 +57,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default AddCategoryScreen;

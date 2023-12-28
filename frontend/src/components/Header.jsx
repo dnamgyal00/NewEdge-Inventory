@@ -26,7 +26,7 @@ const Header = () => {
                   <FaShoppingCart /> Cart
                 </Nav.Link>
               </LinkContainer> */}
-              <LinkContainer to="/login">
+              <LinkContainer to="/profile">
                 <Nav.Link>
                   <div className="d-flex align-items-center text-white">
                     <FaUser className="me-2 " size={21} />
