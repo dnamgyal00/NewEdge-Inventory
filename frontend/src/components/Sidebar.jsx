@@ -1,13 +1,14 @@
 // Sidebar.js
 import React from "react";
 import { Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import {
   AiOutlineShopping,
   AiOutlineStock,
   AiOutlineFileText,
   AiOutlineAppstore,
 } from "react-icons/ai";
-import { BsPlus, BsListUl, BsClipboardData } from "react-icons/bs";
+// import { BsPlus, BsListUl, BsClipboardData } from "react-icons/bs";
 
 const Sidebar = () => {
   return (
@@ -18,10 +19,13 @@ const Sidebar = () => {
     >
       {/* Dashboard Section */}
       <Nav.Item>
-        <Nav.Link to="#" className="fw-bold pb-0 NavLink">
-          <AiOutlineAppstore className="me-1" size={19} />
-          Dashboard
-        </Nav.Link>
+        <LinkContainer to="/">
+          <Nav.Link className="fw-bold pb-0 NavLink">
+            <AiOutlineAppstore className="me-1" size={19} />
+            Dashboard
+          </Nav.Link>
+        </LinkContainer>
+
         <Nav className="ml-3 flex-column sub-list">
           <hr />
         </Nav>
@@ -29,30 +33,32 @@ const Sidebar = () => {
 
       {/* Product Section */}
       <Nav.Item>
-        <Nav.Link href="#" className="fw-bold py-0">
+        <Nav.Link className="fw-bold py-0">
           <AiOutlineShopping className="me-1 mb-1" size={19} />
           Product
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Item List
-            </Nav.Link>
+            <LinkContainer to="/item-list">
+              <Nav.Link className="ml-3 NavLink">Item List</Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+
+          <Nav.Item>
+            <LinkContainer to="/admin/add-item">
+              <Nav.Link className="ml-3 NavLink">Add Item</Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+
+          <Nav.Item>
+            <LinkContainer to="/category">
+              <Nav.Link className="ml-3 NavLink">Category List</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Add Item
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Category List
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/category/add" className="ml-3">
-              Add Category
-            </Nav.Link>
+            <LinkContainer to="/admin/add-category">
+              <Nav.Link className="ml-3">Add Category</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
           <hr />
         </Nav>
@@ -60,25 +66,28 @@ const Sidebar = () => {
 
       {/* Transaction Section */}
       <Nav.Item>
-        <Nav.Link href="#" className="fw-bold py-0">
+        <Nav.Link className="fw-bold py-0">
           <AiOutlineStock className="me-1 mb-1" size={19} />
           Transaction
         </Nav.Link>
+
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Transaction History
-            </Nav.Link>
+            <LinkContainer to="/transactions-history">
+              <Nav.Link className="ml-3 NavLink">Transaction History</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
+
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Stock In
-            </Nav.Link>
+            <LinkContainer to="/stock-in">
+              <Nav.Link className="ml-3 NavLink">Stock In</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
+
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Stock Out
-            </Nav.Link>
+            <LinkContainer to="/stock-out">
+              <Nav.Link className="ml-3 NavLink">Stock Out</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
           <hr />
         </Nav>
@@ -92,14 +101,14 @@ const Sidebar = () => {
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Inventory Report
-            </Nav.Link>
+            <LinkContainer to="/inventory-report">
+              <Nav.Link className="ml-3 NavLink">Inventory Report</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#" className="ml-3 NavLink">
-              Schedule Report
-            </Nav.Link>
+            <LinkContainer to="/schedule-report">
+              <Nav.Link className="ml-3 NavLink">Schedule Report</Nav.Link>
+            </LinkContainer>
           </Nav.Item>
         </Nav>
       </Nav.Item>

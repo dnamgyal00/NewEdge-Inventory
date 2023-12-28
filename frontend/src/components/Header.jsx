@@ -21,11 +21,6 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {/* <LinkContainer to="/cart">
-                <Nav.Link >
-                  <FaShoppingCart /> Cart
-                </Nav.Link>
-              </LinkContainer> */}
               <LinkContainer to="/profile">
                 <Nav.Link>
                   <div className="d-flex align-items-center text-white">
