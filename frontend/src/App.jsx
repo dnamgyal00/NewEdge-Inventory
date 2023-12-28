@@ -13,15 +13,15 @@ const App = () => {
       <Header />
 
       <Container fluid>
-        <Row style={{ background: "gainsboro" }}>
+        <Row style={{ background: "#EFEFEF" }}>
           {/* Sidebar */}
           <Col md={2} className="bg-white p-1">
             <Sidebar />
           </Col>
 
           {/* Main Content */}
-          <Col md={9} className="main-content">
-            <main className="py-3">
+          <Col md={10} className="main-content">
+            <main className="py-3 px-3">
               <Outlet />
             </main>
           </Col>
