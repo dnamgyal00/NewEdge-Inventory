@@ -21,7 +21,7 @@ const App = () => {
 
           {/* Main Content */}
           <Col md={10} className="main-content">
-            <main className="py-3 px-3">
+            <main className="py-4 px-3">
               <Outlet />
             </main>
           </Col>
