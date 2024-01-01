@@ -7,6 +7,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import { Provider } from "react-redux";
+import store from "./store.js";
+
 import App from "./App.jsx";
 import "./assets/styles/bootstrap.custom.css";
 // import './assets/styles/index.css';
@@ -30,25 +33,39 @@ const router = createBrowserRouter(
       <Route index={true} path="/profile" element={<ProfileScreen />} />
       <Route index={true} path="/item-list" element={<ItemScreen />} />
       <Route index={true} path="/category" element={<CategoryScreen />} />
-      <Route index={true} path="/transactions-history" element={<TransactionScreen />} />
+      <Route
+        index={true}
+        path="/transactions-history"
+        element={<TransactionScreen />}
+      />
       <Route index={true} path="/stock-in" element={<StockInScreen />} />
       <Route index={true} path="/stock-out" element={<StockOutScreen />} />
-      <Route index={true} path="/inventory-report" element={<InventoryReport />} />
-      <Route index={true} path="/schedule-report" element={<ScheduleReport />} />
-
-      
-
+      <Route
+        index={true}
+        path="/inventory-report"
+        element={<InventoryReport />}
+      />
+      <Route
+        index={true}
+        path="/schedule-report"
+        element={<ScheduleReport />}
+      />
 
       {/* Admin users */}
-      <Route index={true} path="/admin/add-category" element={<AddCategoryScreen />} />
+      <Route
+        index={true}
+        path="/admin/add-category"
+        element={<AddCategoryScreen />}
+      />
       <Route index={true} path="/admin/add-item" element={<AddItemScreen />} />
-
     </Route>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

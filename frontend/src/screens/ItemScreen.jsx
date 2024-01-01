@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { FaPlus } from "react-icons/fa6";
 import { FiFilter } from "react-icons/fi";
+import axios from "axios";
 
 const ItemScreen = () => {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { data } = await axios.get("http://192.168.131.147:3001/api/item");
+      setItems(data.data); // Update to setItems
+    };
+    fetchItems();
+  }, []);
+
+  console.log(items)
+
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -36,33 +49,17 @@ const ItemScreen = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.name}</td>
+                <td>{item.category.name}</td>
+                <td>{item.brand}</td>
+                <td>{item.unit_price}</td>
+                <td>{item.unit}</td>
+                <td>{item.qty_on_hand}</td>
+                <td>test</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
