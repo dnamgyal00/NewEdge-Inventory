@@ -20,7 +20,7 @@ const Sidebar = () => {
       {/* Dashboard Section */}
       <Nav.Item>
         <LinkContainer to="/">
-          <Nav.Link className="fw-bold pb-0 NavLink">
+          <Nav.Link className="fw-bold pb-0 nav-link">
             <AiOutlineAppstore className="me-1" size={19} />
             Dashboard
           </Nav.Link>
@@ -40,19 +40,19 @@ const Sidebar = () => {
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
             <LinkContainer to="/item-list">
-              <Nav.Link className="ml-3 NavLink">Item List</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Item List</Nav.Link>
             </LinkContainer>
           </Nav.Item>
 
           <Nav.Item>
             <LinkContainer to="/admin/add-item">
-              <Nav.Link className="ml-3 NavLink">Add Item</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Add Item</Nav.Link>
             </LinkContainer>
           </Nav.Item>
 
           <Nav.Item>
             <LinkContainer to="/category">
-              <Nav.Link className="ml-3 NavLink">Category List</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Category List</Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
@@ -74,19 +74,19 @@ const Sidebar = () => {
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
             <LinkContainer to="/transactions-history">
-              <Nav.Link className="ml-3 NavLink">Transaction History</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Transaction History</Nav.Link>
             </LinkContainer>
           </Nav.Item>
 
           <Nav.Item>
             <LinkContainer to="/stock-in">
-              <Nav.Link className="ml-3 NavLink">Stock In</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Stock In</Nav.Link>
             </LinkContainer>
           </Nav.Item>
 
           <Nav.Item>
             <LinkContainer to="/stock-out">
-              <Nav.Link className="ml-3 NavLink">Stock Out</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Stock Out</Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <hr />
@@ -102,12 +102,12 @@ const Sidebar = () => {
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
             <LinkContainer to="/inventory-report">
-              <Nav.Link className="ml-3 NavLink">Inventory Report</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Inventory Report</Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
             <LinkContainer to="/schedule-report">
-              <Nav.Link className="ml-3 NavLink">Schedule Report</Nav.Link>
+              <Nav.Link className="ml-3 nav-link">Schedule Report</Nav.Link>
             </LinkContainer>
           </Nav.Item>
         </Nav>

@@ -13,7 +13,10 @@ const App = () => {
       <Header />
 
       <Container fluid>
-        <Row style={{ background: "#EFEFEF" }}>
+        <Row
+          className="bg-light"
+          // style={{ background: "#EFEFEF" }}
+        >
           {/* Sidebar */}
           <Col md={2} className="bg-white p-1">
             <Sidebar />
