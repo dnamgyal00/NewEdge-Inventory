@@ -18,7 +18,7 @@ const ItemScreen = () => {
     fetchItems();
   }, []);
 
-  console.log(items)
+  console.log(items);
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -70,33 +70,17 @@ const ItemScreen = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.name}</td>
+                <td>{item.category.name}</td>
+                <td>{item.brand}</td>
+                <td>{item.price}</td>
+                <td>{item.unit}</td>
+                <td>{item.qty_on_hand}</td>
+                <td>{/* Add your action buttons here */}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
