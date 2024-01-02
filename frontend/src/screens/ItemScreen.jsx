@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
@@ -8,6 +8,18 @@ import { LinkContainer } from "react-router-bootstrap";
 import { BsEye } from "react-icons/bs";
 
 const ItemScreen = () => {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { data } = await axios.get("http://192.168.131.147:3001/api/item");
+      setItems(data.data); // Update to setItems
+    };
+    fetchItems();
+  }, []);
+
+  console.log(items);
+
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
