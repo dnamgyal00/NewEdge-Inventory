@@ -1,10 +1,11 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { FaPlus, FaSearch } from "react-icons/fa";
-import { FiFilter } from "react-icons/fi";
+import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
+import { BsEye } from "react-icons/bs";
 
 const ItemScreen = () => {
   return (
@@ -67,7 +68,9 @@ const ItemScreen = () => {
               <td>Table cell</td>
               <td>Table cell</td>
               <td>Table cell</td>
-              <td>Table cell</td>
+              <td>
+                <BsEye /> <FiEdit3 /> <FaTrashAlt />
+              </td>
             </tr>
             <tr>
               <td>
@@ -79,7 +82,9 @@ const ItemScreen = () => {
               <td>Table cell</td>
               <td>Table cell</td>
               <td>Table cell</td>
-              <td>Table cell</td>
+              <td>
+                <BsEye /> <FiEdit3 /> <FaTrashAlt />
+              </td>
             </tr>
             <tr>
               <td>
@@ -91,7 +96,9 @@ const ItemScreen = () => {
               <td>Table cell</td>
               <td>Table cell</td>
               <td>Table cell</td>
-              <td>Table cell</td>
+              <td>
+                <BsEye /> <FiEdit3 /> <FaTrashAlt />
+              </td>
             </tr>
           </tbody>
         </Table>
