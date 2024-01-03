@@ -84,19 +84,34 @@ const AddItemScreen = () => {
           <Row className="mb-3 text-black">
             <Form.Group as={Col} controlId="formGridUnit">
               <Form.Label>Unit</Form.Label>
-              <Form.Control type="text" />
+              <Form.Control
+                type="text"
+                name="unit"
+                value={formData.unit}
+                onChange={handleInputChange}
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridUnitPrice">
               <Form.Label>Unit Price</Form.Label>
-              <Form.Control type="number" />
+              <Form.Control
+                type="number"
+                name="unit_price"
+                value={formData.unit_price}
+                onChange={(e) => setFormData((prevData) => ({ ...prevData, unit_price: parseInt(e.target.value, 10) }))}
+              />
             </Form.Group>
           </Row>
           <Row>
             <Col sm={6} md={5}>
               <Form.Group className="mb-2 text-black" controlId="formGridBrand">
                 <Form.Label>Brand</Form.Label>
-                <Form.Control />
+                <Form.Control
+                  type="text"
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleInputChange}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -127,7 +142,7 @@ const AddItemScreen = () => {
           <Button variant="primary" type="submit" className="py-1">
             Add
           </Button>{" "}
-          <Button variant="danger" type="submit" className="text-white">
+          <Button variant="danger" type="button" className="text-white">
             Cancel
           </Button>
         </Form>
