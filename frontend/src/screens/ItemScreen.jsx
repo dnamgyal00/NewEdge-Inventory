@@ -1,10 +1,12 @@
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
+import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import { FiFilter } from "react-icons/fi";
-// import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
+import { BsEye } from "react-icons/bs";
 
 const ItemScreen = () => {
   const { data: { data: items } = {}, isLoading, isError } = useGetItemsQuery();
