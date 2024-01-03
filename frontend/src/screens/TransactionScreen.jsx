@@ -6,10 +6,16 @@ import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
 import { BsEye } from "react-icons/bs";
+import { Breadcrumb } from "react-bootstrap";
 
 const TransactionScreen = () => {
   return (
     <div className="col-sm-12 col-xl-6 w-100">
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Item active>Transaction</Breadcrumb.Item>
+        <Breadcrumb.Item active>Transaction History</Breadcrumb.Item>
+      </Breadcrumb>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h5 className="text-black mb-0"> Transaction History</h5>
