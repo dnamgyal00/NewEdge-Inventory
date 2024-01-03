@@ -31,7 +31,7 @@ const AddItemScreen = () => {
 
             <Form.Group as={Col} controlId="formGridUnitPrice">
               <Form.Label>Unit Price</Form.Label>
-              <Form.Control type="number" />
+              <Form.Control type="text" />
             </Form.Group>
           </Row>
           <Row>
