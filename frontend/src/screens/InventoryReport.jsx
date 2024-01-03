@@ -1,5 +1,5 @@
 import React from "react";
-import { Breadcrumb, Form } from "react-bootstrap";
+import { Breadcrumb, Form, ListGroup } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import {
   FaPlus,
@@ -37,6 +37,10 @@ const InventoryReport = () => {
                 <FiFilter />{" "}
               </span>
             </div>
+            <ListGroup>
+              <ListGroup.Item></ListGroup.Item>
+            </ListGroup>
+
             {/* Search Bar */}
             <div className="border border-solid d-flex py-0 rounded">
               <span className="input-group-text bg-white border-0">
