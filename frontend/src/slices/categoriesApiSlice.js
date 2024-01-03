@@ -1,24 +1,24 @@
-import { ITEM_URL } from "../constant";
+import { CATEGORY_URL } from "../constant";
 import { apiSlice } from "./apiSlice";
 
 
 export const itemsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getItems: builder.query({
+        getCategories: builder.query({
             query: () => ({
-                url: ITEM_URL,
+                url: CATEGORY_URL,
             }),
             keepUnusedDataFor: 5
         }),
-        createItem: builder.mutation({
+        createCategory: builder.mutation({
             query: (data) => ({
-                url: ITEM_URL,
+                url: CATEGORY_URL,
                 method: 'POST',
                 body: data,
             }),
-            invalidatesTags: ['Item'],
+            invalidatesTags: ['Category'],
         }),
     }),
 });
 
-export const { useGetItemsQuery, useCreateItemMutation } = itemsApiSlice; 
+export const { useGetCategoriesQuery, useCreateCategoryMutation } = itemsApiSlice; 

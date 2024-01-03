@@ -1,4 +1,5 @@
 import React from "react";
+import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
@@ -6,6 +7,13 @@ import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 
 const CategoryScreen = () => {
+  const {
+    data: { data: categories } = {},
+    isLoading,
+    isError,
+  } = useGetCategoriesQuery();
+
+  // console.log(categories)
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -54,39 +62,17 @@ const CategoryScreen = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Workstation</td>
-              <td>Table cell</td>
-              <td>
-                Workstations are individual computing units used by employees
-                for daily tasks
-              </td>
-              <td>
-                <BsEye /> <FiEdit3 /> <FaTrashAlt />
-              </td>
-            </tr>
-            <tr>
-              <td>Wires</td>
-              <td>Table cell</td>
-              <td>
-                Workstations are individual computing units used by employees
-                for daily tasks
-              </td>
-              <td>
-                <BsEye /> <FiEdit3 /> <FaTrashAlt />
-              </td>
-            </tr>
-            <tr>
-              <td>Network Devices</td>
-              <td>Table cell</td>
-              <td>
-                Workstations are individual computing units used by employees
-                for daily tasks
-              </td>
-              <td>
-                <BsEye /> <FiEdit3 /> <FaTrashAlt />
-              </td>
-            </tr>
+            {categories &&
+              categories.map((category) => (
+                <tr key={category.id}>
+                  <td>{category.name}</td>
+                  <td>{category.item_count}</td>
+                  <td>{category.description}</td>
+                  <td>
+                    <BsEye /> <FiEdit3 /> <FaTrashAlt />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       </div>
