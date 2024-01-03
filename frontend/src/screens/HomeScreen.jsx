@@ -7,7 +7,7 @@ import Charts from "../components/Charts";
 
 const HomeScreen = () => {
   return (
-    <div className="content">
+    <div className="content pt-2 ">
       <InventoryStats />
       <Charts />
       <RecentTransactions />

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Breadcrumb } from "react-bootstrap";
 import { useCreateCategoryMutation } from "../slices/categoriesApiSlice";
 import { useNavigate} from 'react-router-dom';
 
@@ -34,6 +35,11 @@ const AddCategoryScreen = () => {
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Item active>Product</Breadcrumb.Item>
+        <Breadcrumb.Item active>Add Category</Breadcrumb.Item>
+      </Breadcrumb>
       <h5 className="mb-0 text-black">Category Add</h5>
       <p className="mb-3">Create a new category</p>
       <div className="bg-white rounded p-4">
@@ -44,7 +50,7 @@ const AddCategoryScreen = () => {
             </label>
             <input
               type="text"
-              className="form-control w-50"
+              className="form-control py-2"
               id="exampleInputText"
               aria-describedby="emailHelp"
               value={name}
@@ -56,7 +62,7 @@ const AddCategoryScreen = () => {
               Description
             </label>
             <textarea
-              className="form-control"
+              className="form-control py-2"
               id="floatingTextarea"
               rows={5}
               value={description}

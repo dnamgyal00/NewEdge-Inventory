@@ -5,6 +5,7 @@ import { Table, Button } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
+import { Breadcrumb } from "react-bootstrap";
 
 const CategoryScreen = () => {
   const {
@@ -16,6 +17,11 @@ const CategoryScreen = () => {
   // console.log(categories)
   return (
     <div className="col-sm-12 col-xl-6 w-100">
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Item active>Product</Breadcrumb.Item>
+        <Breadcrumb.Item active>Category List</Breadcrumb.Item>
+      </Breadcrumb>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h5 className="text-black mb-0"> Category List</h5>

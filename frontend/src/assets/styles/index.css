@@ -73,10 +73,9 @@ table th {
   margin: 0rem 1.4rem;
 }
 
-.nav-link.active {
+/* .nav-link.active {
   font-weight: 500;
-  color: rgb(79, 122, 250);
-}
+} */
 .form-control:focus {
   outline: none;
 }
