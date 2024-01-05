@@ -1,14 +1,21 @@
-import React from "react";
+import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
+
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { FaPlus, FaMinus, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
-import { MdOutlineComputer } from "react-icons/md";
+// import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
 import { BsEye } from "react-icons/bs";
 import { Breadcrumb } from "react-bootstrap";
 
 const TransactionScreen = () => {
+  const {
+    data: { data: transactions } = {},
+    isLoading,
+    isError,
+  } = useGetTransactionsQuery();
+  console.log(transactions);
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <Breadcrumb>
@@ -73,39 +80,20 @@ const TransactionScreen = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-                <BsEye /> <FiEdit3 /> <FaTrashAlt />
-              </td>
-            </tr>
-            <tr>
-              <td> Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-                <BsEye /> <FiEdit3 /> <FaTrashAlt />
-              </td>
-            </tr>
-            <tr>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-                <BsEye /> <FiEdit3 /> <FaTrashAlt />
-              </td>
-            </tr>
+            {transactions &&
+              transactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>{transaction.item.name}</td>
+                  <td>{transaction.item.category.name}</td>
+                  <td>{transaction.transaction_type}</td>
+                  <td>{transaction.item.unit}</td>
+                  <td>{transaction.qty}</td>
+                  <td>{transaction.created_at}</td>
+                  <td>
+                    <BsEye /> <FiEdit3 /> <FaTrashAlt />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       </div>
