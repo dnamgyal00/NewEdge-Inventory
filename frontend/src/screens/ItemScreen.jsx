@@ -4,12 +4,17 @@ import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
-import { BsEye } from "react-icons/bs";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 const ItemScreen = () => {
-  const { data: { data: items } = {}, isLoading, isError } = useGetItemsQuery();
-  // console.log(items)
+  const {
+    data: { data: items } = {},
+    isLoading,
+    isError,
+    error,
+  } = useGetItemsQuery();
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -53,33 +58,40 @@ const ItemScreen = () => {
             />
           </div>
         </div>
-        <Table responsive="sm">
-          <thead className="bg-light">
-            <tr>
-              <th className="text-black border-0">Item Name</th>
-              <th className="text-black border-0">Category</th>
-              <th className="text-black border-0">Brand Name</th>
-              <th className="text-black border-0">Price</th>
-              <th className="text-black border-0">Unit</th>
-              <th className="text-black border-0">Qty</th>
-              <th className="text-black border-0">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items &&
-              items.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.name}</td>
-                  <td>{item.category.name}</td>
-                  <td>{item.brand}</td>
-                  <td>{item.unit_price}</td>
-                  <td>{item.unit}</td>
-                  <td>{item.qty_on_hand}</td>
-                  <td>test</td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+        {/* <Message variant='danger'>test</Message> */}
+        {isLoading ? (
+          <Loader />
+        ) : isError ? (
+          <Message variant='danger' >{error?.code?.message || error.error}</Message>
+        ) : (
+          <Table responsive="sm">
+            <thead className="bg-light">
+              <tr>
+                <th className="text-black border-0">Item Name</th>
+                <th className="text-black border-0">Category</th>
+                <th className="text-black border-0">Brand Name</th>
+                <th className="text-black border-0">Price</th>
+                <th className="text-black border-0">Unit</th>
+                <th className="text-black border-0">Qty</th>
+                <th className="text-black border-0">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items &&
+                items.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.name}</td>
+                    <td>{item.category.name}</td>
+                    <td>{item.brand}</td>
+                    <td>{item.unit_price}</td>
+                    <td>{item.unit}</td>
+                    <td>{item.qty_on_hand}</td>
+                    <td>test</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        )}
       </div>
     </div>
   );
