@@ -10,6 +10,12 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
             }),
             keepUnusedDataFor: 5
         }),
+        getCategoryDetails: builder.query({
+            query: (categoryId) => ({
+              url: `${CATEGORY_URL}/${categoryId}`,
+            }),
+            keepUnusedDataFor: 5,
+          }),
         createCategory: builder.mutation({
             query: (data) => ({
                 url: CATEGORY_URL,
@@ -21,4 +27,4 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetCategoriesQuery, useCreateCategoryMutation } = itemsApiSlice; 
+export const { useGetCategoriesQuery,useGetCategoryDetailsQuery, useCreateCategoryMutation } = itemsApiSlice; 

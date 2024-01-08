@@ -71,7 +71,10 @@ const CategoryScreen = () => {
             {categories &&
               categories.map((category) => (
                 <tr key={category.id}>
-                  <td>{category.name}</td>
+                  <LinkContainer to={`/category/${category.id}`}>
+                    <td>{category.name}</td>
+                  </LinkContainer>
+
                   <td>{category.item_count}</td>
                   <td>{category.description}</td>
                   <td>
