@@ -10,6 +10,12 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
             }),
             keepUnusedDataFor: 5
         }),
+        getItemDetails: builder.query({
+            query: (itemId) => ({
+              url: `${ITEM_URL}/${itemId}`,
+            }),
+            keepUnusedDataFor: 5,
+          }),
         createItem: builder.mutation({
             query: (data) => ({
                 url: ITEM_URL,
@@ -21,4 +27,4 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetItemsQuery, useCreateItemMutation } = itemsApiSlice; 
+export const { useGetItemsQuery, useGetItemDetailsQuery, useCreateItemMutation } = itemsApiSlice; 

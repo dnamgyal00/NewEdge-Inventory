@@ -33,7 +33,7 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route index={true} path="/profile" element={<ProfileScreen />} />
       <Route index={true} path="/item-list" element={<ItemScreen />} />
-      <Route index={true} path="/item-list/item-details" element={<ItemDetailsScreen />} />
+      <Route index={true} path="/item-list/item-details/:id" element={<ItemDetailsScreen />} />
       <Route index={true} path="/category" element={<CategoryScreen />} />
       <Route
         index={true}
