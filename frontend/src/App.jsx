@@ -9,13 +9,12 @@ import "./assets/styles/index.css"; // Create an App.css file for custom styles
 
 const App = () => {
   return (
-    <div className="app-container">
+    <div className="app-container bg-light">
       <Header />
 
       <Container fluid>
         <Row
-          className="bg-light"
-          // style={{ background: "#EFEFEF" }}
+        // style={{ background: "#EFEFEF" }}
         >
           {/* Sidebar */}
           <Col md={2} className="bg-white p-1">
