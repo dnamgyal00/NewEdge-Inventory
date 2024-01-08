@@ -1,13 +1,16 @@
 import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
-
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { FaPlus, FaMinus, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaMinus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 // import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
 import { BsEye } from "react-icons/bs";
 import { Breadcrumb } from "react-bootstrap";
+import { useState } from "react";
+import { Row, Col } from "react-bootstrap";
+import DatePicker from "react-datepicker";
 
 const TransactionScreen = () => {
   const {
@@ -15,9 +18,21 @@ const TransactionScreen = () => {
     isLoading,
     isError,
   } = useGetTransactionsQuery();
+
   console.log(transactions);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   return (
-    <div className="col-sm-12 col-xl-6 w-100">
+    <div className=" col-sm-12 col-xl-6 w-100">
       <Breadcrumb>
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
         <Breadcrumb.Item active>Transaction</Breadcrumb.Item>
@@ -46,12 +61,87 @@ const TransactionScreen = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded p-4">
+      <div className="bg-white rounded p-4 d-flex flex-column">
         <div className="input-group d-flex mb-3">
           <div className="input-group-prepend me-1">
-            <span className="input-group-text bg-white border-1">
-              <FiFilter />{" "}
+            <span
+              className={`input-group-text  ${
+                showFilters ? "bg-primary" : "bg-white"
+              }`}
+              onClick={toggleFilters}
+            >
+              {/* <FiFilter />{" "} */}
+              {showFilters ? (
+                // Cross Button when filters are displayed
+                <FaTimes className="text-white" />
+              ) : (
+                // Filter Icon when filters are hidden
+                <FiFilter />
+              )}
             </span>
+
+            {/* Dropdown Filters */}
+            {showFilters && (
+              <iv
+                className="dropdown-menu border-0 show mt-2 py-2 shadow-none"
+                style={{ width: "100%" }}
+              >
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridDate"
+                    className="col-xs-12 col-md-3"
+                  >
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={handleDateChange}
+                      dateFormat="dd/MM/yyyy"
+                      placeholderText="dd/mm/yyyy"
+                      className="form-control py-1 shadow-none"
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridCategory"
+                    className="col-xs-12 col-md-3"
+                  >
+                    <Form.Select
+                      defaultValue="Category"
+                      className="py-1 shadow-none"
+                    >
+                      <option>Category</option>
+                      <option>...</option>
+                    </Form.Select>
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridItem"
+                    className="col-xs-12 col-md-3"
+                  >
+                    <Form.Control
+                      placeholder="Item name"
+                      className="py-1 shadow-none"
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridType"
+                    className="col-xs-12 col-md-3"
+                  >
+                    <Form.Select className="py-1 shadow-none">
+                      <option disabled selected>
+                        Type
+                      </option>
+                      <option>In</option>
+                      <option>Out</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Row>
+              </iv>
+            )}
           </div>
 
           {/* Search Bar */}
@@ -67,35 +157,37 @@ const TransactionScreen = () => {
             />
           </div>
         </div>
-        <Table responsive="sm">
-          <thead className="bg-light">
-            <tr>
-              <th className="text-black border-0">Item Name</th>
-              <th className="text-black border-0">Category</th>
-              <th className="text-black border-0">Stock In/Out</th>
-              <th className="text-black border-0">Unit</th>
-              <th className="text-black border-0">Qty</th>
-              <th className="text-black border-0">Date</th>
-              <th className="text-black border-0">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions &&
-              transactions.map((transaction) => (
-                <tr key={transaction.id}>
-                  <td>{transaction.item.name}</td>
-                  <td>{transaction.item.category.name}</td>
-                  <td>{transaction.transaction_type}</td>
-                  <td>{transaction.item.unit}</td>
-                  <td>{transaction.qty}</td>
-                  <td>{transaction.created_at}</td>
-                  <td>
-                    <BsEye /> <FiEdit3 /> <FaTrashAlt />
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+        <div>
+          <Table responsive="sm" className="position-relative">
+            <thead className="bg-light">
+              <tr>
+                <th className="text-black border-0">Item Name</th>
+                <th className="text-black border-0">Category</th>
+                <th className="text-black border-0">Stock In/Out</th>
+                <th className="text-black border-0">Unit</th>
+                <th className="text-black border-0">Qty</th>
+                <th className="text-black border-0">Date</th>
+                <th className="text-black border-0">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions &&
+                transactions.map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td>{transaction.item.name}</td>
+                    <td>{transaction.item.category.name}</td>
+                    <td>{transaction.transaction_type}</td>
+                    <td>{transaction.item.unit}</td>
+                    <td>{transaction.qty}</td>
+                    <td>{transaction.created_at}</td>
+                    <td>
+                      <BsEye /> <FiEdit3 /> <FaTrashAlt />
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </div>
       </div>
     </div>
   );

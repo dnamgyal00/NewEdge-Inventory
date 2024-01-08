@@ -6,19 +6,17 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar"; // Import Sidebar component
 import "./assets/styles/index.css"; // Create an App.css file for custom styles
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
-    <div className="app-container">
-      <ToastContainer />
+    <div className="app-container bg-light">
       <Header />
 
       <Container fluid>
         <Row
-          className="bg-light"
-          // style={{ background: "#EFEFEF" }}
+        // style={{ background: "#EFEFEF" }}
         >
           {/* Sidebar */}
           <Col md={2} className="bg-white p-1">
