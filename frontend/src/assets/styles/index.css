@@ -76,6 +76,13 @@ table th {
 /* .nav-link.active {
   font-weight: 500;
 } */
-.form-control:focus {
+/* .form-control:focus {
   outline: none;
+} */
+
+input.padding {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-right: 0px;
+  padding-left: 15px;
 }
