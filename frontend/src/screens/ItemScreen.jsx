@@ -62,7 +62,9 @@ const ItemScreen = () => {
         {isLoading ? (
           <Loader />
         ) : isError ? (
-          <Message variant='danger' >{error?.code?.message || error.error}</Message>
+          <Message variant="danger">
+            {error?.code?.message || error.error}
+          </Message>
         ) : (
           <Table responsive="sm">
             <thead className="bg-light">
@@ -80,7 +82,9 @@ const ItemScreen = () => {
               {items &&
                 items.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.name}</td>
+                    <LinkContainer to='/item-list/item-details'>
+                      <td>{item.name}</td>
+                    </LinkContainer>
                     <td>{item.category.name}</td>
                     <td>{item.brand}</td>
                     <td>{item.unit_price}</td>

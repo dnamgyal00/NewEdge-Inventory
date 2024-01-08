@@ -25,6 +25,7 @@ import StockInScreen from "./screens/StockInScreen.jsx";
 import StockOutScreen from "./screens/StockOutScreen.jsx";
 import InventoryReport from "./screens/InventoryReport.jsx";
 import ScheduleReport from "./screens/ScheduleReport.jsx";
+import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route index={true} path="/profile" element={<ProfileScreen />} />
       <Route index={true} path="/item-list" element={<ItemScreen />} />
+      <Route index={true} path="/item-list/item-details" element={<ItemDetailsScreen />} />
       <Route index={true} path="/category" element={<CategoryScreen />} />
       <Route
         index={true}
