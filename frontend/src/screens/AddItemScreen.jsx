@@ -60,7 +60,7 @@ const AddItemScreen = () => {
     <div className="col-sm-12 col-xl-6 w-100">
       <Breadcrumb>
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Product</Breadcrumb.Item>
+        <Breadcrumb.Item href='/category'>Product</Breadcrumb.Item>
         <Breadcrumb.Item active>Add Item </Breadcrumb.Item>
       </Breadcrumb>
       <h5 className="mb-0 text-black">Item Add</h5>
