@@ -1,11 +1,17 @@
 import React from "react";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Collapse,Row, Form, Col } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 import { Breadcrumb } from "react-bootstrap";
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
+
+import { useState } from 'react';
+
 
 const CategoryScreen = () => {
   const {
@@ -13,6 +19,8 @@ const CategoryScreen = () => {
     isLoading,
     isError,
   } = useGetCategoriesQuery();
+
+  const [open, setOpen] = useState(false);
 
   // console.log(categories)
   return (
@@ -34,12 +42,16 @@ const CategoryScreen = () => {
             Add Category
           </Button>
         </LinkContainer>
+
       </div>
+
 
       <div className="bg-white rounded p-4">
         <div className="input-group d-flex mb-3">
           <div className="input-group-prepend me-1">
-            <span className="input-group-text bg-white border-1">
+            <span className="input-group-text bg-white border-1" onClick={() => setOpen(!open)}
+              aria-controls="example-collapse-text"
+              aria-expanded={open}>
               <FiFilter />{" "}
             </span>
           </div>
@@ -56,6 +68,18 @@ const CategoryScreen = () => {
               style={{ boxShadow: "none" }}
             />
           </div>
+        </div>
+        <div className="input-group d-flex mb-3">
+          <Collapse in={open}>
+            <div id="example-collapse-text">
+              <DropdownButton id="dropdown-menu border-0 show mt-2 py-2 shadow-none" title="Choose Item">
+                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                  <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                </DropdownButton>
+              
+            </div>
+          </Collapse>
         </div>
         <Table responsive="sm">
           <thead className="bg-light">

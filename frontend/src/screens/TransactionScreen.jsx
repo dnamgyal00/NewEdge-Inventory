@@ -65,9 +65,8 @@ const TransactionScreen = () => {
         <div className="input-group d-flex mb-3">
           <div className="input-group-prepend me-1">
             <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
               onClick={toggleFilters}
             >
               {/* <FiFilter />{" "} */}
@@ -143,6 +142,12 @@ const TransactionScreen = () => {
               </iv>
             )}
           </div>
+
+
+
+
+
+
 
           {/* Search Bar */}
           <div className="border border-solid d-flex py-0 rounded">
