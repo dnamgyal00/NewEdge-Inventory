@@ -19,7 +19,7 @@ const CategoryScreen = () => {
     <div className="col-sm-12 col-xl-6 w-100">
       <Breadcrumb>
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Product</Breadcrumb.Item>
+        <Breadcrumb.Item >Product</Breadcrumb.Item>
         <Breadcrumb.Item active>Category List</Breadcrumb.Item>
       </Breadcrumb>
       <div className="d-flex justify-content-between align-items-center mb-3">
