@@ -6,12 +6,14 @@ import {
   Card,
   Button,
   Form,
+  Table,
 } from "react-bootstrap";
 import testImage from "../assets/laptop.jpg";
 import { useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Breadcrumb } from "react-bootstrap";
 
 const ItemDetailsScreen = () => {
   const { id: itemId } = useParams();
@@ -24,6 +26,16 @@ const ItemDetailsScreen = () => {
   console.log(item);
   return (
     <>
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Item active>Product</Breadcrumb.Item>
+        <Breadcrumb.Item active>Item List</Breadcrumb.Item>
+        <Breadcrumb.Item active>Item Details</Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="mb-3">
+        <h5 className="text-black mb-0"> Item Details</h5>
+        Full details of a item
+      </div>
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -32,75 +44,42 @@ const ItemDetailsScreen = () => {
         </Message>
       ) : (
         <Row>
-          <Col md={6}>
+          <Col md={4}>
             <Image src={testImage} alt="Test" fluid />
           </Col>
-          <Col md={3}>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h3>Name: {item.name}</h3>
-              </ListGroup.Item>
-
-              <ListGroup.Item>Price: 10$</ListGroup.Item>
-              <ListGroup.Item>Description: this is test item</ListGroup.Item>
-            </ListGroup>
-          </Col>
-          <Col md={3}>
-            <Card>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Price:</Col>
-                    <Col>
-                      <strong>$9</strong>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Status:</Col>
-                    <Col>Out Of Stock</Col>
-                  </Row>
-                </ListGroup.Item>
-
-                {/* Qty Select */}
-
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Qty</Col>
-                    <Col>
-                      <Form.Control
-                        as="select"
-                        // value={qty}
-                        // onChange={(e) => setQty(Number(e.target.value))}
-                      >
-                        {/* {[...Array(product.countInStock).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
-                        ))} */}
-                        <option>5</option>
-                      </Form.Control>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-                {/* {product.countInStock > 0 && (
-                
-              )} */}
-
-                <ListGroup.Item>
-                  <Button className="btn-block" type="button">
-                    stock in
-                  </Button>
-                  <Button className="btn-block" type="button">
-                    Stock out
-                  </Button>
-                </ListGroup.Item>
-              </ListGroup>
+          <Col md={8}>
+            <Card className="p-3">
+              <Table responsive="sm">
+                <tr>
+                  <t>Name: {item.name}</t>
+                  <td>Created Date: dd/mm/yyyy</td>
+                </tr>
+                <tr>
+                  <td>Price: 10$</td>
+                  <td>
+                    Description: Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Unit: M</td>
+                  <td>Unit price: 10$</td>
+                </tr>
+                <tr>
+                  <td>Quantity: 10</td>
+                </tr>
+              </Table>
             </Card>
           </Col>
         </Row>
       )}
+      <Button className="btn-block" type="button">
+        stock in
+      </Button>
+      <Button className="btn-block" type="button">
+        Stock out
+      </Button>
     </>
   );
 };
