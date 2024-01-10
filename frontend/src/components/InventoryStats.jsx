@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useGetStatsQuery } from "../slices/dashboardApiSlice";
 import Loader from "./Loader.jsx";
 import { Form } from "react-bootstrap";
+import Message from "./Message.jsx";
 
 const InventoryStats = () => {
   const [timeRange, setTimeRange] = useState("week");
