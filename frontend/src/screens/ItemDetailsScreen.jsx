@@ -29,8 +29,8 @@ const ItemDetailsScreen = () => {
     <>
       <Breadcrumb>
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Product</Breadcrumb.Item>
-        <Breadcrumb.Item active>Item List</Breadcrumb.Item>
+        <Breadcrumb.Item >Product</Breadcrumb.Item>
+        <Breadcrumb.Item >Item List</Breadcrumb.Item>
         <Breadcrumb.Item active>Item Details</Breadcrumb.Item>
       </Breadcrumb>
       <div className="mb-3">
@@ -44,43 +44,91 @@ const ItemDetailsScreen = () => {
           {error?.code?.message || error.error}
         </Message>
       ) : (
-        <Row>
-          <Col md={4}>
-            <Image src={testImage} alt="Test" fluid />
-          </Col>
-          <Col md={8}>
-            <Card className="p-3">
-              <Table responsive="sm">
-                <tr>
-                  <t>Name: {item.name}</t>
-                  <td>Created Date: dd/mm/yyyy</td>
-                </tr>
-                <tr>
-                  <td>Price: 10$</td>
-                  <td>
-                    Description: Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam.
-                  </td>
-                </tr>
-                <tr>
-                  <td>Unit: M</td>
-                  <td>Unit price: 10$</td>
-                </tr>
-                <tr>
-                  <td>Quantity: 10</td>
-                </tr>
-              </Table>
-            </Card>
-          </Col>
-        </Row>
+        <div>
+          <Row>
+            <Col md={4}>
+              <Image src={testImage} alt="Test" fluid />
+              <Button className="btn-block" type="button">
+                stock in
+              </Button>
+              <Button className="btn-block" type="button">
+                Stock out
+              </Button>
+            </Col>
+            <Col md={8}>
+              <Card className="p-3">
+                <ListGroup variant="flush" >
+                  <ListGroup.Item>
+                    <h3>{item.name}</h3>
+                    <Row>
+                      <Col md={3}>Description:</Col>
+                      <Col md={5}>{item.description}</Col>
+                    </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Row>
+                      <Col md={3}>Category:</Col>
+                      <Col md={5}>{item.category.name}</Col>
+                    </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Row>
+                      <Col md={3}>Brand:</Col>
+                      <Col md={5}>{item.brand}</Col>
+                    </Row></ListGroup.Item>
+                  <ListGroup.Item><Row>
+                    <Col md={3}>Price: </Col>
+                    <Col md={5}>Nu.{item.unit_price}</Col>
+                  </Row></ListGroup.Item>
+                  <ListGroup.Item>
+
+                    <Row>
+                      <Col md={3}>Created at:</Col>
+                      <Col md={5}>{item.created_at}</Col>
+                    </Row>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Card>
+            </Col>
+          </Row>
+
+          <div className="container-fluid pt-3 px-1">
+            <div className="bg-white text-center rounded p-4">
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h6 className="mb-0">Item Instances</h6>
+              </div>
+              <div className="table-responsive">
+                <Table responsive="sm" className="position-relative">
+                  <thead className="bg-light">
+                    <tr>
+                      <th className="text-black border-0">Instance Id</th>
+                      <th className="text-black border-0">Status</th>
+                      <th className="text-black border-0">Details</th>
+                      <th className="text-black border-0">StockIn Id</th>
+                      <th className="text-black border-0">StockOut ID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.item_instance &&
+                      item.item_instance.map((ins) => (
+                        <tr key={ins.id}>
+                          <td>{ins.id}</td>
+                          <td>{ins.status}</td>
+                          <td>{ins.status_details}</td>
+                          <td>{ins.stock_in_id}</td>
+                          <td>{ins.stock_in_id}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+          </div>
+
+        </div >
       )}
-      <Button className="btn-block" type="button">
-        stock in
-      </Button>
-      <Button className="btn-block" type="button">
-        Stock out
-      </Button>
+
+
     </>
   );
 };

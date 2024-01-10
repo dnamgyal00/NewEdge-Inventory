@@ -1,14 +1,68 @@
 import React from "react";
+import {
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Card,
+  Button,
+  Form,
+  Table
+} from "react-bootstrap";
+import { useGetRecentTransactionsQuery } from "../slices/dashboardApiSlice";
+import Loader from "./Loader";
+import Message from "./Message";
 
 const RecentTransactions = () => {
+  const {
+    data: { data: transactions } = {},
+    isLoading,
+    isError,
+    error,
+  } = useGetRecentTransactionsQuery();
   return (
-    <div className="container-fluid pt-4 px-4">
+    <>{isLoading?(
+      <Loader/>
+    ): isError? (
+      <Message variant="danger">
+        {error?.code?.message || error.error}
+      </Message>
+    ):(
+      <div className="container-fluid pt-4 px-4">
       <div className="bg-white text-center rounded p-4">
         <div className="d-flex align-items-center justify-content-between mb-4">
-          <h6 className="mb-0">Recent SaleS</h6>
-          <a href="">Show All</a>
+          <h6 className="mb-0">Recent Transactions</h6>
+          <a href="/transactions-history">Show All</a>
         </div>
         <div className="table-responsive">
+          <Table responsive="sm" className="position-relative">
+            <thead className="bg-light">
+              <tr>
+                <th className="text-black border-0">Item Name</th>
+                <th className="text-black border-0">Category</th>
+                <th className="text-black border-0">Stock In/Out</th>
+                <th className="text-black border-0">Unit</th>
+                <th className="text-black border-0">Qty</th>
+                <th className="text-black border-0">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+             {transactions && transactions.map((transaction) =>(
+              <tr key={transaction.id} >
+                <td>{transaction.item.name}</td>
+                    <td>{transaction.item.category.name}</td>
+                    <td>{transaction.transaction_type}</td>
+                    <td>{transaction.item.unit}</td>
+                    <td>{transaction.qty}</td>
+                    <td>{transaction.created_at}</td>
+              </tr>
+             )
+
+             )}
+            </tbody>
+          </Table>
+        </div>
+        {/* <div className="table-responsive">
           <table className="table text-start align-middle table-bordered table-hover mb-0">
             <thead>
               <tr className="text-dark">
@@ -101,9 +155,10 @@ const RecentTransactions = () => {
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
     </div>
+    )}</>
   );
 };
 

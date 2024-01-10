@@ -82,9 +82,6 @@ const ItemScreen = () => {
               {items &&
                 items.map((item) => (
                   <tr key={item.id}>
-                    {/* <LinkContainer to='/item-list/item-details'>
-                      <td>{item.name}</td>
-                    </LinkContainer> */}
                     <LinkContainer to={`/item-list/item-details/${item.id}`}>
                       <td>{item.name}</td>
                     </LinkContainer>
