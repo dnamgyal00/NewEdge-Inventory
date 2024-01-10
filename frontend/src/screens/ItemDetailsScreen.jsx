@@ -15,7 +15,6 @@ import { useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { Breadcrumb } from "react-bootstrap";
 
 const ItemDetailsScreen = () => {
   const { id: itemId } = useParams();
