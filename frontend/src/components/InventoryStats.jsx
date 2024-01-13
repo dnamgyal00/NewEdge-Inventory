@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useGetStatsQuery } from "../slices/dashboardApiSlice";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 const InventoryStats = () => {
   const [timeRange, setTimeRange] = useState("week");
