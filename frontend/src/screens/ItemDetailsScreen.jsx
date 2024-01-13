@@ -9,7 +9,6 @@ import {
   Table,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
 import testImage from "../assets/laptop.jpg";
 import { useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
@@ -27,12 +26,6 @@ const ItemDetailsScreen = () => {
   console.log(item);
   return (
     <>
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item >Product</Breadcrumb.Item>
-        <Breadcrumb.Item >Item List</Breadcrumb.Item>
-        <Breadcrumb.Item active>Item Details</Breadcrumb.Item>
-      </Breadcrumb>
       <div className="mb-3">
         <h5 className="text-black mb-0"> Item Details</h5>
         Full details of a item
@@ -57,7 +50,7 @@ const ItemDetailsScreen = () => {
             </Col>
             <Col md={8}>
               <Card className="p-3">
-                <ListGroup variant="flush" >
+                <ListGroup variant="flush">
                   <ListGroup.Item>
                     <h3>{item.name}</h3>
                     <Row>
@@ -75,13 +68,15 @@ const ItemDetailsScreen = () => {
                     <Row>
                       <Col md={3}>Brand:</Col>
                       <Col md={5}>{item.brand}</Col>
-                    </Row></ListGroup.Item>
-                  <ListGroup.Item><Row>
-                    <Col md={3}>Price: </Col>
-                    <Col md={5}>Nu.{item.unit_price}</Col>
-                  </Row></ListGroup.Item>
+                    </Row>
+                  </ListGroup.Item>
                   <ListGroup.Item>
-
+                    <Row>
+                      <Col md={3}>Price: </Col>
+                      <Col md={5}>Nu.{item.unit_price}</Col>
+                    </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
                     <Row>
                       <Col md={3}>Created at:</Col>
                       <Col md={5}>{item.created_at}</Col>
@@ -124,11 +119,8 @@ const ItemDetailsScreen = () => {
               </div>
             </div>
           </div>
-
-        </div >
+        </div>
       )}
-
-
     </>
   );
 };

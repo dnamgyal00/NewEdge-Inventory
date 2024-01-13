@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Breadcrumb, Form, InputGroup, FormControl } from "react-bootstrap";
+import { Form, InputGroup, FormControl } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { Row, Col } from "react-bootstrap";
 import {
@@ -35,11 +35,6 @@ const InventoryReport = () => {
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Report</Breadcrumb.Item>
-        <Breadcrumb.Item active>Inventory Report</Breadcrumb.Item>
-      </Breadcrumb>
       <div className="mb-3">
         <h5 className="text-black mb-0">Inventory Report</h5>
         Manage your inventory report

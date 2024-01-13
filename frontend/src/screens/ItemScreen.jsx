@@ -4,7 +4,6 @@ import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
@@ -18,11 +17,6 @@ const ItemScreen = () => {
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item herf='/item-list'>Product</Breadcrumb.Item>
-        <Breadcrumb.Item active>Item List</Breadcrumb.Item>
-      </Breadcrumb>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h5 className="text-black mb-0"> Item List</h5>

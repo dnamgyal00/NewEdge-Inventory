@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useGetStatsQuery } from "../slices/dashboardApiSlice";
 import Loader from "./Loader.jsx";
-import { Form,Breadcrumb } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import Message from "./Message.jsx";
 
 const InventoryStats = () => {
@@ -22,9 +22,6 @@ const InventoryStats = () => {
 
   return (
     <>
-    <Breadcrumb>
-        <Breadcrumb.Item href="/" active>Home </Breadcrumb.Item>
-      </Breadcrumb>
       {isLoading ? (
         <Loader />
       ) : isError ? (

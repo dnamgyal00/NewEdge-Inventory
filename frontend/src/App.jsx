@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar"; // Import Sidebar component
 import "./assets/styles/index.css"; // Create an App.css file for custom styles
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "./components/Breadcrumbs";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           {/* Main Content */}
           <Col md={10} className="main-content">
             <main className="pt-2 pb-4 px-3">
+              <Breadcrumbs />
               <Outlet />
             </main>
           </Col>
