@@ -1,8 +1,9 @@
 import React from "react";
 import { useGetProductStatsQuery } from "../slices/dashboardApiSlice";
 import Loader from "./Loader";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Table } from "react-bootstrap";
 import Message from "./Message";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Charts = () => {
   const {
@@ -22,32 +23,57 @@ const Charts = () => {
       ) : (
         <div className="container-fluid pt-4 px-4">
           <div className="row g-4">
-            <div className="col-sm-12 col-xl-6">
+            <div className="col-sm-12 col-xl-6 rounded">
               <div className="bg-white rounded p-4">
                 <div className="d-flex align-items-center justify-content-between mb-4">
                   <h6 className="mb-0">Product Summary</h6>
                 </div>
                 <div>
+
+                <br/>
                   <Row>
                     <Col md={9}>Total Category:</Col>
                     <Col md={3}>{data.totalCategories}</Col>
                   </Row>
+
+                 <br/>
+
                   <Row>
                     <Col md={9}>Total Items:</Col>
                     <Col md={3}>{data.totalItems}</Col>
                   </Row>
                 </div>
-                {/*            
-            <canvas id="worldwide-sales"></canvas> */}
               </div>
             </div>
-            <div className="col-sm-12 col-xl-6">
-              <div className="bg-white text-center rounded p-4">
+            <div className="col-sm-12 col-xl-6 ">
+              <div className="bg-white rounded p-4">
                 <div className="d-flex align-items-center justify-content-between mb-4">
-                  <h6 className="mb-0">Sales & Revenue</h6>
-                  <a href="">Show All</a>
+                  <h6 className="mb-0">Recently Added Items</h6>
+                  <a href="/item-list/">Show All</a>
                 </div>
-                {/* <canvas id="sales-revenue"></canvas> */}
+                <div className="table-responsive">
+                  <Table responsive="sm" className="position-relative">
+                    <thead className="bg-light">
+                      <tr>
+                        <th className="text-black border-0">No </th>
+                        <th className="text-black border-0">Item</th>
+                        <th className="text-black border-0">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.recentItems && data.recentItems.map((item,index) => (
+                        <tr key={item.id} >
+                          <td>{index+1}</td>
+                          <LinkContainer to={`/item-list/item-details/${item.id}`}>
+                      <td>{item.name}</td>
+                    </LinkContainer>
+                          <td>Nu.{item.unit_price}</td>
+                        </tr>
+                      )
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
               </div>
             </div>
           </div>

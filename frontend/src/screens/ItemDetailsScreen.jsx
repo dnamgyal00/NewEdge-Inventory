@@ -82,6 +82,12 @@ const ItemDetailsScreen = () => {
                       <Col md={5}>{item.created_at}</Col>
                     </Row>
                   </ListGroup.Item>
+                  <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>Quantity in Stock:</Col>
+                        <Col md={5}>{item.qty_on_hand}</Col>
+                      </Row>
+                    </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Col>

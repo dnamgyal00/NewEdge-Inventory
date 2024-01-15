@@ -71,6 +71,7 @@ const CategoryDetailsScreen = () => {
                         <Col md={5}>{category.created_at}</Col>
                       </Row>
                     </ListGroup.Item>
+                    
                   </ListGroup>
                 </Col>
               </Row>
