@@ -1,19 +1,43 @@
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
+import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Collapse } from "react-bootstrap";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { useState } from "react";
 
 const ItemScreen = () => {
+
+  const [categoryName, setCategoryName] = useState("")
   const {
     data: { data: items } = {},
     isLoading,
     isError,
     error,
-  } = useGetItemsQuery();
+  } = useGetItemsQuery(categoryName);
+
+
+  const {
+    data: { data: categories } = {},
+    isLoading2,
+    isError2,
+  } = useGetCategoriesQuery();
+  console.log(categories)
+
+
+  const [open, setOpen] = useState(false); //for filter options
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    setOpen(!open);
+  };
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -32,10 +56,25 @@ const ItemScreen = () => {
       </div>
 
       <div className="bg-white rounded p-4">
+
+
         <div className="input-group d-flex mb-3">
           <div className="input-group-prepend me-1">
-            <span className="input-group-text bg-white border-1">
-              <FiFilter />{" "}
+            {/* Filter Action*/}
+            <span
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
+              onClick={toggleFilters}
+              aria-controls="example-collapse-text"
+              aria-expanded={open}
+            >
+              {showFilters ? (
+                // Cross Button when filters are displayed
+                <FaTimes className="text-white" />
+              ) : (
+                // Filter Icon when filters are hidden
+                <FiFilter />
+              )}
             </span>
           </div>
 
@@ -52,6 +91,33 @@ const ItemScreen = () => {
             />
           </div>
         </div>
+
+        {/* Filter Options*/}
+        <div className="input-group mb-3  ">
+          <Collapse in={open}>
+            <div >
+              <DropdownButton
+                id="dropdown-menu bg-white border-0 show mt-2 py-2 shadow-none"
+                title="Choose Category"
+              >
+                <Dropdown.Item onClick={() => setCategoryName("")} >
+                  All
+                </Dropdown.Item>
+
+                {categories &&
+                  categories.map((category) => (
+                    <Dropdown.Item key={category.id} onClick={() => setCategoryName(category.name)}>
+                      {category.name}
+                    </Dropdown.Item>
+                  ))}
+              </DropdownButton>
+
+            </div>
+
+
+          </Collapse>
+        </div>
+
         {/* <Message variant='danger'>test</Message> */}
         {isLoading ? (
           <Loader />

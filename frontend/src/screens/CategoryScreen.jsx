@@ -26,7 +26,7 @@ const CategoryScreen = () => {
     setOpen(!open);
   };
 
-  // console.log(categories)
+
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -47,9 +47,8 @@ const CategoryScreen = () => {
         <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
             <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -85,9 +84,14 @@ const CategoryScreen = () => {
                 id="dropdown-menu bg-white border-0 show mt-2 py-2 shadow-none"
                 title="Choose Item"
               >
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                {categories &&
+                  categories.map((category) =>
+                    category.item.map((item) => (
+                      <Dropdown.Item href="#/action-1" key={item.id}>
+                        {item.name}
+                      </Dropdown.Item>
+                    ))
+                  )}
               </DropdownButton>
             </div>
           </Collapse>
