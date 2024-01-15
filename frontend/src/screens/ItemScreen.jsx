@@ -22,14 +22,12 @@ const ItemScreen = () => {
     error,
   } = useGetItemsQuery(categoryName);
 
-
   const {
     data: { data: categories } = {},
     isLoading2,
     isError2,
   } = useGetCategoriesQuery();
-  console.log(categories)
-
+  
 
   const [open, setOpen] = useState(false); //for filter options
   const [showFilters, setShowFilters] = useState(false);
@@ -37,6 +35,7 @@ const ItemScreen = () => {
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
+    setCategoryName("")
   };
 
   return (

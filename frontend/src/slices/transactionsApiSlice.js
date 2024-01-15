@@ -4,8 +4,8 @@ import { apiSlice } from "./apiSlice";
 export const transactionsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getTransactions: builder.query({
-            query: () => ({
-                url: TRANSACTION_URL,
+            query: (filters) => ({
+                url:  `${TRANSACTION_URL}?transactionType=${filters.transactionType}&category=${filters.selectedCategory}&item=${filters.itemName}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
             }),
             keepUnusedDataFor: 5
         }),
@@ -21,3 +21,5 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const { useGetTransactionsQuery, useCreateStockInMutation } = transactionsApiSlice; 
+
+{/* transactions?startDate=2023-01-01&endDate=2023-12-31&category=Electronics&item=Laptop&transactionType=stockIn */}

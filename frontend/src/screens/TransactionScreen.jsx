@@ -1,4 +1,6 @@
 import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
+import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetItemsQuery } from "../slices/itemsApiSlice";
 import { FaPlus, FaMinus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 // import { MdOutlineComputer } from "react-icons/md";
@@ -7,27 +9,68 @@ import { BsEye } from "react-icons/bs";
 import { useState } from "react";
 import { Row, Col, Form, Button, Table, Collapse } from "react-bootstrap";
 import DatePicker from "react-datepicker";
+import { parseISO, format } from 'date-fns';
+
+
 
 const TransactionScreen = () => {
+  // State variables for filters
+  const [filters, setFilters] = useState({
+    startDate:"",
+    endDate: "",
+    selectedCategory: "",
+    itemName: "",
+    transactionType: "",
+  });
+
+  //fetch data
   const {
     data: { data: transactions } = {},
     isLoading,
     isError,
-  } = useGetTransactionsQuery();
+  } = useGetTransactionsQuery(filters);
+  const {
+    data: { data: categories } = {},
+    isLoading2,
+    isError2,
+  } = useGetCategoriesQuery();
+  const {
+    data: { data: items } = {},
+    isLoading3,
+    isError3,
+    error,
+  } = useGetItemsQuery();
 
-  console.log(transactions);
+  // Function to update a specific filter parameter
+  const updateFilter = (key, value) => {
+    if (key === "startDate" || key==="endDate") {
+      value = format(value, 'yyyy-MM-dd');
+  
+    }
+      setFilters({
+        ...filters,
+        [key]: value,
+      });
+    
+  };
 
+  console.log(filters)
+
+  //for filter display
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
-  };
 
-  const [selectedDate, setSelectedDate] = useState(null);
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setFilters({
+    startDate:"",
+    endDate: "",
+    selectedCategory: "",
+    itemName: "",
+    transactionType: "",
+    })
   };
 
   return (
@@ -63,9 +106,8 @@ const TransactionScreen = () => {
         <div className="input-group d-flex mb-3">
           <div className="input-group-prepend me-1">
             <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -93,6 +135,7 @@ const TransactionScreen = () => {
             />
           </div>
         </div>
+
         {/* Dropdown Filters */}
         <Collapse in={open}>
           <div id="example-collapse-text">
@@ -104,14 +147,33 @@ const TransactionScreen = () => {
                 xs={6}
                 className="mb-2"
               >
+                <Form.Label>Start Date</Form.Label>
                 <DatePicker
-                  selected={selectedDate}
-                  onChange={handleDateChange}
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/yyyy"
+                  selected={filters.startDate ? new Date(filters.startDate) : null}
+                  onChange={(date) => updateFilter("startDate",date) }
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="Select Date"
                   className="form-control py-1 shadow-none"
                 />
               </Form.Group>
+
+              <Form.Group
+                as={Col}
+                controlId="formGridDate"
+                md={2}
+                xs={6}
+                className="mb-2"
+              >
+                <Form.Label>End Date</Form.Label>
+                <DatePicker
+                  selected={filters.endDate ? new Date(filters.endDate) : null}
+                  onChange={(date) => updateFilter("endDate",date) }
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="Select Date"
+                  className="form-control py-1 shadow-none"
+                />
+              </Form.Group>
+
 
               <Form.Group
                 as={Col}
@@ -120,14 +182,21 @@ const TransactionScreen = () => {
                 xs={6}
                 className="mb-2"
               >
+                <Form.Label>Category</Form.Label>
                 <Form.Select
-                  defaultValue="Category"
                   className="py-1 shadow-none"
+                  onChange={(e) => updateFilter("selectedCategory", e.target.value)
+                }
                 >
-                  <option>Category</option>
-                  <option>...</option>
+                  <option defaultValue value="">
+                    All
+                  </option>
+                  {categories && categories.map((category) => (
+                    <option key={category.id} value={category.name} id={category.id}>{category.name}</option>
+                  ))}
                 </Form.Select>
               </Form.Group>
+
 
               <Form.Group
                 as={Col}
@@ -136,30 +205,35 @@ const TransactionScreen = () => {
                 xs={6}
                 className="mb-2"
               >
-                <Form.Control
-                  placeholder="Item name"
-                  className="py-1 shadow-none"
-                />
-              </Form.Group>
-
-              <Form.Group
-                as={Col}
-                controlId="formGridType"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Select className="py-1 shadow-none">
-                  <option disabled selected>
-                    Type
+                <Form.Label>Item</Form.Label>
+                <Form.Select className="py-1 shadow-none" onChange={(e) => updateFilter("itemName", e.target.value)}>
+                  <option defaultValue value="" >
+                    All
                   </option>
-                  <option>In</option>
-                  <option>Out</option>
+                  {items && items.map((item) => (
+                    <option key={item.id} value={item.name}>{item.name}</option>
+                  ))}
                 </Form.Select>
               </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
+                <Form.Label>Type</Form.Label>
+                <Form.Select
+                  className="py-1 shadow-none"
+                  onChange={(e) => updateFilter("transactionType", e.target.value)}
+                >
+                  <option defaultValue value="">
+                    All
+                  </option>
+                  <option value="stockIn">Stock In</option>
+                  <option value="stockOut">Stock Out</option>
+                </Form.Select>
+              </Form.Group>
+
             </Row>
           </div>
         </Collapse>
+
         <div>
           <Table responsive="sm" className="position-relative">
             <thead className="bg-light">
