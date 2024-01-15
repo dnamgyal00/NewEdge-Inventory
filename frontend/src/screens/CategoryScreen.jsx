@@ -2,7 +2,7 @@ import React from "react";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Collapse, Row, Form, Col } from "react-bootstrap";
-import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -18,6 +18,13 @@ const CategoryScreen = () => {
   } = useGetCategoriesQuery();
 
   const [open, setOpen] = useState(false);
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    setOpen(!open);
+  };
 
   // console.log(categories)
   return (
@@ -37,15 +44,32 @@ const CategoryScreen = () => {
       </div>
 
       <div className="bg-white rounded p-4">
-        <div className="input-group d-flex mb-3">
+        <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
-            <span
+            {/* <span
               className="input-group-text bg-white border-1"
               onClick={() => setOpen(!open)}
               aria-controls="example-collapse-text"
               aria-expanded={open}
             >
               <FiFilter />{" "}
+            </span> */}
+            <span
+              className={`input-group-text  ${
+                showFilters ? "bg-primary" : "bg-white"
+              }`}
+              onClick={toggleFilters}
+              aria-controls="example-collapse-text"
+              aria-expanded={open}
+            >
+              {/* <FiFilter />{" "} */}
+              {showFilters ? (
+                // Cross Button when filters are displayed
+                <FaTimes className="text-white" />
+              ) : (
+                // Filter Icon when filters are hidden
+                <FiFilter />
+              )}
             </span>
           </div>
 
@@ -66,7 +90,7 @@ const CategoryScreen = () => {
           <Collapse in={open}>
             <div id="example-collapse-text">
               <DropdownButton
-                id="dropdown-menu border-0 show mt-2 py-2 shadow-none"
+                id="dropdown-menu bg-white border-0 show mt-2 py-2 shadow-none"
                 title="Choose Item"
               >
                 <Dropdown.Item href="#/action-1">Action</Dropdown.Item>

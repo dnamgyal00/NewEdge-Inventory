@@ -1,14 +1,11 @@
 import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
 import { FaPlus, FaMinus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 // import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
 import { BsEye } from "react-icons/bs";
 import { useState } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Form, Button, Table, Collapse } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
 const TransactionScreen = () => {
@@ -19,10 +16,13 @@ const TransactionScreen = () => {
   } = useGetTransactionsQuery();
 
   console.log(transactions);
+
+  const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
+    setOpen(!open);
   };
 
   const [selectedDate, setSelectedDate] = useState(null);
@@ -63,8 +63,9 @@ const TransactionScreen = () => {
                 showFilters ? "bg-primary" : "bg-white"
               }`}
               onClick={toggleFilters}
+              aria-controls="example-collapse-text"
+              aria-expanded={open}
             >
-              {/* <FiFilter />{" "} */}
               {showFilters ? (
                 // Cross Button when filters are displayed
                 <FaTimes className="text-white" />
@@ -76,65 +77,64 @@ const TransactionScreen = () => {
 
             {/* Dropdown Filters */}
             {showFilters && (
-              <iv
-                className="dropdown-menu border-0 show mt-2 py-2 shadow-none"
-                style={{ width: "100%" }}
-              >
-                <Row className="mb-3">
-                  <Form.Group
-                    as={Col}
-                    controlId="formGridDate"
-                    className="col-xs-12 col-md-3"
-                  >
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleDateChange}
-                      dateFormat="dd/MM/yyyy"
-                      placeholderText="dd/mm/yyyy"
-                      className="form-control py-1 shadow-none"
-                    />
-                  </Form.Group>
-
-                  <Form.Group
-                    as={Col}
-                    controlId="formGridCategory"
-                    className="col-xs-12 col-md-3"
-                  >
-                    <Form.Select
-                      defaultValue="Category"
-                      className="py-1 shadow-none"
+              <Collapse in={open}>
+                <div id="example-collapse-text">
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      controlId="formGridDate"
+                      className="col-xs-12 col-md-3"
                     >
-                      <option>Category</option>
-                      <option>...</option>
-                    </Form.Select>
-                  </Form.Group>
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="dd/mm/yyyy"
+                        className="form-control py-1 shadow-none"
+                      />
+                    </Form.Group>
 
-                  <Form.Group
-                    as={Col}
-                    controlId="formGridItem"
-                    className="col-xs-12 col-md-3"
-                  >
-                    <Form.Control
-                      placeholder="Item name"
-                      className="py-1 shadow-none"
-                    />
-                  </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      controlId="formGridCategory"
+                      className="col-xs-12 col-md-3"
+                    >
+                      <Form.Select
+                        defaultValue="Category"
+                        className="py-1 shadow-none"
+                      >
+                        <option>Category</option>
+                        <option>...</option>
+                      </Form.Select>
+                    </Form.Group>
 
-                  <Form.Group
-                    as={Col}
-                    controlId="formGridType"
-                    className="col-xs-12 col-md-3"
-                  >
-                    <Form.Select className="py-1 shadow-none">
-                      <option disabled selected>
-                        Type
-                      </option>
-                      <option>In</option>
-                      <option>Out</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Row>
-              </iv>
+                    <Form.Group
+                      as={Col}
+                      controlId="formGridItem"
+                      className="col-xs-12 col-md-3"
+                    >
+                      <Form.Control
+                        placeholder="Item name"
+                        className="py-1 shadow-none"
+                      />
+                    </Form.Group>
+
+                    <Form.Group
+                      as={Col}
+                      controlId="formGridType"
+                      className="col-xs-12 col-md-3"
+                    >
+                      <Form.Select className="py-1 shadow-none">
+                        <option disabled selected>
+                          Type
+                        </option>
+                        <option>In</option>
+                        <option>Out</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Row>
+                </div>
+              </Collapse>
             )}
           </div>
 

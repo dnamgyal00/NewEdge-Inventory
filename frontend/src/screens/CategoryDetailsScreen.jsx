@@ -51,7 +51,7 @@ const CategoryDetailsScreen = () => {
 
                 <Col xs={6}>
                   <ListGroup variant="flush">
-                    <ListGroup.Item>
+                    <ListGroup.Item className="lh-1">
                       <h3>{category.name}</h3>
 
                       <Row>
@@ -59,13 +59,13 @@ const CategoryDetailsScreen = () => {
                         <Col md={9}>{category.description}</Col>
                       </Row>
                     </ListGroup.Item>
-                    <ListGroup.Item>
+                    <ListGroup.Item className="lh-1">
                       <Row>
                         <Col md={3}>Total Item:</Col>
                         <Col md={5}>{category.item_count}</Col>
                       </Row>
                     </ListGroup.Item>
-                    <ListGroup.Item>
+                    <ListGroup.Item className="lh-1">
                       <Row>
                         <Col md={3}>Created at:</Col>
                         <Col md={5}>{category.created_at}</Col>
