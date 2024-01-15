@@ -41,42 +41,36 @@ const ItemDetailsScreen = () => {
           <Row>
             <Col md={4}>
               <Image src={testImage} alt="Test" fluid />
-              <Button className="btn-block" type="button">
-                stock in
-              </Button>
-              <Button className="btn-block" type="button">
-                Stock out
-              </Button>
             </Col>
             <Col md={8}>
-              <Card className="p-3">
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
+              <Card className="p-3 border-0 shadow-none">
+                <ListGroup variant="flush" className="p-2">
+                  <ListGroup.Item className="lh-1">
                     <h3>{item.name}</h3>
                     <Row>
                       <Col md={3}>Description:</Col>
                       <Col md={5}>{item.description}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Category:</Col>
                       <Col md={5}>{item.category.name}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Brand:</Col>
                       <Col md={5}>{item.brand}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Price: </Col>
                       <Col md={5}>Nu.{item.unit_price}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Created at:</Col>
                       <Col md={5}>{item.created_at}</Col>
@@ -86,6 +80,20 @@ const ItemDetailsScreen = () => {
               </Card>
             </Col>
           </Row>
+          <div className="d-flex flex-column flex-md-row justify-content-end py-3 ">
+            <Button
+              className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2 "
+              type="button"
+            >
+              Stock In
+            </Button>
+            <Button
+              className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2"
+              type="button"
+            >
+              Stock Out
+            </Button>
+          </div>
 
           <div className="container-fluid pt-3 px-1">
             <div className="bg-white text-center rounded p-4">
