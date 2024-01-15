@@ -46,14 +46,6 @@ const CategoryScreen = () => {
       <div className="bg-white rounded p-4">
         <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
-            {/* <span
-              className="input-group-text bg-white border-1"
-              onClick={() => setOpen(!open)}
-              aria-controls="example-collapse-text"
-              aria-expanded={open}
-            >
-              <FiFilter />{" "}
-            </span> */}
             <span
               className={`input-group-text  ${
                 showFilters ? "bg-primary" : "bg-white"

@@ -102,3 +102,7 @@ input.padding {
 .breadcrumbs .crumb a {
   color: #969696;
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}

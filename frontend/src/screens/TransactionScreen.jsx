@@ -37,18 +37,22 @@ const TransactionScreen = () => {
           <h5 className="text-black mb-0"> Transaction History</h5>
           Manage your transactions
         </div>
-        <div className="">
+        <div className="d-flex flex-row">
           <LinkContainer to="/stock-in">
-            <Button variant="primary" size="sm" className="px-4 py-1 me-3">
+            <Button
+              variant="primary"
+              size="sm"
+              className="px-md-4 py-1 me-1 me-md-3"
+            >
               {" "}
-              <FaPlus className="me-2 mb-1" />
+              <FaPlus className="me-1 me-md-2 mb-1" />
               Stock In
             </Button>
           </LinkContainer>
           <LinkContainer to="/stock-out">
-            <Button variant="primary" size="sm" className="px-4 py-1">
+            <Button variant="primary" size="sm" className="px-md-4 py-1">
               {" "}
-              <FaMinus className="me-2 mb-1" />
+              <FaMinus className="me-1 me-md-2 mb-1" />
               Stock Out
             </Button>
           </LinkContainer>
@@ -74,68 +78,6 @@ const TransactionScreen = () => {
                 <FiFilter />
               )}
             </span>
-
-            {/* Dropdown Filters */}
-            {showFilters && (
-              <Collapse in={open}>
-                <div id="example-collapse-text">
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      controlId="formGridDate"
-                      className="col-xs-12 col-md-3"
-                    >
-                      <DatePicker
-                        selected={selectedDate}
-                        onChange={handleDateChange}
-                        dateFormat="dd/MM/yyyy"
-                        placeholderText="dd/mm/yyyy"
-                        className="form-control py-1 shadow-none"
-                      />
-                    </Form.Group>
-
-                    <Form.Group
-                      as={Col}
-                      controlId="formGridCategory"
-                      className="col-xs-12 col-md-3"
-                    >
-                      <Form.Select
-                        defaultValue="Category"
-                        className="py-1 shadow-none"
-                      >
-                        <option>Category</option>
-                        <option>...</option>
-                      </Form.Select>
-                    </Form.Group>
-
-                    <Form.Group
-                      as={Col}
-                      controlId="formGridItem"
-                      className="col-xs-12 col-md-3"
-                    >
-                      <Form.Control
-                        placeholder="Item name"
-                        className="py-1 shadow-none"
-                      />
-                    </Form.Group>
-
-                    <Form.Group
-                      as={Col}
-                      controlId="formGridType"
-                      className="col-xs-12 col-md-3"
-                    >
-                      <Form.Select className="py-1 shadow-none">
-                        <option disabled selected>
-                          Type
-                        </option>
-                        <option>In</option>
-                        <option>Out</option>
-                      </Form.Select>
-                    </Form.Group>
-                  </Row>
-                </div>
-              </Collapse>
-            )}
           </div>
 
           {/* Search Bar */}
@@ -151,6 +93,73 @@ const TransactionScreen = () => {
             />
           </div>
         </div>
+        {/* Dropdown Filters */}
+        <Collapse in={open}>
+          <div id="example-collapse-text">
+            <Row className="mb-3">
+              <Form.Group
+                as={Col}
+                controlId="formGridDate"
+                md={2}
+                xs={6}
+                className="mb-2"
+              >
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={handleDateChange}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="form-control py-1 shadow-none"
+                />
+              </Form.Group>
+
+              <Form.Group
+                as={Col}
+                controlId="formGridCategory"
+                md={2}
+                xs={6}
+                className="mb-2"
+              >
+                <Form.Select
+                  defaultValue="Category"
+                  className="py-1 shadow-none"
+                >
+                  <option>Category</option>
+                  <option>...</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group
+                as={Col}
+                controlId="formGridItem"
+                md={2}
+                xs={6}
+                className="mb-2"
+              >
+                <Form.Control
+                  placeholder="Item name"
+                  className="py-1 shadow-none"
+                />
+              </Form.Group>
+
+              <Form.Group
+                as={Col}
+                controlId="formGridType"
+                md={2}
+                xs={6}
+                className="mb-2"
+              >
+                <Form.Select className="py-1 shadow-none">
+                  <option disabled selected>
+                    Type
+                  </option>
+                  <option>In</option>
+                  <option>Out</option>
+                </Form.Select>
+              </Form.Group>
+            </Row>
+          </div>
+        </Collapse>
         <div>
           <Table responsive="sm" className="position-relative">
             <thead className="bg-light">
