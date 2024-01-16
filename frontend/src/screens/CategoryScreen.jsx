@@ -7,25 +7,35 @@ import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import Pagination from 'react-bootstrap/Pagination';
 
 import { useState } from "react";
 
 const CategoryScreen = () => {
-  const {
-    data: { data: categories } = {},
-    isLoading,
-    isError,
-  } = useGetCategoriesQuery();
+
+  //Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
   const [open, setOpen] = useState(false);
-
   const [showFilters, setShowFilters] = useState(false);
-
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
   };
+  const {
+    data: { data: categories } = {},
+    isLoading,
+    isError,
+  } = useGetCategoriesQuery(currentPage);
 
+  //console.log(categories.length);
+  console.log(categories);
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -123,7 +133,23 @@ const CategoryScreen = () => {
               ))}
           </tbody>
         </Table>
+
+
+        {/* Pagination */}
+        {categories && categories.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={categories.length < 10} />
+              </Pagination>
+            </ul>
+          </nav>
+        )}
+
       </div>
+
+
     </div>
   );
 };

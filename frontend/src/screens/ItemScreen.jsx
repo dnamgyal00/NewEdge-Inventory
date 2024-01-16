@@ -11,32 +11,41 @@ import { Collapse } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useState } from "react";
+import { Pagination } from "react-bootstrap";
 
 const ItemScreen = () => {
+  //Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
+  //Filter
   const [categoryName, setCategoryName] = useState("")
+  const [open, setOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    setOpen(!open);
+    setCategoryName("")
+  };
+
+  //API calls
   const {
     data: { data: items } = {},
     isLoading,
     isError,
     error,
-  } = useGetItemsQuery(categoryName);
+  } = useGetItemsQuery({ categoryName, currentPage });
 
   const {
     data: { data: categories } = {},
     isLoading2,
     isError2,
   } = useGetCategoriesQuery();
-  
-
-  const [open, setOpen] = useState(false); //for filter options
-  const [showFilters, setShowFilters] = useState(false);
-
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
-    setOpen(!open);
-    setCategoryName("")
-  };
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -154,6 +163,18 @@ const ItemScreen = () => {
                 ))}
             </tbody>
           </Table>
+        )}
+
+        {/* Pagination */}
+        {items && items.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={items.length < 10} />
+              </Pagination>
+            </ul>
+          </nav>
         )}
       </div>
     </div>
