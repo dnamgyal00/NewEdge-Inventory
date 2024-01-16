@@ -10,10 +10,21 @@ import { useState } from "react";
 import { Row, Col, Form, Button, Table, Collapse } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { parseISO, format } from 'date-fns';
+import Pagination from 'react-bootstrap/Pagination';
 
 
 
 const TransactionScreen = () => {
+
+   //Pagenation
+   const [currentPage, setCurrentPage] = useState(1);
+   const handleNextPage = () => {
+     setCurrentPage((prevPage) => prevPage + 1);
+   };
+   const handlePrevPage = () => {
+     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+   };
+
   // State variables for filters
   const [filters, setFilters] = useState({
     startDate:"",
@@ -28,7 +39,8 @@ const TransactionScreen = () => {
     data: { data: transactions } = {},
     isLoading,
     isError,
-  } = useGetTransactionsQuery(filters);
+  } = useGetTransactionsQuery({filters,currentPage});
+
   const {
     data: { data: categories } = {},
     isLoading2,
@@ -45,7 +57,6 @@ const TransactionScreen = () => {
   const updateFilter = (key, value) => {
     if (key === "startDate" || key==="endDate") {
       value = format(value, 'yyyy-MM-dd');
-  
     }
       setFilters({
         ...filters,
@@ -55,7 +66,6 @@ const TransactionScreen = () => {
   };
 
   console.log(filters)
-
   //for filter display
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -264,6 +274,18 @@ const TransactionScreen = () => {
                 ))}
             </tbody>
           </Table>
+          
+        {/* Pagination */}
+        {transactions && transactions.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={transactions.length < 10} />
+              </Pagination>
+            </ul>
+          </nav>
+        )}
         </div>
       </div>
     </div>

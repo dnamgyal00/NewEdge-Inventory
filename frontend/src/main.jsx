@@ -44,7 +44,7 @@ const router = createBrowserRouter(
         <Route index={true} path="/category" element={<CategoryScreen />} />
         <Route
           index={true}
-          path="/category/:id"
+          path="/category/category-details/:id"
           element={<CategoryDetailsScreen />}
         />
 
