@@ -51,7 +51,7 @@ const TransactionScreen = () => {
     isLoading3,
     isError3,
     error,
-  } = useGetItemsQuery();
+  } = useGetItemsQuery({});
 
   // Function to update a specific filter parameter
   const updateFilter = (key, value) => {
