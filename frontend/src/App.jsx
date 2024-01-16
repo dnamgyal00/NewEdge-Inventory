@@ -20,7 +20,10 @@ const App = () => {
         // style={{ background: "#EFEFEF" }}
         >
           {/* Sidebar */}
-          <Col md={2} className="bg-white p-1">
+          <Col
+            md={2}
+            className="bg-white p-1 container-fluid page-body-wrapper"
+          >
             <Sidebar />
           </Col>
 
@@ -30,11 +33,10 @@ const App = () => {
               <Breadcrumbs />
               <Outlet />
             </main>
+            <Footer />
           </Col>
         </Row>
       </Container>
-
-      <Footer />
     </div>
   );
 };
