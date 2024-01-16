@@ -5,8 +5,8 @@ import { apiSlice } from "./apiSlice";
 export const itemsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getItems: builder.query({
-            query: (categoryName) => ({
-                url: categoryName? `${ITEM_URL}?categoryName=${categoryName}` : ITEM_URL
+            query: ({categoryName,currentPage}) => ({
+                url:categoryName||currentPage? `${ITEM_URL}?categoryName=${categoryName}&page=${currentPage}` : ITEM_URL
             }),
             keepUnusedDataFor: 5
         }),
