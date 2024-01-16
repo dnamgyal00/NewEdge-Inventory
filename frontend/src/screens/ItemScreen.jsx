@@ -64,14 +64,13 @@ const ItemScreen = () => {
       </div>
 
       <div className="bg-white rounded p-4">
-
-
-        <div className="input-group d-flex mb-3">
+        <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
             {/* Filter Action*/}
             <span
-              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
-                }`}
+              className={`input-group-text  ${
+                showFilters ? "bg-primary" : "bg-white"
+              }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -103,26 +102,28 @@ const ItemScreen = () => {
         {/* Filter Options*/}
         <div className="input-group mb-3  ">
           <Collapse in={open}>
-            <div >
+            <div id="example-collapse-text">
               <DropdownButton
-                id="dropdown-menu bg-white border-0 show mt-2 py-2 shadow-none"
+                variant="white"
+                id="dropdown-menu show"
+                className="border border-solid rounded mt-2 lh-1"
                 title="Choose Category"
               >
-                <Dropdown.Item onClick={() => setCategoryName("")} >
+                <Dropdown.Item onClick={() => setCategoryName("")}>
                   All
                 </Dropdown.Item>
 
                 {categories &&
                   categories.map((category) => (
-                    <Dropdown.Item key={category.id} onClick={() => setCategoryName(category.name)}>
+                    <Dropdown.Item
+                      key={category.id}
+                      onClick={() => setCategoryName(category.name)}
+                    >
                       {category.name}
                     </Dropdown.Item>
                   ))}
               </DropdownButton>
-
             </div>
-
-
           </Collapse>
         </div>
 

@@ -106,3 +106,8 @@ input.padding {
 .react-datepicker-wrapper {
   width: 100%;
 }
+
+/* filter button */
+button.dropdown-toggle {
+  border: none;
+}
