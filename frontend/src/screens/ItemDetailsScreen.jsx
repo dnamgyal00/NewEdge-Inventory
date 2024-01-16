@@ -14,15 +14,28 @@ import { useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Pagination } from "react-bootstrap";
+import { useState } from "react";
 
 const ItemDetailsScreen = () => {
   const { id: itemId } = useParams();
+
+  //item Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  //api call
   const {
     data: { data: item } = {},
     isLoading,
     isError,
     error,
-  } = useGetItemDetailsQuery(itemId);
+  } = useGetItemDetailsQuery({itemId,currentPage});
   console.log(item);
   return (
     <>
@@ -131,6 +144,17 @@ const ItemDetailsScreen = () => {
                   </tbody>
                 </Table>
               </div>
+                  {/* Pagination */}
+        {item.item_instance && item.item_instance.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={item.item_instance.length < 10} />
+              </Pagination>
+            </ul>
+          </nav>
+        )}
             </div>
           </div>
         </div>
