@@ -16,24 +16,26 @@ const App = () => {
       <Header />
 
       <Container fluid>
-        <Row
-        // style={{ background: "#EFEFEF" }}
-        >
+        <Row>
           {/* Sidebar */}
-          <Col
-            md={2}
-            className="bg-white p-1 container-fluid page-body-wrapper"
-          >
+          <Col md={2} className="bg-white p-1">
             <Sidebar />
           </Col>
 
           {/* Main Content */}
-          <Col md={10} className="main-content">
-            <main className="pt-2 pb-4 px-3">
-              <Breadcrumbs />
-              <Outlet />
-            </main>
-            <Footer />
+          <Col
+            md={10}
+            className="main-content-container d-flex flex-column justify-content-between"
+          >
+            <div>
+              <main className="pt-2 pb-4 px-3 main-content">
+                <Breadcrumbs />
+                <Outlet />
+              </main>
+            </div>
+            <div className="mb-5 py-3">
+              <Footer />
+            </div>
           </Col>
         </Row>
       </Container>
