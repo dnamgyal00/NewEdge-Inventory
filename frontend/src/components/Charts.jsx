@@ -24,19 +24,18 @@ const Charts = () => {
         <div className="container-fluid pt-4 px-4">
           <div className="row g-4">
             <div className="col-sm-12 col-xl-6 rounded">
-              <div className="bg-white rounded p-4">
+              <div className="bg-white rounded p-4 h-100">
                 <div className="d-flex align-items-center justify-content-between mb-4">
                   <h6 className="mb-0">Product Summary</h6>
                 </div>
                 <div>
-
-                <br/>
+                  <br />
                   <Row>
                     <Col md={9}>Total Category:</Col>
                     <Col md={3}>{data.totalCategories}</Col>
                   </Row>
 
-                 <br/>
+                  <br />
 
                   <Row>
                     <Col md={9}>Total Items:</Col>
@@ -61,16 +60,18 @@ const Charts = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.recentItems && data.recentItems.map((item,index) => (
-                        <tr key={item.id} >
-                          <td>{index+1}</td>
-                          <LinkContainer to={`/item-list/item-details/${item.id}`}>
-                      <td>{item.name}</td>
-                    </LinkContainer>
-                          <td>Nu.{item.unit_price}</td>
-                        </tr>
-                      )
-                      )}
+                      {data.recentItems &&
+                        data.recentItems.map((item, index) => (
+                          <tr key={item.id}>
+                            <td>{index + 1}</td>
+                            <LinkContainer
+                              to={`/item-list/item-details/${item.id}`}
+                            >
+                              <td>{item.name}</td>
+                            </LinkContainer>
+                            <td>Nu.{item.unit_price}</td>
+                          </tr>
+                        ))}
                     </tbody>
                   </Table>
                 </div>
