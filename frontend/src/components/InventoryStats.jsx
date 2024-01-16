@@ -8,7 +8,6 @@ const InventoryStats = () => {
   const [timeRange, setTimeRange] = useState("month");
   const handleStatusChange = (e) => {
     setTimeRange(e.target.value);
-    console.log(e.target.value)
   };
 
   const {

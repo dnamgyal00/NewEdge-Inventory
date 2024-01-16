@@ -34,6 +34,7 @@ const ItemScreen = () => {
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
+    setCategoryName("");
   };
 
   return (

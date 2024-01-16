@@ -12,12 +12,12 @@ const StockInScreen = () => {
     isError: isItemsEror,
   } = useGetItemsQuery();
 
-  const [createStockIn, { isLoading: isStockInLoading, isError }] =
-    useCreateStockInMutation();
+  const [createStockIn, { isLoading: isStockInLoading, isError }] = useCreateStockInMutation();
 
   const [itemData, setItemData] = useState({
     item_id: 0,
     qty: 0,
+    total_price:0,
   });
   console.log(itemData);
 
