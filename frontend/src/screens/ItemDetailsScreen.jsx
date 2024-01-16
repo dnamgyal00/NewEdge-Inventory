@@ -37,6 +37,7 @@ const ItemDetailsScreen = () => {
     error,
   } = useGetItemDetailsQuery({itemId,currentPage});
   console.log(item);
+  
   return (
     <>
       <div className="mb-3">

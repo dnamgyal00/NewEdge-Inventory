@@ -57,9 +57,8 @@ const CategoryScreen = () => {
         <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
             <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -123,7 +122,7 @@ const CategoryScreen = () => {
             {categories &&
               categories.map((category) => (
                 <tr key={category.id}>
-                  <LinkContainer to={`/category/${category.id}`}>
+                  <LinkContainer to={`/category/category-details/ ${category.id}`}>
                     <td>{category.name}</td>
                   </LinkContainer>
 
