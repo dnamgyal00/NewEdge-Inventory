@@ -11,8 +11,8 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
             keepUnusedDataFor: 5
         }),
         getCategoryDetails: builder.query({
-            query: (categoryId) => ({
-              url: `${CATEGORY_URL}/${categoryId}`,
+            query: ({categoryId,currentPage}) => ({
+              url: `${CATEGORY_URL}/${categoryId}?page=${currentPage}`,
             }),
             keepUnusedDataFor: 5,
           }),

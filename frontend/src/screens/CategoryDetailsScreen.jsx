@@ -15,18 +15,30 @@ import {
 } from "react-bootstrap";
 import testImage from "../assets/laptop.jpg";
 import { LinkContainer } from "react-router-bootstrap";
+import { useState } from "react";
+import { Pagination } from "react-bootstrap";
 
 const CategoryDetailsScreen = () => {
   const { id: categoryId } = useParams();
-  console.log(categoryId);
 
+  //item Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  //api call
   const {
     data: { data: category } = {},
     isLoading,
     isError,
     error,
-  } = useGetCategoryDetailsQuery(categoryId);
+  } = useGetCategoryDetailsQuery({ categoryId, currentPage });
   console.log(category);
+
   return (
     <>
       {isLoading ? (
@@ -71,7 +83,7 @@ const CategoryDetailsScreen = () => {
                         <Col md={5}>{category.created_at}</Col>
                       </Row>
                     </ListGroup.Item>
-                    
+
                   </ListGroup>
                 </Col>
               </Row>
@@ -117,6 +129,21 @@ const CategoryDetailsScreen = () => {
                   </tbody>
                 </Table>
               </div>
+
+              {/* Pagination */}
+        {category.item && category.item.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={category.item.length < 5} />
+              </Pagination>
+            </ul>
+          </nav>
+        )}
+
+
+        
             </div>
           </div>
         </div>
