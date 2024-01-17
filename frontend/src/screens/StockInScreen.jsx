@@ -6,39 +6,23 @@ import { Row, Col, Button } from "react-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
 
 const StockInScreen = () => {
+
+  //api calls
   const {
     data: { data: items } = {},
     isLoading: isItemsLoading,
     isError: isItemsEror,
-  } = useGetItemsQuery();
+  } = useGetItemsQuery({});
 
   const [createStockIn, { isLoading: isStockInLoading, isError }] = useCreateStockInMutation();
 
+  // stock in data
   const [itemData, setItemData] = useState({
     item_id: 0,
     qty: 0,
     total_price:0,
   });
   console.log(itemData);
-
-  // console.log(itemData);
-  const [selectedItem, setSelectedItem] = useState(null);
-  useEffect(() => {
-    if (items && items.length > 0) {
-      const item = items.find((item) => item.id === itemData.item_id);
-      setSelectedItem(item);
-    }
-  }, [itemData.item_id]);
-
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  useEffect(() => {
-    if (selectedItem) {
-      const total = selectedItem.unit_price * itemData.qty;
-      setTotalPrice(total);
-    }
-  }, [itemData.qty]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setItemData((prevData) => ({
@@ -50,6 +34,29 @@ const StockInScreen = () => {
     }));
   };
 
+  // console.log(itemData);
+  const [selectedItem, setSelectedItem] = useState(null);
+  useEffect(() => {
+    if (items && items.length > 0) {
+      const item = items.find((item) => item.id === itemData.item_id);
+      setSelectedItem(item);
+    }
+  }, [itemData.item_id]);
+
+  const [totalPrice, setTotalPrice] = useState(0);
+  useEffect(() => {
+    if (selectedItem) {
+      const total = selectedItem.unit_price * itemData.qty;
+      setTotalPrice(total);
+      setItemData((prevData) => ({
+        ...prevData,
+        total_price:total,
+      }));
+    }
+  }, [itemData.qty]);
+
+ 
+  //submit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -58,9 +65,10 @@ const StockInScreen = () => {
       setItemData({
         item_id: 0,
         qty: 0,
+        total_price:0,
       });
     } catch (error) {
-      console.error("Error creating item:", error);
+      console.error("Error creating submitting stock in data:", error);
     }
   };
 
@@ -166,7 +174,9 @@ const StockInScreen = () => {
             <Col xs={6} md={5}>
               <Form.Group controlId="formGridUnitPrice">
                 <Form.Label>Total Price</Form.Label>
-                <Form.Control className="py-1" readOnly value={totalPrice} />
+                <Form.Control className="py-1" readOnly value={totalPrice} 
+                // onChange={handleChange} 
+                name="total_price" />
               </Form.Group>
             </Col>
           </Row>
