@@ -8,14 +8,13 @@ import {
   AiOutlineFileText,
   AiOutlineAppstore,
 } from "react-icons/ai";
-// import { BsPlus, BsListUl, BsClipboardData } from "react-icons/bs";
 
-const Sidebar = () => {
+const Sidebar = ({ toggle }) => {
   return (
     <Nav
-      className="flex-column sidebar bg-white navbar-light ml-0 mr-0"
-      style={{ lineHeight: "1" }}
-      // style={{ backgroundColor: "white" }}
+      className={`d-md-flex flex-column w-auto sidebar bg-white${
+        toggle ? " " : "sidebar-hidden"
+      }`}
     >
       {/* Dashboard Section */}
       <Nav.Item>
@@ -117,3 +116,5 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+// };
