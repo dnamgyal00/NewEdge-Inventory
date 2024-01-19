@@ -1,4 +1,5 @@
 import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
+import { useGetTransactionsExcelDataQuery } from "../slices/transactionsApiSlice";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
 import { FaPlus, FaMinus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
@@ -11,35 +12,46 @@ import { Row, Col, Form, Button, Table, Collapse } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { parseISO, format } from 'date-fns';
 import Pagination from 'react-bootstrap/Pagination';
-
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { useRef } from "react";
+import * as XLSX from "xlsx";
 
 
 const TransactionScreen = () => {
 
-   //Pagenation
-   const [currentPage, setCurrentPage] = useState(1);
-   const handleNextPage = () => {
-     setCurrentPage((prevPage) => prevPage + 1);
-   };
-   const handlePrevPage = () => {
-     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-   };
+  //Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
   // State variables for filters
   const [filters, setFilters] = useState({
-    startDate:"",
+    startDate: "",
     endDate: "",
     selectedCategory: "",
     itemName: "",
     transactionType: "",
   });
 
-  //fetch data
+  // API CALLS
+  // Fetch all data for Excel export
   const {
-    data: { data: transactions } = {},
-    isLoading,
-    isError,
-  } = useGetTransactionsQuery({filters,currentPage});
+    data: { data: allTransactions } = {},
+    isLoading: allTransactionsLoading,
+    isError: allTransactionsError,
+  } = useGetTransactionsExcelDataQuery({ filters });
+
+  //Fetch paginated data for display
+  const {
+    data: { data: paginatedTransactions } = {},
+    isLoading: paginatedTransactionsLoading,
+    isError: paginatedTransactionsError,
+  } = useGetTransactionsQuery({ filters, currentPage });
 
   const {
     data: { data: categories } = {},
@@ -55,17 +67,16 @@ const TransactionScreen = () => {
 
   // Function to update a specific filter parameter
   const updateFilter = (key, value) => {
-    if (key === "startDate" || key==="endDate") {
+    if (key === "startDate" || key === "endDate") {
       value = format(value, 'yyyy-MM-dd');
     }
-      setFilters({
-        ...filters,
-        [key]: value,
-      });
-    
+    setFilters({
+      ...filters,
+      [key]: value,
+    });
+
   };
 
-  console.log(filters)
   //for filter display
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -75,12 +86,36 @@ const TransactionScreen = () => {
     setOpen(!open);
 
     setFilters({
-    startDate:"",
-    endDate: "",
-    selectedCategory: "",
-    itemName: "",
-    transactionType: "",
+      startDate: "",
+      endDate: "",
+      selectedCategory: "",
+      itemName: "",
+      transactionType: "",
     })
+  };
+
+  const handleDownloadExcel = () => {
+    try {
+      const rows = allTransactions.map((t) => ({
+        id: t.id,
+        item_name: t.item.name,
+        item_id: t.item.id,
+        category: t.item.category.name,
+        transaction: t.transaction_type,
+        type: t.type,
+        qty: t.qty,
+        unit_price: t.item.unit_price,
+        total_price: t.total_price,
+        data: t.created_at,
+      }));
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+      XLSX.writeFile(wb, "Transactions.xlsx");
+
+    } catch (error) {
+      console.error("Error downloading Excel:", error);
+    }
   };
 
   return (
@@ -109,41 +144,55 @@ const TransactionScreen = () => {
               Stock Out
             </Button>
           </LinkContainer>
+
         </div>
       </div>
 
-      <div className="bg-white rounded p-4 d-flex flex-column">
-        <div className="input-group d-flex mb-3">
-          <div className="input-group-prepend me-1">
-            <span
-              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
-                }`}
-              onClick={toggleFilters}
-              aria-controls="example-collapse-text"
-              aria-expanded={open}
-            >
-              {showFilters ? (
-                // Cross Button when filters are displayed
-                <FaTimes className="text-white" />
-              ) : (
-                // Filter Icon when filters are hidden
-                <FiFilter />
-              )}
-            </span>
+      <div className="bg-white rounded p-4 d-flex flex-column ">
+        <div className="input-group d-flex mb-3 justify-content-between align-items-center">
+
+          <div className="d-flex">
+            <div className="input-group-prepend me-1">
+              <span
+                className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                  }`}
+                onClick={toggleFilters}
+                aria-controls="example-collapse-text"
+                aria-expanded={open}
+              >
+                {showFilters ? (
+                  // Cross Button when filters are displayed
+                  <FaTimes className="text-white" />
+                ) : (
+                  // Filter Icon when filters are hidden
+                  <FiFilter />
+                )}
+              </span>
+            </div>
+
+            {/* Search Bar */}
+            <div className="border border-solid d-flex py-0 rounded">
+              <span className="input-group-text bg-white border-0">
+                <FaSearch />
+              </span>
+              <input
+                type="text"
+                placeholder="Search..."
+                className="form-control border-0 px-0 py-0"
+                style={{ boxShadow: "none" }}
+              />
+            </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="border border-solid d-flex py-0 rounded">
-            <span className="input-group-text bg-white border-0">
-              <FaSearch />
+          <div className="d-flex flex-row">
+            {/* Add onClick handler for Excel download */}
+            <span className="input-group-text bg-white border-0" >
             </span>
-            <input
-              type="text"
-              placeholder="Search..."
-              className="form-control border-0 px-0 py-0"
-              style={{ boxShadow: "none" }}
-            />
+            <button onClick={handleDownloadExcel} className="me-2">
+              <PiMicrosoftExcelLogoFill size={30} />
+            </button>
           </div>
+
         </div>
 
         {/* Dropdown Filters */}
@@ -160,7 +209,7 @@ const TransactionScreen = () => {
                 <Form.Label>Start Date</Form.Label>
                 <DatePicker
                   selected={filters.startDate ? new Date(filters.startDate) : null}
-                  onChange={(date) => updateFilter("startDate",date) }
+                  onChange={(date) => updateFilter("startDate", date)}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Select Date"
                   className="form-control py-1 shadow-none"
@@ -177,7 +226,7 @@ const TransactionScreen = () => {
                 <Form.Label>End Date</Form.Label>
                 <DatePicker
                   selected={filters.endDate ? new Date(filters.endDate) : null}
-                  onChange={(date) => updateFilter("endDate",date) }
+                  onChange={(date) => updateFilter("endDate", date)}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Select Date"
                   className="form-control py-1 shadow-none"
@@ -196,7 +245,7 @@ const TransactionScreen = () => {
                 <Form.Select
                   className="py-1 shadow-none"
                   onChange={(e) => updateFilter("selectedCategory", e.target.value)
-                }
+                  }
                 >
                   <option defaultValue value="">
                     All
@@ -245,47 +294,53 @@ const TransactionScreen = () => {
         </Collapse>
 
         <div>
-          <Table responsive="sm" className="position-relative">
+          <Table responsive="sm" className="position-relative" >
             <thead className="bg-light">
               <tr>
                 <th className="text-black border-0">Item Name</th>
                 <th className="text-black border-0">Category</th>
                 <th className="text-black border-0">Stock In/Out</th>
-                <th className="text-black border-0">Unit</th>
                 <th className="text-black border-0">Qty</th>
+                <th className="text-black border-0">Unit Price</th>
+                <th className="text-black border-0">Total Price</th>
+
                 <th className="text-black border-0">Date</th>
-                <th className="text-black border-0">Action</th>
+                {/* <th className="text-black border-0">Action</th> */}
               </tr>
             </thead>
             <tbody>
-              {transactions &&
-                transactions.map((transaction) => (
+              {paginatedTransactions &&
+                paginatedTransactions.map((transaction) => (
                   <tr key={transaction.id}>
                     <td>{transaction.item.name}</td>
                     <td>{transaction.item.category.name}</td>
                     <td>{transaction.transaction_type}</td>
-                    <td>{transaction.item.unit}</td>
                     <td>{transaction.qty}</td>
-                    <td>{transaction.created_at}</td>
+                    <td>Nu.{transaction.item.unit_price}</td>
+                    <td>Nu.{transaction.total_price}</td>
+
+                    <td>{format(transaction.created_at, 'yyyy-MM-dd')}</td>
                     <td>
-                      <BsEye /> <FiEdit3 /> <FaTrashAlt />
+                      {/* <BsEye /> 
+                      <FiEdit3 /> 
+                      <FaTrashAlt /> */}
                     </td>
                   </tr>
                 ))}
             </tbody>
           </Table>
-          
-        {/* Pagination */}
-        {transactions && transactions.length > 0 && (
-          <nav aria-label="Page navigation example mb-5">
-            <ul className="pagination justify-content-center">
-              <Pagination>
-                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                <Pagination.Next onClick={handleNextPage} disabled={transactions.length < 10} />
-              </Pagination>
-            </ul>
-          </nav>
-        )}
+
+          {/* Pagination */}
+          {paginatedTransactions && paginatedTransactions.length > 0 && (
+            <nav aria-label="Page navigation example mb-5">
+              <ul className="pagination justify-content-center">
+                <Pagination>
+                  <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                  <Pagination.Next onClick={handleNextPage} disabled={paginatedTransactions.length < 10} />
+                </Pagination>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </div>
