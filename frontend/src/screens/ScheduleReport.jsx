@@ -1,5 +1,5 @@
 import React from "react";
-import { Breadcrumb, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import {
   FaPlus,
@@ -19,11 +19,6 @@ const ScheduleReport = () => {
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Report</Breadcrumb.Item>
-        <Breadcrumb.Item active>Schedule Report</Breadcrumb.Item>
-      </Breadcrumb>
       <div className="mb-3">
         <h5 className="text-black mb-0"> Schedule Report</h5>
         Manage your scheduled report

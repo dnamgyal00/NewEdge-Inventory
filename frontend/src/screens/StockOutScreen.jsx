@@ -1,16 +1,10 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button } from "react-bootstrap";
-import { Breadcrumb } from "react-bootstrap";
 
 function StockOutScreen() {
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Transaction</Breadcrumb.Item>
-        <Breadcrumb.Item active>Stock Out </Breadcrumb.Item>
-      </Breadcrumb>
       <h5 className="mb-0 text-black">Stock Out</h5>
       <p className="mb-3">Manage stock out </p>
       <div className="bg-white rounded p-4 ">

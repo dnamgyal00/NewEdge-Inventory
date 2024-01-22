@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useCreateStockInMutation } from "../slices/transactionsApiSlice";
 
 import Form from "react-bootstrap/Form";
-import { Breadcrumb } from "react-bootstrap";
 import { Row, Col, Button } from "react-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
 
@@ -20,7 +19,7 @@ const StockInScreen = () => {
     item_id: 0,
     qty: 0,
   });
-  console.log(itemData)
+  console.log(itemData);
 
   // console.log(itemData);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -32,7 +31,6 @@ const StockInScreen = () => {
   }, [itemData.item_id]);
 
   const [totalPrice, setTotalPrice] = useState(0);
-  
 
   useEffect(() => {
     if (selectedItem) {
@@ -46,7 +44,9 @@ const StockInScreen = () => {
     setItemData((prevData) => ({
       ...prevData,
       [name]:
-        name === "item_id" ? parseInt(value, 10) || 0 : parseInt(value, 10) || 0,
+        name === "item_id"
+          ? parseInt(value, 10) || 0
+          : parseInt(value, 10) || 0,
     }));
   };
 
@@ -66,11 +66,6 @@ const StockInScreen = () => {
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Transaction</Breadcrumb.Item>
-        <Breadcrumb.Item active>Stock In </Breadcrumb.Item>
-      </Breadcrumb>
       <h5 className="mb-0 text-black">Stock In </h5>
       <p className="mb-3">Manage stock in </p>
       <div className="bg-white rounded p-4 ">
@@ -171,11 +166,7 @@ const StockInScreen = () => {
             <Col xs={6} md={5}>
               <Form.Group controlId="formGridUnitPrice">
                 <Form.Label>Total Price</Form.Label>
-                <Form.Control
-                  className="py-1"
-                  readOnly
-                  value={totalPrice}
-                />
+                <Form.Control className="py-1" readOnly value={totalPrice} />
               </Form.Group>
             </Col>
           </Row>

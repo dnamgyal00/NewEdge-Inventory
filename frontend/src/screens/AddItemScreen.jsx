@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { Row, Col, Button, Breadcrumb } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { useCreateItemMutation } from "../slices/itemsApiSlice";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const AddItemScreen = () => {
-  const { data: { data: categories } = {}, isLoading : isCategoryLoading } =
+  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
     useGetCategoriesQuery();
-  const [createItem, { isLoading: isItemLoading, isError, error }] = useCreateItemMutation();
+  const [createItem, { isLoading: isItemLoading, isError, error }] =
+    useCreateItemMutation();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     category_id: 0,
@@ -29,8 +30,8 @@ const AddItemScreen = () => {
     try {
       const result = await createItem(formData).unwrap();
       console.log(result);
-      toast.success('item added sucessfully');
-      navigate('/item-list')
+      toast.success("item added sucessfully");
+      navigate("/item-list");
 
       setFormData({
         name: "",
@@ -58,19 +59,18 @@ const AddItemScreen = () => {
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Product</Breadcrumb.Item>
-        <Breadcrumb.Item active>Add Item </Breadcrumb.Item>
-      </Breadcrumb>
       <h5 className="mb-0 text-black">Item Add</h5>
       <p className="mb-3">Add new item</p>
 
       {isItemLoading ? (
-          <Loader />
-        ) : isError ? (
-          <Message variant='danger' >{error?.code?.message || error.error}</Message>
-        ) : (<></>) }
+        <Loader />
+      ) : isError ? (
+        <Message variant="danger">
+          {error?.code?.message || error.error}
+        </Message>
+      ) : (
+        <></>
+      )}
       <div className="bg-white rounded p-4 ">
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3 text-black">
@@ -181,10 +181,20 @@ const AddItemScreen = () => {
               className="py-1"
             />
           </Form.Group>
-          <Button variant="primary" type="submit" className="py-1" disabled={isItemLoading}>
+          <Button
+            variant="primary"
+            type="submit"
+            className="py-1"
+            disabled={isItemLoading}
+          >
             Add
           </Button>{" "}
-          <Button variant="danger" type="button" className="text-white py-1" disabled={isItemLoading}>
+          <Button
+            variant="danger"
+            type="button"
+            className="text-white py-1"
+            disabled={isItemLoading}
+          >
             Cancel
           </Button>
         </Form>

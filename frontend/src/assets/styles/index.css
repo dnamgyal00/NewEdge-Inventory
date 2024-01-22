@@ -86,3 +86,19 @@ input.padding {
   padding-right: 0px;
   padding-left: 15px;
 }
+
+/* Breadcrumbs styling */
+.breadcrumbs > * {
+  display: inline-block;
+  margin-right: 5px;
+}
+.breadcrumbs .crumb:after {
+  content: "/";
+  margin-left: 5px;
+}
+.breadcrumbs .crumb:last-child:after {
+  display: none;
+}
+.breadcrumbs .crumb a {
+  color: #969696;
+}
