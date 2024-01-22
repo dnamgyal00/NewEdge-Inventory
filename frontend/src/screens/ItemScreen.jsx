@@ -1,19 +1,51 @@
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
+import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Collapse } from "react-bootstrap";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { useState } from "react";
+import { Pagination } from "react-bootstrap";
 
 const ItemScreen = () => {
+  //Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  //Filter
+  const [categoryName, setCategoryName] = useState("")
+  const [open, setOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    setOpen(!open);
+    setCategoryName("")
+  };
+
+  //API calls
   const {
     data: { data: items } = {},
     isLoading,
     isError,
     error,
-  } = useGetItemsQuery();
+  } = useGetItemsQuery({ categoryName, currentPage });
+
+  const {
+    data: { data: categories } = {},
+    isLoading2,
+    isError2,
+  } = useGetCategoriesQuery();
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -32,10 +64,24 @@ const ItemScreen = () => {
       </div>
 
       <div className="bg-white rounded p-4">
-        <div className="input-group d-flex mb-3">
+        <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
-            <span className="input-group-text bg-white border-1">
-              <FiFilter />{" "}
+            {/* Filter Action*/}
+            <span
+              className={`input-group-text  ${
+                showFilters ? "bg-primary" : "bg-white"
+              }`}
+              onClick={toggleFilters}
+              aria-controls="example-collapse-text"
+              aria-expanded={open}
+            >
+              {showFilters ? (
+                // Cross Button when filters are displayed
+                <FaTimes className="text-white" />
+              ) : (
+                // Filter Icon when filters are hidden
+                <FiFilter />
+              )}
             </span>
           </div>
 
@@ -52,6 +98,35 @@ const ItemScreen = () => {
             />
           </div>
         </div>
+
+        {/* Filter Options*/}
+        <div className="input-group mb-3  ">
+          <Collapse in={open}>
+            <div id="example-collapse-text">
+              <DropdownButton
+                variant="white"
+                id="dropdown-menu show"
+                className="border border-solid rounded mt-2 lh-1"
+                title="Choose Category"
+              >
+                <Dropdown.Item onClick={() => setCategoryName("")}>
+                  All
+                </Dropdown.Item>
+
+                {categories &&
+                  categories.map((category) => (
+                    <Dropdown.Item
+                      key={category.id}
+                      onClick={() => setCategoryName(category.name)}
+                    >
+                      {category.name}
+                    </Dropdown.Item>
+                  ))}
+              </DropdownButton>
+            </div>
+          </Collapse>
+        </div>
+
         {/* <Message variant='danger'>test</Message> */}
         {isLoading ? (
           <Loader />
@@ -89,6 +164,18 @@ const ItemScreen = () => {
                 ))}
             </tbody>
           </Table>
+        )}
+
+        {/* Pagination */}
+        {items && items.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={items.length < 10} />
+              </Pagination>
+            </ul>
+          </nav>
         )}
       </div>
     </div>

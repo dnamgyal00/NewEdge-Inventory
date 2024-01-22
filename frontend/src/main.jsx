@@ -12,7 +12,7 @@ import store from "./store.js";
 
 import App from "./App.jsx";
 import "./assets/styles/bootstrap.custom.css";
-// import './assets/styles/index.css';
+import { Navigate } from "react-router-dom";
 
 import HomeScreen from "./screens/HomeScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
@@ -27,44 +27,63 @@ import InventoryReport from "./screens/InventoryReport.jsx";
 import ScheduleReport from "./screens/ScheduleReport.jsx";
 import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 import CategoryDetailsScreen from "./screens/CategoryDetailsScreen.jsx";
-
+import Error from "./Error404.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route index={true} path="/" element={<HomeScreen />} />
-      <Route index={true} path="/profile" element={<ProfileScreen />} />
-      <Route index={true} path="/item-list" element={<ItemScreen />} />
-      <Route index={true} path="/item-list/item-details/:id" element={<ItemDetailsScreen/>}/>
-      <Route index={true} path="/category" element={<CategoryScreen />} />
-      <Route index={true} path="/category/:id" element={<CategoryDetailsScreen />} />
-     
-      <Route
-        index={true}
-        path="/transactions-history"
-        element={<TransactionScreen />}
-      />
-      <Route index={true} path="/stock-in" element={<StockInScreen />} />
-      <Route index={true} path="/stock-out" element={<StockOutScreen />} />
-      <Route
-        index={true}
-        path="/inventory-report"
-        element={<InventoryReport />}
-      />
-      <Route
-        index={true}
-        path="/schedule-report"
-        element={<ScheduleReport />}
-      />
+    <>
+      <Route path="/" element={<App />}>
+        <Route index={true} path="/" element={<HomeScreen />} />
+        <Route index={true} path="/profile" element={<ProfileScreen />} />
+        <Route index={true} path="/item-list" element={<ItemScreen />} />
+        <Route
+          index={true}
+          path="/item-list/item-details/:id"
+          element={<ItemDetailsScreen />}
+        />
+        <Route index={true} path="/category" element={<CategoryScreen />} />
+        <Route
+          index={true}
+          path="/category/category-details/:id"
+          element={<CategoryDetailsScreen />}
+        />
 
-      {/* Admin users */}
-      <Route
-        index={true}
-        path="/admin/add-category"
-        element={<AddCategoryScreen />}
-      />
-      <Route index={true} path="/admin/add-item" element={<AddItemScreen />} />
-    </Route>
+        <Route
+          index={true}
+          path="/transactions-history"
+          element={<TransactionScreen />}
+        />
+        <Route index={true} path="/stock-in" element={<StockInScreen />} />
+        <Route index={true} path="/stock-out" element={<StockOutScreen />} />
+        <Route
+          index={true}
+          path="/inventory-report"
+          element={<InventoryReport />}
+        />
+        <Route
+          index={true}
+          path="/schedule-report"
+          element={<ScheduleReport />}
+        />
+
+        {/* Admin users */}
+        <Route
+          index={true}
+          path="/admin/add-category"
+          element={<AddCategoryScreen />}
+        />
+        <Route
+          index={true}
+          path="/admin/add-item"
+          element={<AddItemScreen />}
+        />
+      </Route>
+      {/* Error route */}
+      <Route path="error" element={<Error />} />
+
+      {/* Page Not Found route */}
+      <Route path="*" element={<Navigate to="/error" />} />
+    </>
   )
 );
 

@@ -4,22 +4,46 @@ import { useCreateStockInMutation } from "../slices/transactionsApiSlice";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button } from "react-bootstrap";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
+//import { format } from 'date-fns';
 
 const StockInScreen = () => {
+
+  //api calls
   const {
     data: { data: items } = {},
     isLoading: isItemsLoading,
     isError: isItemsEror,
-  } = useGetItemsQuery();
+  } = useGetItemsQuery({});
 
-  const [createStockIn, { isLoading: isStockInLoading, isError }] =
-    useCreateStockInMutation();
+  const [createStockIn, { isLoading: isStockInLoading, isError }] = useCreateStockInMutation();
 
+  // stock in data
   const [itemData, setItemData] = useState({
     item_id: 0,
     qty: 0,
+    total_price: 0,
+    created_at: "",
   });
   console.log(itemData);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name == "created_at" && value) {
+      setItemData((prevData) => ({
+        ...prevData,
+        created_at: value
+      }));
+
+    } else {
+      setItemData((prevData) => ({
+        ...prevData,
+        [name]:
+          name === "item_id"
+            ? parseInt(value, 10) || 0
+            : parseInt(value, 10) || 0,
+      }));
+    }
+  };
 
   // console.log(itemData);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -31,25 +55,19 @@ const StockInScreen = () => {
   }, [itemData.item_id]);
 
   const [totalPrice, setTotalPrice] = useState(0);
-
   useEffect(() => {
     if (selectedItem) {
       const total = selectedItem.unit_price * itemData.qty;
       setTotalPrice(total);
+      setItemData((prevData) => ({
+        ...prevData,
+        total_price: total,
+      }));
     }
   }, [itemData.qty]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setItemData((prevData) => ({
-      ...prevData,
-      [name]:
-        name === "item_id"
-          ? parseInt(value, 10) || 0
-          : parseInt(value, 10) || 0,
-    }));
-  };
 
+  //submit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -58,9 +76,10 @@ const StockInScreen = () => {
       setItemData({
         item_id: 0,
         qty: 0,
+        total_price: 0,
       });
     } catch (error) {
-      console.error("Error creating item:", error);
+      console.error("Error creating submitting stock in data:", error);
     }
   };
 
@@ -73,15 +92,16 @@ const StockInScreen = () => {
           <Row className="mb-2 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
-                <Form.Label>Item Name</Form.Label>
+                <Form.Label><i>Item </i></Form.Label>
                 <Form.Select
                   name="item_id"
                   value={itemData.item_id}
                   onChange={handleChange}
                   className="py-1"
+                  required
                 >
-                  <option value="" disabled>
-                    Select a Item
+                  <option value={0} disabled>
+                    Select Item
                   </option>
                   {items &&
                     items.map((item) => (
@@ -91,6 +111,8 @@ const StockInScreen = () => {
                     ))}
                 </Form.Select>
               </Form.Group>
+
+
             </Col>
 
             <Col sm={6} md={5}>
@@ -105,6 +127,18 @@ const StockInScreen = () => {
             </Col>
           </Row>
           <Row className="mb-2 text-black ">
+          <Col xs={6} md={5}>
+              {/* //DATE */}
+              <Form.Group controlId="formGridDate">
+                <Form.Label><i>Select Date</i></Form.Label>
+                <Form.Control type="date"
+                  className="py-1"
+                  name="created_at"
+                  //value={new Date(itemData.created_at)}
+                  //required
+                  onChange={handleChange} />
+              </Form.Group>
+            </Col>
             <Col xs={6} md={5}>
               <Form.Group controlId="formGridBrand">
                 <Form.Label>Brand</Form.Label>
@@ -119,12 +153,7 @@ const StockInScreen = () => {
                 />
               </Form.Group>
             </Col>
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridDate">
-                <Form.Label>Date</Form.Label>
-                <Form.Control type="date" className="py-1" />
-              </Form.Group>
-            </Col>
+            
           </Row>
           <Row className="mb-2 text-black">
             <Col xs={6} md={5}>
@@ -144,7 +173,7 @@ const StockInScreen = () => {
                 <Form.Control
                   className="py-1"
                   readOnly
-                  defaultValue={selectedItem ? selectedItem.unit_price : ""}
+                  defaultValue={selectedItem ? `Nu.${selectedItem.unit_price}` : ""}
                 />
               </Form.Group>
             </Col>
@@ -152,13 +181,14 @@ const StockInScreen = () => {
           <Row className="mb-3 text-black ">
             <Col xs={6} md={5}>
               <Form.Group controlId="formGridUnit">
-                <Form.Label>Quantity</Form.Label>
+                <Form.Label><i>Enter Quantity</i></Form.Label>
                 <Form.Control
                   type="number"
                   className="py-1"
                   name="qty"
                   value={itemData.qty}
                   onChange={handleChange}
+                  required
                 />
               </Form.Group>
             </Col>
@@ -166,7 +196,9 @@ const StockInScreen = () => {
             <Col xs={6} md={5}>
               <Form.Group controlId="formGridUnitPrice">
                 <Form.Label>Total Price</Form.Label>
-                <Form.Control className="py-1" readOnly value={totalPrice} />
+                <Form.Control className="py-1" readOnly value=  {`Nu.${totalPrice}`}
+                  // onChange={handleChange} 
+                  name="total_price" />
               </Form.Group>
             </Col>
           </Row>
@@ -181,8 +213,9 @@ const StockInScreen = () => {
           <Button variant="danger" type="button" className="text-white py-1">
             Cancel
           </Button>
-          {/* {isError && <div className="text-danger mt-2">{error.message}</div>} */}
+          {isError && <div className="text-danger mt-2">{isError}</div>}
         </Form>
+
       </div>
     </div>
   );

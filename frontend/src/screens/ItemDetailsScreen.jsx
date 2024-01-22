@@ -14,16 +14,30 @@ import { useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Pagination } from "react-bootstrap";
+import { useState } from "react";
 
 const ItemDetailsScreen = () => {
   const { id: itemId } = useParams();
+
+  //item Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  //api call
   const {
     data: { data: item } = {},
     isLoading,
     isError,
     error,
-  } = useGetItemDetailsQuery(itemId);
+  } = useGetItemDetailsQuery({itemId,currentPage});
   console.log(item);
+  
   return (
     <>
       <div className="mb-3">
@@ -41,51 +55,65 @@ const ItemDetailsScreen = () => {
           <Row>
             <Col md={4}>
               <Image src={testImage} alt="Test" fluid />
-              <Button className="btn-block" type="button">
-                stock in
-              </Button>
-              <Button className="btn-block" type="button">
-                Stock out
-              </Button>
             </Col>
             <Col md={8}>
-              <Card className="p-3">
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
+              <Card className="p-3 border-0 shadow-none">
+                <ListGroup variant="flush" className="p-2">
+                  <ListGroup.Item className="lh-1">
                     <h3>{item.name}</h3>
                     <Row>
                       <Col md={3}>Description:</Col>
                       <Col md={5}>{item.description}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Category:</Col>
                       <Col md={5}>{item.category.name}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Brand:</Col>
                       <Col md={5}>{item.brand}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Price: </Col>
                       <Col md={5}>Nu.{item.unit_price}</Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className="lh-1">
                     <Row>
                       <Col md={3}>Created at:</Col>
                       <Col md={5}>{item.created_at}</Col>
                     </Row>
                   </ListGroup.Item>
+                  <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>Quantity in Stock:</Col>
+                        <Col md={5}>{item.qty_on_hand}</Col>
+                      </Row>
+                    </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Col>
           </Row>
+          <div className="d-flex flex-column flex-md-row justify-content-end py-3 ">
+            <Button
+              className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2 "
+              type="button"
+            >
+              Stock In
+            </Button>
+            <Button
+              className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2"
+              type="button"
+            >
+              Stock Out
+            </Button>
+          </div>
 
           <div className="container-fluid pt-3 px-1">
             <div className="bg-white text-center rounded p-4">
@@ -117,6 +145,17 @@ const ItemDetailsScreen = () => {
                   </tbody>
                 </Table>
               </div>
+                  {/* Pagination */}
+        {item.item_instance && item.item_instance.length > 0 && (
+          <nav aria-label="Page navigation example mb-5">
+            <ul className="pagination justify-content-center">
+              <Pagination>
+                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
+                <Pagination.Next onClick={handleNextPage} disabled={item.item_instance.length < 10} />
+              </Pagination>
+            </ul>
+          </nav>
+        )}
             </div>
           </div>
         </div>

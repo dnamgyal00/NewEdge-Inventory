@@ -5,14 +5,14 @@ import { apiSlice } from "./apiSlice";
 export const itemsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getCategories: builder.query({
-            query: () => ({
-                url: CATEGORY_URL,
+            query: (page) => ({
+                url: page? `${CATEGORY_URL}?page=${page}`:CATEGORY_URL
             }),
             keepUnusedDataFor: 5
         }),
         getCategoryDetails: builder.query({
-            query: (categoryId) => ({
-              url: `${CATEGORY_URL}/${categoryId}`,
+            query: ({categoryId,currentPage}) => ({
+              url: `${CATEGORY_URL}/${categoryId}?page=${currentPage}`,
             }),
             keepUnusedDataFor: 5,
           }),
