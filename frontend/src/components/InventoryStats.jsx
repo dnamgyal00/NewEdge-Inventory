@@ -26,9 +26,9 @@ const InventoryStats = () => {
           {error?.code?.message || error.error}
         </Message>
       ) : (
-        <div className="container-fluid pt-5 px-4">
-          <div className="row bg-white rounded g-4 mx-1">
-            <div className="d-flex flex-row bg-white px-4">
+        <div className="container-fluid pt-4 px-4">
+          <div className="row bg-white rounded g-4 mx-1 pb-2 pb-md-0">
+            <div className="d-flex flex-column flex-md-row bg-white px-4">
               <Form.Label className="me-3">Time Range: </Form.Label>
               <Form.Check
                 type="radio"
@@ -36,7 +36,7 @@ const InventoryStats = () => {
                 value="day"
                 checked={timeRange === "day"}
                 onChange={handleStatusChange}
-                className="me-3 ls-1"
+                className="me-3"
               />
               <Form.Check
                 defaultChecked
