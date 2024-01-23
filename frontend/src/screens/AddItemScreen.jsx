@@ -42,8 +42,8 @@ const AddItemScreen = () => {
       formDataObj.append("description", formData.description);
       formDataObj.append("image", formData.image);
 
-      console.log(formData)
-      console.log(formData.image)
+      // console.log(formData)
+      // console.log(formData.image)
 
       // const result = await createItem(formDataObj).unwrap();
       // console.log(result);
