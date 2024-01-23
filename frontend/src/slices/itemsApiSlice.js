@@ -5,7 +5,10 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getItems: builder.query({
       query: ({ categoryName, currentPage }) => ({
-        url:categoryName || currentPage? `${ITEM_URL}?categoryName=${categoryName}&page=${currentPage}`: ITEM_URL,
+        url:
+          categoryName || currentPage
+            ? `${ITEM_URL}?categoryName=${categoryName}&page=${currentPage}`
+            : ITEM_URL,
       }),
       keepUnusedDataFor: 5,
     }),
@@ -20,6 +23,9 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
         url: ITEM_URL,
         method: "POST",
         body: data,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }),
       invalidatesTags: ["Item"],
     }),
