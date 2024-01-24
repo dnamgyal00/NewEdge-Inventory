@@ -151,7 +151,7 @@ const ItemScreen = () => {
               {items &&
                 items.map((item) => (
                   <tr key={item.id}>
-                    <LinkContainer to={`/item-list/item-details/${item.id}`}>
+                    <LinkContainer to={{ pathname: `/home/item/${item.name}`, search: `?id=${item.id}` }}>
                       <td>{item.name}</td>
                     </LinkContainer>
                     <td>{item.category.name}</td>

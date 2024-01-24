@@ -18,7 +18,7 @@ const Sidebar = ({ toggle }) => {
     >
       {/* Dashboard Section */}
       <Nav.Item>
-        <LinkContainer to="/">
+        <LinkContainer to="/home">
           <Nav.Link className="fw-bold pb-0">
             <AiOutlineAppstore className="me-1" size={19} />
             Dashboard
@@ -38,13 +38,13 @@ const Sidebar = ({ toggle }) => {
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
           <Nav.Item>
-            <LinkContainer to="/item-list">
+            <LinkContainer to="/home/item">
               <Nav.Link className="ml-3 ">Item List</Nav.Link>
             </LinkContainer>
           </Nav.Item>
 
           <Nav.Item>
-            <LinkContainer to="/admin/add-item">
+            <LinkContainer to="home/item/add-item">
               <Nav.Link className="ml-3 ">Add Item</Nav.Link>
             </LinkContainer>
           </Nav.Item>
