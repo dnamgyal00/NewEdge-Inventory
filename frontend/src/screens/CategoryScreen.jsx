@@ -111,6 +111,7 @@ const CategoryScreen = () => {
         <Table responsive="sm">
           <thead className="bg-light">
             <tr>
+            <th className="text-black border-0"></th>
               <th className="text-black border-0">Category Name</th>
               <th className="text-black border-0">No of Items</th>
               <th className="text-black border-0">Description</th>
@@ -122,6 +123,15 @@ const CategoryScreen = () => {
             {categories &&
               categories.map((category) => (
                 <tr key={category.id}>
+                  <td>
+                  {category.image && (
+                              <img
+                                src={category.image} // Assuming category.image contains the URL
+                                alt={`Image for ${category.name}`}
+                                style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
+                              />
+                            )}
+                  </td>
                   <LinkContainer to={`/category/category-details/ ${category.id}`}>
                     <td>{category.name}</td>
                   </LinkContainer>

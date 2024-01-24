@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import testImage from "../assets/laptop.jpg";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -19,7 +19,10 @@ import { useState } from "react";
 import React from "react";
 
 const ItemDetailsScreen = () => {
-  const { id: itemId } = useParams();
+  const { name, id } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const itemId = searchParams.get("id");
 
   //item Pagenation
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,7 +58,19 @@ const ItemDetailsScreen = () => {
         <div>
           <Row>
             <Col md={4}>
-              <Image src={testImage} alt="Test" fluid />
+              {item.image ? (
+                <Image
+                  src={item.image} // Assuming item.image contains the URL
+                  alt={`Image for ${item.name}`}
+                  fluid
+                />
+              ) : (
+                <Image
+                  src={testImage} // Replace testImage with your default image URL
+                  alt="Test"
+                  fluid
+                />
+              )}
             </Col>
             <Col md={8}>
               <Card className="p-3 border-0 shadow-none">

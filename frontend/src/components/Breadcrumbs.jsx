@@ -8,12 +8,19 @@ export default function Breadcrumbs() {
   const crumbs = location.pathname
     .split("/")
     .filter((crumb) => crumb !== "")
-    .map((crumb) => {
-      currentLink = +`/${crumb}`;
+    .map((crumb, index, array) => {
+      currentLink += `/${crumb}`;
+
+      // Check if it's the last crumb
+      const isLastCrumb = index === array.length - 1;
 
       return (
         <div className="crumb" key={crumb}>
-          <Link to={currentLink}>{crumb}</Link>
+          {isLastCrumb ? (
+            <span>{crumb}</span>
+          ) : (
+            <Link to={currentLink}>{crumb}</Link>
+          )}
         </div>
       );
     });

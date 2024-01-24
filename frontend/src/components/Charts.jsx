@@ -55,21 +55,40 @@ const Charts = () => {
                     <thead className="bg-light">
                       <tr>
                         <th className="text-black border-0">No </th>
+                        <th className="text-black border-0">Image</th>
                         <th className="text-black border-0">Item</th>
                         <th className="text-black border-0">Price</th>
+                        
+                        
+                        
                       </tr>
                     </thead>
                     <tbody>
                       {data.recentItems &&
                         data.recentItems.map((item, index) => (
                           <tr key={item.id}>
-                            <td>{index + 1}</td>
+                            <td>{index + 1}
+                            </td>
+                            <td>
+                            {item.image && (
+                              <img
+                                src={item.image} // Assuming item.image contains the URL
+                                alt={`Image for ${item.name}`}
+                                style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
+                              />
+                            )}
+                            </td>
                             <LinkContainer
                               to={`/item-list/item-details/${item.id}`}
                             >
                               <td>{item.name}</td>
                             </LinkContainer>
-                            <td>Nu.{item.unit_price}</td>
+                            <td>Nu.{item.unit_price}
+                            
+                            </td>
+
+                            
+
                           </tr>
                         ))}
                     </tbody>
