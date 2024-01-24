@@ -75,12 +75,12 @@ button.dropdown-toggle {
 }
 
 /* Toggle sidebar */
-.sidebar {
-  /* your existing styles for the sidebar */
-  height: 100vh;
-  line-height: 1rem;
-  transition: margin-left 0.3s;
-}
-.sidebar-hidden {
+
+/* .sidebar-hidden {
   margin-left: -250px; /* Set this value to the width of your sidebar */
-}
+
+/* @media (min-width: 767px) {
+  .navCollapse {
+    display: none;
+  }
+} */

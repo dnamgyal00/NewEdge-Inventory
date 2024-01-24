@@ -2,8 +2,15 @@ import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
 import { FaUser, FaBars } from "react-icons/fa";
 import { MdOutlineWarehouse } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
+// import { useState } from "react";
+// import Sidebar from "./Sidebar.jsx";
 
-const Header = ({ Toggle }) => {
+const Header = () => {
+  // const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  // const toggleSidebar = () => {
+  //   setSidebarVisible(!sidebarVisible);
+  // };
   return (
     <header>
       <Navbar className="navbar navbar-expand bg-dark navbar-dark sticky-top px-md-2 py-0">
@@ -11,14 +18,10 @@ const Header = ({ Toggle }) => {
           fluid
           className="d-flex justify-content-between align-items-center"
         >
-          {" "}
-          <div
-            className="d-flex align-items-center me-4"
-            onClick={Toggle}
-            style={{ cursor: "pointer" }}
-          >
+          {/* {" "}
+          <div className="d-flex align-items-center me-4">
             <FaBars className="text-white" />
-          </div>
+          </div> */}
           <LinkContainer to="/">
             <Navbar.Brand className="d-flex align-items-center">
               <MdOutlineWarehouse className="me-2 mb-1" size={30} />

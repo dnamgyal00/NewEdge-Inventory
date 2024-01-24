@@ -23,9 +23,9 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
         url: ITEM_URL,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
       }),
       invalidatesTags: ["Item"],
     }),

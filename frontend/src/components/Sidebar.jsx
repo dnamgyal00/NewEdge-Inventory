@@ -9,13 +9,9 @@ import {
   AiOutlineAppstore,
 } from "react-icons/ai";
 
-const Sidebar = ({ toggle }) => {
+const Sidebar = () => {
   return (
-    <Nav
-      className={`d-md-flex flex-column w-auto sidebar bg-white${
-        toggle ? " " : "sidebar-hidden"
-      }`}
-    >
+    <Nav className="d-md-flex flex-column sidebar bg-white vh-100 lh-1">
       {/* Dashboard Section */}
       <Nav.Item>
         <LinkContainer to="/home">
