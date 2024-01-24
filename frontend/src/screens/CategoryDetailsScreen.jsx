@@ -58,7 +58,19 @@ const CategoryDetailsScreen = () => {
             <div className="bg-white rounded p-4">
               <Row>
                 <Col>
-                  <Image src={testImage} alt="Test" fluid />
+                {category.image ? (
+            <Image
+              src={category.image} // Assuming category.image contains the URL
+              alt={`Image for ${category.name}`}
+              fluid
+            />
+          ) : (
+            <Image
+              src={testImage} // Replace testImage with your default image URL
+              alt="Test"
+              fluid
+            />
+          )}
                 </Col>
 
                 <Col xs={6}>
