@@ -65,6 +65,15 @@ const AddItemScreen = () => {
   console.log(formData);
   console.log(typeof formData);
 
+  // Modal
+  const [showModal, setShowModal] = useState(false);
+  const handleModelAction = () => {
+    // Implement the logic for the confirmed action here
+    console.log("Confirmed action");
+    // Close the modal after handling the action
+    setShowModal(false);
+  };
+
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <h5 className="mb-0 text-black">Item Add</h5>
