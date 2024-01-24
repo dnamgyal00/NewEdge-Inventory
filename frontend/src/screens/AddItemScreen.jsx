@@ -21,27 +21,28 @@ const AddItemScreen = () => {
     unit_price: 0,
     brand: "",
     description: "",
-    image: null,
   });
+  const [imageData,setImageData]= useState(null);
+  console.log(imageData)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await createItem(formData).unwrap();
+      const result = await createItem({formData}).unwrap();
       console.log(result);
       toast.success("item added successfully");
-      navigate("/item-list");
+      //navigate("/item-list");
 
-      setFormData({
-        name: "",
-        category_id: 0,
-        unit: "",
-        unit_price: 0,
-        brand: "",
-        description: "",
-        image: null,
-      });
+      // setFormData({
+      //   name: "",
+      //   category_id: 0,
+      //   unit: "",
+      //   unit_price: 0,
+      //   brand: "",
+      //   description: "",
+      // });
+
     } catch (error) {
       console.error("Error creating item:", error);
     }
@@ -55,11 +56,14 @@ const AddItemScreen = () => {
         name === "category_id" || name === "unit_price"
           ? parseInt(value, 10)
           : name === "image"
-            ? files[0] // Set the selected file for the image
+            ? files[0] 
             : value,
     }));
   };
-  console.log(formData)
+  const handleImageChange = (e) => {
+    const file =e.target.files[0]
+    setImageData(file)
+  };
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -182,7 +186,7 @@ const AddItemScreen = () => {
             <Form.Control
               type="file"
               name="image" // Make sure the name matches the property in formData
-              onChange={handleInputChange}
+              onChange={handleImageChange}
               className="py-1"
             />
           </Form.Group>
