@@ -16,12 +16,13 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
 import { useState } from "react";
+import React from "react";
 
 const ItemDetailsScreen = () => {
   const { name, id } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const itemId = searchParams.get('id');
+  const itemId = searchParams.get("id");
 
   //item Pagenation
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,20 +58,19 @@ const ItemDetailsScreen = () => {
         <div>
           <Row>
             <Col md={4}>
-            {item.image ? (
-            <Image
-              src={item.image} // Assuming item.image contains the URL
-              alt={`Image for ${item.name}`}
-              fluid
-            />
-          ) : (
-            <Image
-              src={testImage} // Replace testImage with your default image URL
-              alt="Test"
-              fluid
-            />
-          )}
-
+              {item.image ? (
+                <Image
+                  src={item.image} // Assuming item.image contains the URL
+                  alt={`Image for ${item.name}`}
+                  fluid
+                />
+              ) : (
+                <Image
+                  src={testImage} // Replace testImage with your default image URL
+                  alt="Test"
+                  fluid
+                />
+              )}
             </Col>
             <Col md={8}>
               <Card className="p-3 border-0 shadow-none">
@@ -166,8 +166,14 @@ const ItemDetailsScreen = () => {
                 <nav aria-label="Page navigation example mb-5">
                   <ul className="pagination justify-content-center">
                     <Pagination>
-                      <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                      <Pagination.Next onClick={handleNextPage} disabled={item.item_instance.length < 10} />
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={currentPage == 1}
+                      />
+                      <Pagination.Next
+                        onClick={handleNextPage}
+                        disabled={item.item_instance.length < 10}
+                      />
                     </Pagination>
                   </ul>
                 </nav>
