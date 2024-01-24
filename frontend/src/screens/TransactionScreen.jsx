@@ -2,7 +2,14 @@ import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
 import { useGetTransactionsExcelDataQuery } from "../slices/transactionsApiSlice";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
-import { FaPlus, FaMinus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
+import {
+  FaPlus,
+  FaMinus,
+  FaSearch,
+  FaTrashAlt,
+  FaTimes,
+  FaFilePdf,
+} from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 // import { MdOutlineComputer } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
@@ -10,16 +17,16 @@ import { BsEye } from "react-icons/bs";
 import { useState } from "react";
 import { Row, Col, Form, Button, Table, Collapse } from "react-bootstrap";
 import DatePicker from "react-datepicker";
-import { parseISO, format } from 'date-fns';
-import Pagination from 'react-bootstrap/Pagination';
+import { parseISO, format } from "date-fns";
+import Pagination from "react-bootstrap/Pagination";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
-import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { DownloadTableExcel } from "react-export-table-to-excel";
 import { useRef } from "react";
 import * as XLSX from "xlsx";
-
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 const TransactionScreen = () => {
-
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -68,13 +75,12 @@ const TransactionScreen = () => {
   // Function to update a specific filter parameter
   const updateFilter = (key, value) => {
     if (key === "startDate" || key === "endDate") {
-      value = format(value, 'yyyy-MM-dd');
+      value = format(value, "yyyy-MM-dd");
     }
     setFilters({
       ...filters,
       [key]: value,
     });
-
   };
 
   //for filter display
@@ -91,7 +97,7 @@ const TransactionScreen = () => {
       selectedCategory: "",
       itemName: "",
       transactionType: "",
-    })
+    });
   };
 
   const handleDownloadExcel = () => {
@@ -112,11 +118,93 @@ const TransactionScreen = () => {
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Transactions");
       XLSX.writeFile(wb, "Transactions.xlsx");
-
     } catch (error) {
       console.error("Error downloading Excel:", error);
     }
   };
+
+  const handleDownloadPDF = () => {
+    try {
+      const pdf = new jsPDF();
+      pdf.autoTable({
+        head: [
+          [
+            "Item Name",
+            "Category",
+            "Stock In/Out",
+            "Qty",
+            "Unit Price",
+            "Total Price",
+            "Date",
+          ],
+        ],
+        body: paginatedTransactions.map((transaction) => [
+          transaction.item.name,
+          transaction.item.category.name,
+          transaction.transaction_type,
+          transaction.qty,
+          `Nu.${transaction.item.unit_price}`,
+          `Nu.${transaction.total_price}`,
+          format(transaction.created_at, "yyyy-MM-dd"),
+        ]),
+      });
+
+      pdf.save("Transactions.pdf");
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+    }
+  };
+
+  // const fetchTransactionData = async (page) => {
+  //   try {
+  //     const { data } = await useGetTransactionsQuery({
+  //       filters,
+  //       page,
+  //     });
+
+  //     return data?.data || [];
+  //   } catch (error) {
+  //     console.error("Error fetching transaction data:", error);
+  //     return [];
+  //   }
+  // };
+
+  // const handleDownloadPDF = async () => {
+  //   try {
+  //     const allPdfData = [];
+
+  //     // Fetch data from all pages
+  //     let nextPage = 1;
+  //     while (true) {
+  //       const paginatedTransactions = await fetchTransactionData(nextPage);
+
+  //       if (!paginatedTransactions || paginatedTransactions.length === 0) {
+  //         // No more pages to fetch
+  //         break;
+  //       }
+
+  //       // Add data from the current page to the overall array
+  //       allPdfData.push(
+  //         ...paginatedTransactions.map((transaction) => ({
+  //           item_name: transaction.item.name,
+  //           category: transaction.item.category.name,
+  //           transaction_type: transaction.transaction_type,
+  //           qty: transaction.qty,
+  //           unit_price: `Nu.${transaction.item.unit_price}`,
+  //           total_price: `Nu.${transaction.total_price}`,
+  //           date: format(transaction.created_at, "yyyy-MM-dd"),
+  //         }))
+  //       );
+
+  //       nextPage++;
+  //     }
+
+  //     // Generate PDF with all data
+  //     downloadFile(allPdfData, "pdf", "Transactions");
+  //   } catch (error) {
+  //     console.error("Error downloading PDF:", error);
+  //   }
+  // };
 
   return (
     <div className=" col-sm-12 col-xl-6 w-100">
@@ -144,18 +232,17 @@ const TransactionScreen = () => {
               Stock Out
             </Button>
           </LinkContainer>
-
         </div>
       </div>
 
       <div className="bg-white rounded p-4 d-flex flex-column ">
         <div className="input-group d-flex mb-3 justify-content-between align-items-center">
-
           <div className="d-flex">
             <div className="input-group-prepend me-1">
               <span
-                className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
-                  }`}
+                className={`input-group-text  ${
+                  showFilters ? "bg-primary" : "bg-white"
+                }`}
                 onClick={toggleFilters}
                 aria-controls="example-collapse-text"
                 aria-expanded={open}
@@ -186,13 +273,20 @@ const TransactionScreen = () => {
 
           <div className="d-flex flex-row">
             {/* Add onClick handler for Excel download */}
-            <span className="input-group-text bg-white border-0" >
-            </span>
-            <button onClick={handleDownloadExcel} className="me-2">
-              <PiMicrosoftExcelLogoFill size={30} />
+            {/* <span className="input-group-text bg-white border-0"></span> */}
+            <button
+              onClick={handleDownloadPDF}
+              className="mb-1 bg-transparent text-primary border-0"
+            >
+              <FaFilePdf size={21} />
+            </button>
+            <button
+              onClick={handleDownloadExcel}
+              className="bg-transparent text-primary border-0 p-0"
+            >
+              <PiMicrosoftExcelLogoFill size={27} />
             </button>
           </div>
-
         </div>
 
         {/* Dropdown Filters */}
@@ -208,7 +302,9 @@ const TransactionScreen = () => {
               >
                 <Form.Label>Start Date</Form.Label>
                 <DatePicker
-                  selected={filters.startDate ? new Date(filters.startDate) : null}
+                  selected={
+                    filters.startDate ? new Date(filters.startDate) : null
+                  }
                   onChange={(date) => updateFilter("startDate", date)}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Select Date"
@@ -233,7 +329,6 @@ const TransactionScreen = () => {
                 />
               </Form.Group>
 
-
               <Form.Group
                 as={Col}
                 controlId="formGridCategory"
@@ -244,18 +339,25 @@ const TransactionScreen = () => {
                 <Form.Label>Category</Form.Label>
                 <Form.Select
                   className="py-1 shadow-none"
-                  onChange={(e) => updateFilter("selectedCategory", e.target.value)
+                  onChange={(e) =>
+                    updateFilter("selectedCategory", e.target.value)
                   }
                 >
                   <option defaultValue value="">
                     All
                   </option>
-                  {categories && categories.map((category) => (
-                    <option key={category.id} value={category.name} id={category.id}>{category.name}</option>
-                  ))}
+                  {categories &&
+                    categories.map((category) => (
+                      <option
+                        key={category.id}
+                        value={category.name}
+                        id={category.id}
+                      >
+                        {category.name}
+                      </option>
+                    ))}
                 </Form.Select>
               </Form.Group>
-
 
               <Form.Group
                 as={Col}
@@ -265,21 +367,35 @@ const TransactionScreen = () => {
                 className="mb-2"
               >
                 <Form.Label>Item</Form.Label>
-                <Form.Select className="py-1 shadow-none" onChange={(e) => updateFilter("itemName", e.target.value)}>
-                  <option defaultValue value="" >
+                <Form.Select
+                  className="py-1 shadow-none"
+                  onChange={(e) => updateFilter("itemName", e.target.value)}
+                >
+                  <option defaultValue value="">
                     All
                   </option>
-                  {items && items.map((item) => (
-                    <option key={item.id} value={item.name}>{item.name}</option>
-                  ))}
+                  {items &&
+                    items.map((item) => (
+                      <option key={item.id} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))}
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
+              <Form.Group
+                as={Col}
+                controlId="formGridType"
+                md={2}
+                xs={6}
+                className="mb-2"
+              >
                 <Form.Label>Type</Form.Label>
                 <Form.Select
                   className="py-1 shadow-none"
-                  onChange={(e) => updateFilter("transactionType", e.target.value)}
+                  onChange={(e) =>
+                    updateFilter("transactionType", e.target.value)
+                  }
                 >
                   <option defaultValue value="">
                     All
@@ -288,13 +404,12 @@ const TransactionScreen = () => {
                   <option value="stockOut">Stock Out</option>
                 </Form.Select>
               </Form.Group>
-
             </Row>
           </div>
         </Collapse>
 
         <div>
-          <Table responsive="sm" className="position-relative" >
+          <Table responsive="sm" className="position-relative">
             <thead className="bg-light">
               <tr>
                 <th className="text-black border-0">Item Name</th>
@@ -319,12 +434,12 @@ const TransactionScreen = () => {
                     <td>Nu.{transaction.item.unit_price}</td>
                     <td>Nu.{transaction.total_price}</td>
 
-                    <td>{format(transaction.created_at, 'yyyy-MM-dd')}</td>
-                    <td>
-                      {/* <BsEye /> 
+                    <td>{format(transaction.created_at, "yyyy-MM-dd")}</td>
+                    {/* <td>
+                      <BsEye /> 
                       <FiEdit3 /> 
-                      <FaTrashAlt /> */}
-                    </td>
+                      <FaTrashAlt />
+                    </td> */}
                   </tr>
                 ))}
             </tbody>
@@ -335,8 +450,14 @@ const TransactionScreen = () => {
             <nav aria-label="Page navigation example mb-5">
               <ul className="pagination justify-content-center">
                 <Pagination>
-                  <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                  <Pagination.Next onClick={handleNextPage} disabled={paginatedTransactions.length < 10} />
+                  <Pagination.Prev
+                    onClick={handlePrevPage}
+                    disabled={currentPage == 1}
+                  />
+                  <Pagination.Next
+                    onClick={handleNextPage}
+                    disabled={paginatedTransactions.length < 10}
+                  />
                 </Pagination>
               </ul>
             </nav>

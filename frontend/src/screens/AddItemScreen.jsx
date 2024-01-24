@@ -7,11 +7,14 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Modals from "../components/Modals.jsx";
 
 const AddItemScreen = () => {
   //api calls
-  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =useGetCategoriesQuery();
-  const [createItem, { isLoading: isItemLoading, isError, error }] = useCreateItemMutation();
+  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
+    useGetCategoriesQuery();
+  const [createItem, { isLoading: isItemLoading, isError, error }] =
+    useCreateItemMutation();
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -21,7 +24,7 @@ const AddItemScreen = () => {
     unit_price: 0,
     brand: "",
     description: "",
-    image:null,
+    image: null,
   });
 
   const handleSubmit = async (e) => {
@@ -65,19 +68,28 @@ const AddItemScreen = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value ,files} = e.target;
+    const { name, value, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-      name === "category_id" || name === "unit_price"
-      ? parseInt(value, 10)
-      : name === "image"
-      ? files[0] // Set the selected file for the image
-      : value,
+        name === "category_id" || name === "unit_price"
+          ? parseInt(value, 10)
+          : name === "image"
+          ? files[0] // Set the selected file for the image
+          : value,
     }));
   };
-  console.log(formData)
-  console.log(typeof(formData))
+  console.log(formData);
+  console.log(typeof formData);
+
+  // Modal
+  const [showModal, setShowModal] = useState(false);
+  const handleModelAction = () => {
+    // Implement the logic for the confirmed action here
+    console.log("Confirmed action");
+    // Close the modal after handling the action
+    setShowModal(false);
+  };
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -198,17 +210,18 @@ const AddItemScreen = () => {
           >
             <Form.Label>Item Image</Form.Label>
             <Form.Control
-            type="file"
-            name="image" // Make sure the name matches the property in formData
-            onChange={handleInputChange}
-            className="py-1"
-          />
+              type="file"
+              name="image" // Make sure the name matches the property in formData
+              onChange={handleInputChange}
+              className="py-1"
+            />
           </Form.Group>
           <Button
             variant="primary"
             type="submit"
             className="py-1"
             disabled={isItemLoading}
+            onClick={() => setShowModal(true)}
           >
             Add
           </Button>{" "}
@@ -220,6 +233,14 @@ const AddItemScreen = () => {
           >
             Cancel
           </Button>
+          {/* ConfirmModal component */}
+          <Modals
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            onConfirm={handleModelAction}
+            title="Add Confirm"
+            body="Are you sure you want to perform this action?"
+          />
         </Form>
       </div>
     </div>
@@ -227,12 +248,6 @@ const AddItemScreen = () => {
 };
 
 export default AddItemScreen;
-
-
-
-
-
-
 
 // const AddItemScreen = () => {
 //   const { data: { data: categories } = {}, isLoading: isCategoryLoading } =

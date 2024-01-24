@@ -16,6 +16,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
 import { useState } from "react";
+import React from "react";
 
 const ItemDetailsScreen = () => {
   const { id: itemId } = useParams();
@@ -35,9 +36,9 @@ const ItemDetailsScreen = () => {
     isLoading,
     isError,
     error,
-  } = useGetItemDetailsQuery({itemId,currentPage});
+  } = useGetItemDetailsQuery({ itemId, currentPage });
   console.log(item);
-  
+
   return (
     <>
       <div className="mb-3">
@@ -91,11 +92,11 @@ const ItemDetailsScreen = () => {
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Quantity in Stock:</Col>
-                        <Col md={5}>{item.qty_on_hand}</Col>
-                      </Row>
-                    </ListGroup.Item>
+                    <Row>
+                      <Col md={3}>Quantity in Stock:</Col>
+                      <Col md={5}>{item.qty_on_hand}</Col>
+                    </Row>
+                  </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Col>
@@ -145,17 +146,23 @@ const ItemDetailsScreen = () => {
                   </tbody>
                 </Table>
               </div>
-                  {/* Pagination */}
-        {item.item_instance && item.item_instance.length > 0 && (
-          <nav aria-label="Page navigation example mb-5">
-            <ul className="pagination justify-content-center">
-              <Pagination>
-                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                <Pagination.Next onClick={handleNextPage} disabled={item.item_instance.length < 10} />
-              </Pagination>
-            </ul>
-          </nav>
-        )}
+              {/* Pagination */}
+              {item.item_instance && item.item_instance.length > 0 && (
+                <nav aria-label="Page navigation example mb-5">
+                  <ul className="pagination justify-content-center">
+                    <Pagination>
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={currentPage == 1}
+                      />
+                      <Pagination.Next
+                        onClick={handleNextPage}
+                        disabled={item.item_instance.length < 10}
+                      />
+                    </Pagination>
+                  </ul>
+                </nav>
+              )}
             </div>
           </div>
         </div>
