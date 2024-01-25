@@ -239,6 +239,7 @@ const TransactionScreen = () => {
         <div className="input-group d-flex mb-3 justify-content-between align-items-center">
           <div className="d-flex">
             <div className="input-group-prepend me-1">
+              {/* Filter Action*/}
               <span
                 className={`input-group-text  ${
                   showFilters ? "bg-primary" : "bg-white"
@@ -271,21 +272,9 @@ const TransactionScreen = () => {
             </div>
           </div>
 
+            {/* Print Options */}
           <div className="d-flex flex-row">
-            {/* Add onClick handler for Excel download */}
-            {/* <span className="input-group-text bg-white border-0"></span> */}
-            <button
-              onClick={handleDownloadPDF}
-              className="mb-1 bg-transparent text-primary border-0"
-            >
-              <FaFilePdf size={21} />
-            </button>
-            <button
-              onClick={handleDownloadExcel}
-              className="bg-transparent text-primary border-0 p-0"
-            >
-              <PiMicrosoftExcelLogoFill size={27} />
-            </button>
+            <PiMicrosoftExcelLogoFill size={25} onClick={handleDownloadExcel} />
           </div>
         </div>
 

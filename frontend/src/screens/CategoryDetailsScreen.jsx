@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -19,7 +19,10 @@ import { useState } from "react";
 import { Pagination } from "react-bootstrap";
 
 const CategoryDetailsScreen = () => {
-  const { id: categoryId } = useParams();
+  const { name, id } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const categoryId = searchParams.get('id');
 
   //item Pagenation
   const [currentPage, setCurrentPage] = useState(1);
@@ -107,7 +110,7 @@ const CategoryDetailsScreen = () => {
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h6 className="mb-0">Category Items</h6>
                 <div className="d-flex justify-content-between align-items-center">
-                  <LinkContainer to="/admin/add-item">
+                  <LinkContainer to={{ pathname: `/home/category/${name}/add-item`, search: `?id=${category.id}` }}>
                     <Button variant="primary" size="sm" className="px-4 py-1">
                       {" "}
                       <FaPlus className="me-2 mb-1" />

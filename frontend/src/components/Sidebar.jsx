@@ -46,7 +46,7 @@ const Sidebar = () => {
           </Nav.Item>
 
           <Nav.Item>
-            <LinkContainer to="/category">
+            <LinkContainer to="/home/category">
               <Nav.Link className="ml-3 ">Category List</Nav.Link>
             </LinkContainer>
           </Nav.Item>

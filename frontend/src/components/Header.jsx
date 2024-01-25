@@ -22,7 +22,7 @@ const Header = () => {
           <div className="d-flex align-items-center me-4">
             <FaBars className="text-white" />
           </div> */}
-          <LinkContainer to="/">
+          <LinkContainer to="/home">
             <Navbar.Brand className="d-flex align-items-center">
               <MdOutlineWarehouse className="me-2 mb-1" size={30} />
               <div className="d-none d-md-block">Inventory</div>

@@ -14,12 +14,14 @@ export default function Breadcrumbs() {
       // Check if it's the last crumb
       const isLastCrumb = index === array.length - 1;
 
+      const decodedCrumb = decodeURIComponent(crumb);
+
       return (
-        <div className="crumb" key={crumb}>
+        <div className="crumb" key={decodedCrumb}>
           {isLastCrumb ? (
-            <span>{crumb}</span>
+            <span>{decodedCrumb}</span>
           ) : (
-            <Link to={currentLink}>{crumb}</Link>
+            <Link to={currentLink}>{decodedCrumb}</Link>
           )}
         </div>
       );

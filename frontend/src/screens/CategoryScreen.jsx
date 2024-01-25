@@ -111,7 +111,7 @@ const CategoryScreen = () => {
         <Table responsive="sm">
           <thead className="bg-light">
             <tr>
-            <th className="text-black border-0"></th>
+            {/* <th className="text-black border-0"></th> */}
               <th className="text-black border-0">Category Name</th>
               <th className="text-black border-0">No of Items</th>
               <th className="text-black border-0">Description</th>
@@ -123,7 +123,7 @@ const CategoryScreen = () => {
             {categories &&
               categories.map((category) => (
                 <tr key={category.id}>
-                  <td>
+                  {/* <td>
                   {category.image && (
                               <img
                                 src={category.image} // Assuming category.image contains the URL
@@ -132,7 +132,7 @@ const CategoryScreen = () => {
                               />
                             )}
                   </td>
-                  <LinkContainer to={`/category/category-details/ ${category.id}`}>
+                  <LinkContainer to={{ pathname: `/home/category/${category.name}`, search: `?id=${category.id}` }}>
                     <td>{category.name}</td>
                   </LinkContainer>
 

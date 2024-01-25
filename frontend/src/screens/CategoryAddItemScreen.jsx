@@ -1,98 +1,76 @@
-import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button } from "react-bootstrap";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
 import { useCreateItemMutation } from "../slices/itemsApiSlice";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import Modals from "../components/Modals.jsx";
+import { useState } from "react";
 
-const AddItemScreen = () => {
-  //api calls
-  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
-    useGetCategoriesQuery();
+function CategoryAddItemScreen() {
   const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
+
+  // const { name } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const categoryId = searchParams.get("id");
+
+  const { data: { data: category } = {}, isLoading } =
+    useGetCategoryDetailsQuery({ categoryId, currentPage: 1 });
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    category_id: 0,
+    category_id: categoryId,
     unit: "",
     unit_price: 0,
     brand: "",
     description: "",
-    image:null
   });
-  const [imageData,setImageData]= useState(null);
+  const [imageData, setImageData] = useState(null);
   
+  // console.log(imageData)
 
-  // form validation
-  const [validated, setValidated] = useState(false);
   const handleSubmit = async (e) => {
+
     e.preventDefault();
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setValidated(true);
 
     try {
-      const formDataObj = new FormData();
-      formDataObj.append('name',formData.name);
-      formDataObj.append('category_id',formData.category_id);
-      formDataObj.append('unit',formData.unit);
-      formDataObj.append('unit_price',formData.unit_price);
-      formDataObj.append('brand',formData.brand);
-      formDataObj.append('description',formData.description);
-      formDataObj.append('image',formData.image)
-      const result = await createItem(formDataObj).unwrap();
+      const result = await createItem(formData).unwrap();
       console.log(result);
-      toast.success("item added successfully");
-      //navigate("/item-list");
+      toast.success("Item added successfully");
+      // navigate("/home/item");
 
       setFormData({
         name: "",
-        category_id: 0,
+        category_id: categoryId,
         unit: "",
         unit_price: 0,
         brand: "",
         description: "",
-        image:null,
       });
-
     } catch (error) {
       console.error("Error creating item:", error);
     }
   };
 
+ 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    setImageData(file);
+  };
+
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]:
-        name === "category_id" || name === "unit_price"
-          ? parseInt(value, 10)
-          : name === "image"
-          ? files[0] // Set the selected file for the image
-          : value,
+      [name]: name === "unit_price" ? parseInt(value, 10) : value,
     }));
   };
-
-  // console.log(imageData)
   console.log(formData);
-
-  // Modal
-  const [showModal, setShowModal] = useState(false);
-  const handleModelAction = () => {
-    // Implement the logic for the confirmed action here
-    console.log("Confirmed action");
-    // Close the modal after handling the action
-    setShowModal(false);
-  };
+  console.log(ImageData);
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -109,13 +87,12 @@ const AddItemScreen = () => {
         <></>
       )}
       <div className="bg-white rounded p-4 ">
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Row className="mb-3 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
                 <Form.Label>Item Name</Form.Label>
                 <Form.Control
-                  required
                   type="text"
                   name="name"
                   value={formData.name}
@@ -127,26 +104,12 @@ const AddItemScreen = () => {
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridChooseCategory">
                 <Form.Label>Category</Form.Label>
-                <Form.Select
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleInputChange}
+                <Form.Control
+                  type="text"
+                  readOnly
+                  value={category?.name}
                   className="py-1"
-                  required
-                >
-                  <option value="" disabled>
-                    Select a category
-                  </option>
-                  {categories &&
-                    categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  Please choose a category.
-                </Form.Control.Feedback>
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -163,11 +126,7 @@ const AddItemScreen = () => {
                 value={formData.unit}
                 onChange={handleInputChange}
                 className="py-1"
-                required
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a unit.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group
@@ -182,11 +141,7 @@ const AddItemScreen = () => {
                 value={formData.unit_price}
                 onChange={handleInputChange}
                 className="py-1"
-                required
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a price.
-              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row>
@@ -202,11 +157,7 @@ const AddItemScreen = () => {
                   value={formData.brand}
                   onChange={handleInputChange}
                   className="py-1"
-                  required
                 />
-                <Form.Control.Feedback type="invalid">
-                  Please provide a brand.
-                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
@@ -222,11 +173,7 @@ const AddItemScreen = () => {
               value={formData.description}
               onChange={handleInputChange}
               className="py-1"
-              required
             />
-            <Form.Control.Feedback type="invalid">
-              Please provide a description.
-            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group
             className="mb-3 text-black col-md-10"
@@ -235,25 +182,16 @@ const AddItemScreen = () => {
             <Form.Label>Item Image</Form.Label>
             <Form.Control
               type="file"
-              name="image" // Make sure the name matches the property in formData
-              onChange={handleInputChange}
+              name="image"
+              onChange={handleFileUpload}
               className="py-1"
-              required
             />
-            <Form.Control.Feedback type="invalid">
-              Please upload an image.
-            </Form.Control.Feedback>
           </Form.Group>
           <Button
             variant="primary"
             type="submit"
             className="py-1"
             disabled={isItemLoading}
-            onClick={() => {
-              if (validated) {
-                setShowModal(true);
-              }
-            }}
           >
             Add
           </Button>{" "}
@@ -265,19 +203,10 @@ const AddItemScreen = () => {
           >
             Cancel
           </Button>
-          {/* ConfirmModal component */}
-          <Modals
-            show={showModal}
-            onHide={() => setShowModal(false)}
-            onConfirm={handleModelAction}
-            title="Add Confirm"
-            body="Are you sure you want to perform this action?"
-          />
         </Form>
       </div>
     </div>
   );
-};
+}
 
-export default AddItemScreen;
-
+export default CategoryAddItemScreen;

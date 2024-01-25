@@ -9,10 +9,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "./components/Breadcrumbs";
 
 const App = () => {
-  // const [toggle, setToggle] = useState(false);
-  // const Toggle = () => {
-  //   setToggle(!toggle);
-  // };
+  const [toggle, setToggle] = useState(false);
+  const Toggle = () => {
+    setToggle(!toggle);
+  };
   return (
     <div className="app-container bg-light">
       <Header />
@@ -20,20 +20,14 @@ const App = () => {
       <Container fluid>
         <Row className="wh-100">
           {/* Sidebar */}
-          <Col
-            md={2}
-            className="d-flex bg-white p-md-1 justify-content-right"
-            //   toggle
-            //     ? "d-none bg-white p-md-1 d-md-flex w-auto"
-            //     : "d-flex bg-white p-md-1 justify-content-right w-auto"
-            // }
-          >
+          <Col md={2} sm={3} className="d-flex bg-white p-md-1">
             <Sidebar />
           </Col>
 
           {/* Main Content */}
           <Col
             md={10}
+            sm={9}
             className={`main-content-container d-flex flex-column justify-content-between`}
           >
             <div>
