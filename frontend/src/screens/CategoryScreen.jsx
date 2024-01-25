@@ -131,7 +131,7 @@ const CategoryScreen = () => {
                                 style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
                               />
                             )}
-                  </td>
+                  </td> */}
                   <LinkContainer to={{ pathname: `/home/category/${category.name}`, search: `?id=${category.id}` }}>
                     <td>{category.name}</td>
                   </LinkContainer>
