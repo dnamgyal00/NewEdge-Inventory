@@ -19,11 +19,13 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     createItem: builder.mutation({
-      query: (data ) => ({
+      query: (formDataObj) => ({
         url: ITEM_URL,
         method: "POST",
-        body: data,
-
+        body: formDataObj,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }),
       invalidatesTags: ["Item"],
     }),

@@ -55,7 +55,7 @@ const Charts = () => {
                     <thead className="bg-light">
                       <tr>
                         <th className="text-black border-0">No </th>
-                        <th className="text-black border-0">Image</th>
+                        {/* <th className="text-black border-0">Image</th> */}
                         <th className="text-black border-0">Item</th>
                         <th className="text-black border-0">Price</th>
                         
@@ -69,7 +69,7 @@ const Charts = () => {
                           <tr key={item.id}>
                             <td>{index + 1}
                             </td>
-                            <td>
+                            {/* <td>
                             {item.image && (
                               <img
                                 src={item.image} // Assuming item.image contains the URL
@@ -77,7 +77,7 @@ const Charts = () => {
                                 style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
                               />
                             )}
-                            </td>
+                            </td> */}
                             <LinkContainer
                               to={`/item-list/item-details/${item.id}`}
                             >

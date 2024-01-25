@@ -138,7 +138,7 @@ const ItemScreen = () => {
           <Table responsive="sm">
             <thead className="bg-light">
               <tr>
-              <th className="text-black border-0">Image</th>
+              {/* <th className="text-black border-0">Image</th> */}
                 <th className="text-black border-0">Name</th>
                 <th className="text-black border-0">Category</th>
                 <th className="text-black border-0">Brand Name</th>
@@ -152,7 +152,7 @@ const ItemScreen = () => {
               {items &&
                 items.map((item) => (
                   <tr key={item.id}>
-                      <td>
+                      {/* <td>
                             {item.image && (
                               <img
                                 src={item.image} // Assuming item.image contains the URL
@@ -160,7 +160,7 @@ const ItemScreen = () => {
                                 style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
                               />
                             )}
-                            </td>
+                            </td> */}
                     <LinkContainer to={{ pathname: `/home/item/${item.name}`, search: `?id=${item.id}` }}>
                       <td>{item.name}</td>
                     </LinkContainer>

@@ -11,7 +11,7 @@ import {
 
 const Sidebar = () => {
   return (
-    <Nav className="d-md-flex flex-column sidebar bg-white vh-100 lh-1">
+    <Nav className="d-flex flex-column sidebar bg-white vh-100 lh-1">
       {/* Dashboard Section */}
       <Nav.Item>
         <LinkContainer to="/home">

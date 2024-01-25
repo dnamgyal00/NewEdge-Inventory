@@ -7,11 +7,14 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Modals from "../components/Modals.jsx";
 
 const AddItemScreen = () => {
   //api calls
-  const { data: { data: categories } = {}, isLoading: isCategoryLoading } = useGetCategoriesQuery();
-  const [createItem, { isLoading: isItemLoading, isError, error }] = useCreateItemMutation();
+  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
+    useGetCategoriesQuery();
+  const [createItem, { isLoading: isItemLoading, isError, error }] =
+    useCreateItemMutation();
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -21,17 +24,27 @@ const AddItemScreen = () => {
     unit_price: 0,
     brand: "",
     description: "",
-    image: null,
+    image:null
   });
+  const [imageData,setImageData]= useState(null);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await createItem(formData).unwrap();
+      const formDataObj = new FormData();
+      formDataObj.append('name',formData.name);
+      formDataObj.append('category_id',formData.category_id);
+      formDataObj.append('unit',formData.unit);
+      formDataObj.append('unit_price',formData.unit_price);
+      formDataObj.append('brand',formData.brand);
+      formDataObj.append('description',formData.description);
+      formDataObj.append('image',formData.image)
+      const result = await createItem(formDataObj).unwrap();
       console.log(result);
       toast.success("item added successfully");
-      navigate("/item-list");
+      //navigate("/item-list");
 
       setFormData({
         name: "",
@@ -40,8 +53,9 @@ const AddItemScreen = () => {
         unit_price: 0,
         brand: "",
         description: "",
-        image: null,
+        image:null,
       });
+
     } catch (error) {
       console.error("Error creating item:", error);
     }
@@ -55,11 +69,22 @@ const AddItemScreen = () => {
         name === "category_id" || name === "unit_price"
           ? parseInt(value, 10)
           : name === "image"
-            ? files[0] // Set the selected file for the image
-            : value,
+          ? files[0] // Set the selected file for the image
+          : value,
     }));
   };
-  console.log(formData)
+
+  // console.log(imageData)
+  console.log(formData);
+
+  // Modal
+  const [showModal, setShowModal] = useState(false);
+  const handleModelAction = () => {
+    // Implement the logic for the confirmed action here
+    console.log("Confirmed action");
+    // Close the modal after handling the action
+    setShowModal(false);
+  };
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -191,6 +216,7 @@ const AddItemScreen = () => {
             type="submit"
             className="py-1"
             disabled={isItemLoading}
+            onClick={() => setShowModal(true)}
           >
             Add
           </Button>{" "}
@@ -202,6 +228,14 @@ const AddItemScreen = () => {
           >
             Cancel
           </Button>
+          {/* ConfirmModal component */}
+          <Modals
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            onConfirm={handleModelAction}
+            title="Add Confirm"
+            body="Are you sure you want to perform this action?"
+          />
         </Form>
       </div>
     </div>
@@ -209,3 +243,4 @@ const AddItemScreen = () => {
 };
 
 export default AddItemScreen;
+
