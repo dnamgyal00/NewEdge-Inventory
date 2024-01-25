@@ -9,9 +9,18 @@ const AddCategoryScreen = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   console.log(name, description);
+  const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const form = e.currentTarget;
+    setValidated(true);
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      return;
+    }
+
     try {
       const result = await createCategory({
         name,
@@ -33,7 +42,11 @@ const AddCategoryScreen = () => {
       <h5 className="mb-0 text-black">Category Add</h5>
       <p className="mb-3">Create a new category</p>
       <div className="bg-white rounded p-4">
-        <form onSubmit={handleSubmit}>
+        <form
+          noValidate
+          className={`needs-validation ${validated ? "was-validated" : ""}`}
+          onSubmit={handleSubmit}
+        >
           <div className="mb-3 col-md-3">
             <label htmlFor="exampleInputText" className="form-label text-black">
               Category Name
@@ -45,7 +58,9 @@ const AddCategoryScreen = () => {
               aria-describedby="emailHelp"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
+            <div class="invalid-feedback">Please enter a category name.</div>
           </div>
           <div className="mb-3 col-sm-6 col-md-10">
             <label htmlFor="floatingTextarea" className="form-label text-black">
@@ -57,7 +72,9 @@ const AddCategoryScreen = () => {
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              required
             ></textarea>
+            <div class="invalid-feedback">Please provide a description.</div>
           </div>
           <button
             type="submit"

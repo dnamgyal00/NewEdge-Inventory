@@ -27,8 +27,16 @@ const AddItemScreen = () => {
     image: null,
   });
 
+  // form validation
+  const [validated, setValidated] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
 
     try {
       const result = await createItem(formData).unwrap();
@@ -89,12 +97,13 @@ const AddItemScreen = () => {
         <></>
       )}
       <div className="bg-white rounded p-4 ">
-        <Form onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row className="mb-3 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
                 <Form.Label>Item Name</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   name="name"
                   value={formData.name}
@@ -111,6 +120,7 @@ const AddItemScreen = () => {
                   value={formData.category_id}
                   onChange={handleInputChange}
                   className="py-1"
+                  required
                 >
                   <option value="" disabled>
                     Select a category
@@ -122,6 +132,9 @@ const AddItemScreen = () => {
                       </option>
                     ))}
                 </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Please choose a category.
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
@@ -138,7 +151,11 @@ const AddItemScreen = () => {
                 value={formData.unit}
                 onChange={handleInputChange}
                 className="py-1"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a unit.
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group
@@ -153,7 +170,11 @@ const AddItemScreen = () => {
                 value={formData.unit_price}
                 onChange={handleInputChange}
                 className="py-1"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a price.
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row>
@@ -169,7 +190,11 @@ const AddItemScreen = () => {
                   value={formData.brand}
                   onChange={handleInputChange}
                   className="py-1"
+                  required
                 />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a brand.
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
@@ -185,7 +210,11 @@ const AddItemScreen = () => {
               value={formData.description}
               onChange={handleInputChange}
               className="py-1"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              Please provide a description.
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group
             className="mb-3 text-black col-md-10"
@@ -197,14 +226,22 @@ const AddItemScreen = () => {
               name="image" // Make sure the name matches the property in formData
               onChange={handleInputChange}
               className="py-1"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              Please upload an image.
+            </Form.Control.Feedback>
           </Form.Group>
           <Button
             variant="primary"
             type="submit"
             className="py-1"
             disabled={isItemLoading}
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              if (validated) {
+                setShowModal(true);
+              }
+            }}
           >
             Add
           </Button>{" "}
