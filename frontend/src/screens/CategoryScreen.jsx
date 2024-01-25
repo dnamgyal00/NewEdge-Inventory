@@ -132,7 +132,7 @@ const CategoryScreen = () => {
                               />
                             )}
                   </td>
-                  <LinkContainer to={`/category/category-details/ ${category.id}`}>
+                  <LinkContainer to={{ pathname: `/home/category/${category.name}`, search: `?id=${category.id}` }}>
                     <td>{category.name}</td>
                   </LinkContainer>
 

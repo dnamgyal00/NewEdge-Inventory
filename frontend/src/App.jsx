@@ -20,23 +20,15 @@ const App = () => {
       <Container fluid>
         <Row className="wh-100">
           {/* Sidebar */}
-          <Col
-            md={2}
-            // className={
-            //   toggle
-            //     ? "d-none bg-white p-md-1 d-md-flex w-auto"
-            //     : "d-flex bg-white p-md-1 justify-content-right w-auto"
-            // }
-          >
+          <Col md={2} sm={3} className="d-flex bg-white p-md-1">
             <Sidebar />
           </Col>
 
           {/* Main Content */}
           <Col
             md={10}
-            className={`main-content-container d-flex flex-column justify-content-between ${
-              toggle ? "ml-0" : "ml-md-2 "
-            }`}
+            sm={9}
+            className={`main-content-container d-flex flex-column justify-content-between`}
           >
             <div>
               <main className="pt-2 pb-4 px-0 px-md-3 main-content">

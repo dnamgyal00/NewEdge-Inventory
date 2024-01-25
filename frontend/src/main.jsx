@@ -28,27 +28,44 @@ import ScheduleReport from "./screens/ScheduleReport.jsx";
 import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 import CategoryDetailsScreen from "./screens/CategoryDetailsScreen.jsx";
 import Error from "./Error404.jsx";
+import CategoryAddItemScreen from "./screens/CategoryAddItemScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
+        <Route index={true} path="/" element={<HomeScreen />} />
         <Route index={true} path="/home" element={<HomeScreen />} />
         <Route index={true} path="/profile" element={<ProfileScreen />} />
 
         {/* Item routes */}
         <Route index={true} path="/home/item" element={<ItemScreen />} />
-        <Route index={true} path="/home/item/:name" element={<ItemDetailsScreen />} />
-        <Route index={true} path="/home/item/add-item" element={<AddItemScreen />} />
-
-
-
-
-        <Route index={true} path="/category" element={<CategoryScreen />} />
         <Route
           index={true}
-          path="/category/category-details/:id"
+          path="/home/item/:name"
+          element={<ItemDetailsScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/item/add-item"
+          element={<AddItemScreen />}
+        />
+
+        {/* category routes */}
+        <Route
+          index={true}
+          path="/home/category"
+          element={<CategoryScreen />}
+        />
+        <Route
+          index={true}
+          path="home/category/:name"
           element={<CategoryDetailsScreen />}
+        />
+        <Route
+          index={true}
+          path="home/category/:name/add-item"
+          element={<CategoryAddItemScreen />}
         />
 
         <Route
