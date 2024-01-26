@@ -23,42 +23,46 @@ function CategoryAddItemScreen() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    category_id: categoryId,
+    category_id: categoryId?categoryId:"",
     unit: "",
-    unit_price: 0,
+    unit_price: "",
     brand: "",
     description: "",
     image: null,
   });
-  const [imageData, setImageData] = useState(null);
-
-  // console.log(imageData)
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const formDataObj = new FormData();
-      formDataObj.append("name", formData.name);
-      formDataObj.append("category_id", formData.category_id);
-      formDataObj.append("unit", formData.unit);
-      formDataObj.append("unit_price", formData.unit_price);
-      formDataObj.append("brand", formData.brand);
-      formDataObj.append("description", formData.description);
-      formDataObj.append("image", formData.image);
+      formDataObj.append('name',formData.name);
+      formDataObj.append('category_id',formData.category_id);
+      formDataObj.append('unit',formData.unit);
+      formDataObj.append('unit_price',formData.unit_price);
+      formDataObj.append('brand',formData.brand);
+      formDataObj.append('description',formData.description);
+      formDataObj.append('image',formData.image)
       const result = await createItem(formDataObj).unwrap();
       console.log(result);
+     if(!result.status){
+        
+
+     }else{
       toast.success("item added successfully");
+      //navigate("/item-list");
 
       setFormData({
         name: "",
-        category_id: categoryId,
+        category_id: "",
         unit: "",
-        unit_price: 0,
+        unit_price: "",
         brand: "",
         description: "",
-        image: null,
+        image:null,
       });
+     }
+
     } catch (error) {
       console.error("Error creating item:", error);
     }
@@ -69,15 +73,15 @@ function CategoryAddItemScreen() {
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-        name === "unit_price"
+        name === "category_id" || name === "unit_price"
           ? parseInt(value, 10)
           : name === "image"
           ? files[0] // Set the selected file for the image
           : value,
     }));
   };
-  // console.log(formData);
-  // console.log(ImageData);
+  console.log(formData);
+  
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">

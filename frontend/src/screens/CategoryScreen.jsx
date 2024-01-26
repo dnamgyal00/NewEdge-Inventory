@@ -124,20 +124,15 @@ const CategoryScreen = () => {
               categories.map((category) => (
                 <tr key={category.id}>
                   {/* <td>
-                    {category.image && (
-                      <img
-                        src={category.image} // Assuming category.image contains the URL
-                        alt={`Image for ${category.name}`}
-                        style={{ maxWidth: "100px", maxHeight: "100px" }} // Set max width and height as per your design
-                      />
-                    )}
+                  {category.image && (
+                              <img
+                                src={category.image} // Assuming category.image contains the URL
+                                alt={`Image for ${category.name}`}
+                                style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
+                              />
+                            )}
                   </td> */}
-                  <LinkContainer
-                    to={{
-                      pathname: `/home/category/${category.name}`,
-                      search: `?id=${category.id}`,
-                    }}
-                  >
+                  <LinkContainer to={{ pathname: `/home/category/${category.name}`, search: `?id=${category.id}` }}>
                     <td>{category.name}</td>
                   </LinkContainer>
 

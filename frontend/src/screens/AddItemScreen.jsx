@@ -4,12 +4,18 @@ import { Row, Col, Button } from "react-bootstrap";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { useCreateItemMutation } from "../slices/itemsApiSlice";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Modals from "../components/Modals.jsx";
 
 const AddItemScreen = () => {
+  //if category selected
+   // const { name } = useParams();
+   const location = useLocation();
+   const searchParams = new URLSearchParams(location.search);
+   const categoryId = searchParams.get("id");
+
   //api calls
   const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
     useGetCategoriesQuery();
@@ -19,16 +25,25 @@ const AddItemScreen = () => {
   // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    category_id: 0,
+    category_id:  categoryId?categoryId:"",
     unit: "",
-    unit_price: 0,
+    unit_price: "",
     brand: "",
     description: "",
     image: null,
   });
 
+ 
+  // form validation
+  const [validated, setValidated] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
 
     try {
       const formDataObj = new FormData();
@@ -41,18 +56,24 @@ const AddItemScreen = () => {
       formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       console.log(result);
+     if(!result.status){
+        
+
+     }else{
       toast.success("item added successfully");
       //navigate("/item-list");
 
       setFormData({
         name: "",
-        category_id: 0,
+        category_id: categoryId?categoryId:"",
         unit: "",
-        unit_price: 0,
+        unit_price: "",
         brand: "",
         description: "",
         image: null,
       });
+     }
+
     } catch (error) {
       console.error("Error creating item:", error);
     }
@@ -97,12 +118,13 @@ const AddItemScreen = () => {
         <></>
       )}
       <div className="bg-white rounded p-4 ">
-        <Form onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row className="mb-3 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
                 <Form.Label>Item Name</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   name="name"
                   value={formData.name}
@@ -112,25 +134,45 @@ const AddItemScreen = () => {
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
-              <Form.Group controlId="formGridChooseCategory">
+              
+
+            {categoryId? (
+                <Form.Group controlId="formGridChooseCategory">
                 <Form.Label>Category</Form.Label>
-                <Form.Select
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleInputChange}
+                <Form.Control
+                  type="text"
+                  readOnly
+                  value={category?.name}
                   className="py-1"
-                >
-                  <option value="" disabled>
-                    Select a category
-                  </option>
-                  {categories &&
-                    categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                </Form.Select>
+                />
               </Form.Group>
+              ):(<Form.Group controlId="formGridChooseCategory">
+              <Form.Label>Category</Form.Label>
+              <Form.Select
+                name="category_id"
+                value={formData.category_id}
+                onChange={handleInputChange}
+                className="py-1"
+                required
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories &&
+                  categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Please choose a category.
+              </Form.Control.Feedback>
+            </Form.Group>)} 
+
+         
+
+
             </Col>
           </Row>
           <Row className="mb-3 text-black">
@@ -146,7 +188,11 @@ const AddItemScreen = () => {
                 value={formData.unit}
                 onChange={handleInputChange}
                 className="py-1"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a unit.
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group
@@ -161,7 +207,11 @@ const AddItemScreen = () => {
                 value={formData.unit_price}
                 onChange={handleInputChange}
                 className="py-1"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a price.
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row>
@@ -177,7 +227,11 @@ const AddItemScreen = () => {
                   value={formData.brand}
                   onChange={handleInputChange}
                   className="py-1"
+                  required
                 />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a brand.
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
@@ -193,7 +247,11 @@ const AddItemScreen = () => {
               value={formData.description}
               onChange={handleInputChange}
               className="py-1"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              Please provide a description.
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group
             className="mb-3 text-black col-md-10"
@@ -205,14 +263,22 @@ const AddItemScreen = () => {
               name="image" // Make sure the name matches the property in formData
               onChange={handleInputChange}
               className="py-1"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              Please upload an image.
+            </Form.Control.Feedback>
           </Form.Group>
           <Button
             variant="primary"
             type="submit"
             className="py-1"
             disabled={isItemLoading}
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              if (validated) {
+                setShowModal(true);
+              }
+            }}
           >
             Add
           </Button>{" "}

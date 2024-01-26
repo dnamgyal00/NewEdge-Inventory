@@ -35,7 +35,14 @@ const StockOutScreen = () => {
         [name]: parseInt(value, 10) || 0,
       }));
 
-    } else {
+    }else if (name == "created_at" && value) {
+      setItemData((prevData) => ({
+        ...prevData,
+        created_at: value
+      }));
+
+    }
+     else {
       setItemData((prevData) => ({
         ...prevData,
         [name]: value
