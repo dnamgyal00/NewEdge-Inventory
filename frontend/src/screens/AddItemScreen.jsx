@@ -11,10 +11,10 @@ import Modals from "../components/Modals.jsx";
 
 const AddItemScreen = () => {
   //if category selected
-   // const { name } = useParams();
-   const location = useLocation();
-   const searchParams = new URLSearchParams(location.search);
-   const categoryId = searchParams.get("id");
+  // const { name } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const categoryId = searchParams.get("id");
 
   //api calls
   const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
@@ -22,58 +22,51 @@ const AddItemScreen = () => {
   const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    category_id:  categoryId?categoryId:"",
+    category_id: categoryId ? categoryId : "",
     unit: "",
     unit_price: "",
     brand: "",
     description: "",
-    image:null
+    image: null,
   });
+  const [imageData, setImageData] = useState(null);
 
- 
   // form validation
   const [validated, setValidated] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-      e.preventDefault();
       e.stopPropagation();
     }
     setValidated(true);
 
     try {
       const formDataObj = new FormData();
-      formDataObj.append('name',formData.name);
-      formDataObj.append('category_id',formData.category_id);
-      formDataObj.append('unit',formData.unit);
-      formDataObj.append('unit_price',formData.unit_price);
-      formDataObj.append('brand',formData.brand);
-      formDataObj.append('description',formData.description);
-      formDataObj.append('image',formData.image)
+      formDataObj.append("name", formData.name);
+      formDataObj.append("category_id", formData.category_id);
+      formDataObj.append("unit", formData.unit);
+      formDataObj.append("unit_price", formData.unit_price);
+      formDataObj.append("brand", formData.brand);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       console.log(result);
-     if(!result.status){
-        
-
-     }else{
       toast.success("item added successfully");
       //navigate("/item-list");
 
       setFormData({
         name: "",
-        category_id: categoryId?categoryId:"",
+        category_id: 0,
         unit: "",
-        unit_price: "",
+        unit_price: 0,
         brand: "",
         description: "",
-        image:null,
+        image: null,
       });
-     }
-
     } catch (error) {
       console.error("Error creating item:", error);
     }
@@ -96,11 +89,36 @@ const AddItemScreen = () => {
 
   // Modal
   const [showModal, setShowModal] = useState(false);
-  const handleModelAction = () => {
+
+  const handleModelAction = async () => {
     // Implement the logic for the confirmed action here
     console.log("Confirmed action");
-    // Close the modal after handling the action
-    setShowModal(false);
+
+    const form = document.getElementById("your-form-id"); // replace "your-form-id" with the actual ID of your form
+    if (form && validated) {
+      try {
+        const formDataObj = new FormData(form);
+        const result = await createItem(formDataObj).unwrap();
+        console.log(result);
+        toast.success("item added successfully");
+        // navigate("/item-list");
+
+        setFormData({
+          name: "",
+          category_id: 0,
+          unit: "",
+          unit_price: 0,
+          brand: "",
+          description: "",
+          image: null,
+        });
+      } catch (error) {
+        console.error("Error creating item:", error);
+      }
+
+      // Close the modal after handling the action
+      setShowModal(false);
+    }
   };
 
   return (
@@ -118,7 +136,12 @@ const AddItemScreen = () => {
         <></>
       )}
       <div className="bg-white rounded p-4 ">
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form
+          id="your-form-id"
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
           <Row className="mb-3 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
@@ -134,45 +157,41 @@ const AddItemScreen = () => {
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
-              
-
-            {categoryId? (
+              {categoryId ? (
                 <Form.Group controlId="formGridChooseCategory">
-                <Form.Label>Category</Form.Label>
-                <Form.Control
-                  type="text"
-                  readOnly
-                  value={category?.name}
-                  className="py-1"
-                />
-              </Form.Group>
-              ):(<Form.Group controlId="formGridChooseCategory">
-              <Form.Label>Category</Form.Label>
-              <Form.Select
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleInputChange}
-                className="py-1"
-                required
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categories &&
-                  categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
+                  <Form.Label>Category</Form.Label>
+                  <Form.Control
+                    type="text"
+                    readOnly
+                    value={category?.name}
+                    className="py-1"
+                  />
+                </Form.Group>
+              ) : (
+                <Form.Group controlId="formGridChooseCategory">
+                  <Form.Label>Category</Form.Label>
+                  <Form.Select
+                    name="category_id"
+                    value={formData.category_id}
+                    onChange={handleInputChange}
+                    className="py-1"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select a category
                     </option>
-                  ))}
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                Please choose a category.
-              </Form.Control.Feedback>
-            </Form.Group>)} 
-
-         
-
-
+                    {categories &&
+                      categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a category.
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
             </Col>
           </Row>
           <Row className="mb-3 text-black">

@@ -48,7 +48,9 @@ const Charts = () => {
               <div className="bg-white rounded p-4">
                 <div className="d-flex align-items-center justify-content-between mb-4">
                   <h6 className="mb-0">Recently Added Items</h6>
-                  <a href="/item-list/">Show All</a>
+                  <LinkContainer to={"/home/item/"}>
+                    <a>Show All</a>
+                  </LinkContainer>
                 </div>
                 <div className="table-responsive">
                   <Table responsive="sm" className="position-relative">
@@ -58,17 +60,13 @@ const Charts = () => {
                         {/* <th className="text-black border-0">Image</th> */}
                         <th className="text-black border-0">Item</th>
                         <th className="text-black border-0">Price</th>
-                        
-                        
-                        
                       </tr>
                     </thead>
                     <tbody>
                       {data.recentItems &&
                         data.recentItems.map((item, index) => (
                           <tr key={item.id}>
-                            <td>{index + 1}
-                            </td>
+                            <td>{index + 1}</td>
                             {/* <td>
                             {item.image && (
                               <img
@@ -79,16 +77,14 @@ const Charts = () => {
                             )}
                             </td> */}
                             <LinkContainer
-                              to={`/item-list/item-details/${item.id}`}
+                              to={{
+                                pathname: `/home/item/${item.name}`,
+                                search: `?id=${item.id}`,
+                              }}
                             >
                               <td>{item.name}</td>
                             </LinkContainer>
-                            <td>Nu.{item.unit_price}
-                            
-                            </td>
-
-                            
-
+                            <td>Nu.{item.unit_price}</td>
                           </tr>
                         ))}
                     </tbody>

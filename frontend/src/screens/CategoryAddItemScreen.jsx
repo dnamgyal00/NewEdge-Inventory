@@ -23,50 +23,54 @@ function CategoryAddItemScreen() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    category_id: categoryId?categoryId:"",
+    category_id: categoryId ? categoryId : "",
     unit: "",
     unit_price: "",
     brand: "",
     description: "",
-    item:null,
+    image: null,
   });
- 
-  const handleSubmit = async (e) => {
+  const [imageData, setImageData] = useState(null);
 
+  // console.log(imageData)
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const formDataObj = new FormData();
-      formDataObj.append('name',formData.name);
-      formDataObj.append('category_id',formData.category_id);
-      formDataObj.append('unit',formData.unit);
-      formDataObj.append('unit_price',formData.unit_price);
-      formDataObj.append('brand',formData.brand);
-      formDataObj.append('description',formData.description);
-      formDataObj.append('image',formData.image)
+      formDataObj.append("name", formData.name);
+      formDataObj.append("category_id", formData.category_id);
+      formDataObj.append("unit", formData.unit);
+      formDataObj.append("unit_price", formData.unit_price);
+      formDataObj.append("brand", formData.brand);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       console.log(result);
-     if(!result.status){
-        
+      if (!result.status) {
+      } else {
+        toast.success("item added successfully");
+        //navigate("/item-list");
 
-     }else{
-      toast.success("item added successfully");
-      //navigate("/item-list");
-
-      setFormData({
-        name: "",
-        category_id: "",
-        unit: "",
-        unit_price: "",
-        brand: "",
-        description: "",
-        image:null,
-      });
-     }
-
+        setFormData({
+          name: "",
+          category_id: "",
+          unit: "",
+          unit_price: "",
+          brand: "",
+          description: "",
+          image: null,
+        });
+      }
     } catch (error) {
       console.error("Error creating item:", error);
     }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    setImageData(file);
   };
 
   const handleInputChange = (e) => {
@@ -82,7 +86,6 @@ function CategoryAddItemScreen() {
     }));
   };
   console.log(formData);
-  
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">

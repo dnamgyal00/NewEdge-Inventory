@@ -29,6 +29,8 @@ import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 import CategoryDetailsScreen from "./screens/CategoryDetailsScreen.jsx";
 import Error from "./Error404.jsx";
 import CategoryAddItemScreen from "./screens/CategoryAddItemScreen.jsx";
+import ItemStockInScreen from "./screens/ItemStockInScreen.jsx";
+import ItemStockOutScreen from "./screens/ItemStockOutScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,23 +52,25 @@ const router = createBrowserRouter(
           path="/home/item/add-item"
           element={<AddItemScreen />}
         />
+        <Route
+          index={true}
+          path="/home/item/:name/stock-in"
+          element={<ItemStockInScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/item/:name/stock-out"
+          element={<ItemStockOutScreen />}
+        />
 
         {/* category routes */}
-        <Route
-          index={true}
-          path="/home/category"
-          element={<CategoryScreen />}
-        />
-        <Route
-          index={true}
-          path="home/category/:name"
-          element={<CategoryDetailsScreen />}
-        />
-        <Route
-          index={true}
-          path="home/category/:name/add-item"
-          element={<CategoryAddItemScreen />}
-        />
+        <Route index={true} path="/home/category" element={<CategoryScreen />} />
+        <Route index={true} path="/home/category/add-category" element={<AddCategoryScreen />} />
+        <Route index={true} path="/home/category/:name" element={<CategoryDetailsScreen />} />
+        <Route index={true} path="/home/category/:name/add-item" element={<CategoryAddItemScreen />} />
+
+
+
 
         <Route
           index={true}
@@ -87,20 +91,15 @@ const router = createBrowserRouter(
         />
 
         {/* Admin users */}
-        <Route
-          index={true}
-          path="/admin/add-category"
-          element={<AddCategoryScreen />}
-        />
-        <Route
+        {/* <Route
           index={true}
           path="/admin/add-item"
           element={<AddItemScreen />}
-        />
+        /> */}
       </Route>
+
       {/* Error route */}
       <Route path="error" element={<Error />} />
-
       {/* Page Not Found route */}
       <Route path="*" element={<Navigate to="/error" />} />
     </>
