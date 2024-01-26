@@ -6,9 +6,21 @@ const AddCategoryScreen = () => {
   const navigate = useNavigate();
   const [createCategory, { isLoading }] = useCreateCategoryMutation();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  console.log(name, description);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: null
+  });
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]:
+        name === "image" ? files[0] : value,
+    }));
+  };
+  console.log(formData);
+
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -22,12 +34,13 @@ const AddCategoryScreen = () => {
     }
 
     try {
-      const result = await createCategory({
-        name,
-        description,
-      }).unwrap();
+      const formDataObj = new FormData();
+      formDataObj.append('name',formData.name);
+      formDataObj.append('description',formData.description);
+      formDataObj.append('image',formData.image)
+      const result = await createCategory(formDataObj).unwrap();
       console.log(result);
-      navigate("/category");
+      // navigate("/category");
     } catch (err) {
       if (err.data) {
         console.error("Error creating category:", err.data);
@@ -56,8 +69,9 @@ const AddCategoryScreen = () => {
               className="form-control py-1"
               id="exampleInputText"
               aria-describedby="emailHelp"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name='name'
+              value={formData.name}
+              onChange={handleInputChange}
               required
             />
             <div class="invalid-feedback">Please enter a category name.</div>
@@ -69,12 +83,28 @@ const AddCategoryScreen = () => {
             <textarea
               className="form-control py-2"
               id="floatingTextarea"
+              name='description'
               rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={handleInputChange}
               required
             ></textarea>
             <div class="invalid-feedback">Please provide a description.</div>
+          </div>
+          <div className="mb-3 col-sm-6 col-md-10">
+            <label htmlFor="imageInput" className="form-label text-black">
+              Category Image 
+            </label>
+            <input
+              type="file"
+              className="form-control py-2"
+              id="image"
+              name="image"
+              onChange={handleInputChange}
+              accept="image/*" 
+              required
+            />
+            <div class="invalid-feedback">Please upload an image.</div>
           </div>
           <button
             type="submit"
