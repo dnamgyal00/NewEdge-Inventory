@@ -28,20 +28,27 @@ function CategoryAddItemScreen() {
     unit_price: 0,
     brand: "",
     description: "",
+    image: null,
   });
   const [imageData, setImageData] = useState(null);
-  
+
   // console.log(imageData)
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
-      const result = await createItem(formData).unwrap();
+      const formDataObj = new FormData();
+      formDataObj.append("name", formData.name);
+      formDataObj.append("category_id", formData.category_id);
+      formDataObj.append("unit", formData.unit);
+      formDataObj.append("unit_price", formData.unit_price);
+      formDataObj.append("brand", formData.brand);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("image", formData.image);
+      const result = await createItem(formDataObj).unwrap();
       console.log(result);
-      toast.success("Item added successfully");
-      // navigate("/home/item");
+      toast.success("item added successfully");
 
       setFormData({
         name: "",
@@ -50,27 +57,27 @@ function CategoryAddItemScreen() {
         unit_price: 0,
         brand: "",
         description: "",
+        image: null,
       });
     } catch (error) {
       console.error("Error creating item:", error);
     }
   };
 
- 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    setImageData(file);
-  };
-
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "unit_price" ? parseInt(value, 10) : value,
+      [name]:
+        name === "unit_price"
+          ? parseInt(value, 10)
+          : name === "image"
+          ? files[0] // Set the selected file for the image
+          : value,
     }));
   };
-  console.log(formData);
-  console.log(ImageData);
+  // console.log(formData);
+  // console.log(ImageData);
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -183,7 +190,7 @@ function CategoryAddItemScreen() {
             <Form.Control
               type="file"
               name="image"
-              onChange={handleFileUpload}
+              onChange={handleInputChange}
               className="py-1"
             />
           </Form.Group>

@@ -16,7 +16,7 @@ const AddItemScreen = () => {
   const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     category_id: 0,
@@ -24,23 +24,21 @@ const AddItemScreen = () => {
     unit_price: 0,
     brand: "",
     description: "",
-    image:null
+    image: null,
   });
-  const [imageData,setImageData]= useState(null);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const formDataObj = new FormData();
-      formDataObj.append('name',formData.name);
-      formDataObj.append('category_id',formData.category_id);
-      formDataObj.append('unit',formData.unit);
-      formDataObj.append('unit_price',formData.unit_price);
-      formDataObj.append('brand',formData.brand);
-      formDataObj.append('description',formData.description);
-      formDataObj.append('image',formData.image)
+      formDataObj.append("name", formData.name);
+      formDataObj.append("category_id", formData.category_id);
+      formDataObj.append("unit", formData.unit);
+      formDataObj.append("unit_price", formData.unit_price);
+      formDataObj.append("brand", formData.brand);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       console.log(result);
       toast.success("item added successfully");
@@ -53,9 +51,8 @@ const AddItemScreen = () => {
         unit_price: 0,
         brand: "",
         description: "",
-        image:null,
+        image: null,
       });
-
     } catch (error) {
       console.error("Error creating item:", error);
     }
@@ -74,7 +71,6 @@ const AddItemScreen = () => {
     }));
   };
 
-  // console.log(imageData)
   console.log(formData);
 
   // Modal
@@ -243,4 +239,3 @@ const AddItemScreen = () => {
 };
 
 export default AddItemScreen;
-
