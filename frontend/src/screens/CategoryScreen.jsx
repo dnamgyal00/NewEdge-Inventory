@@ -7,12 +7,11 @@ import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import Pagination from 'react-bootstrap/Pagination';
+import Pagination from "react-bootstrap/Pagination";
 
 import { useState } from "react";
 
 const CategoryScreen = () => {
-
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -57,8 +56,9 @@ const CategoryScreen = () => {
         <div className="input-group d-flex mb-1">
           <div className="input-group-prepend me-1">
             <span
-              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
-                }`}
+              className={`input-group-text  ${
+                showFilters ? "bg-primary" : "bg-white"
+              }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -111,7 +111,7 @@ const CategoryScreen = () => {
         <Table responsive="sm">
           <thead className="bg-light">
             <tr>
-            {/* <th className="text-black border-0"></th> */}
+              {/* <th className="text-black border-0"></th> */}
               <th className="text-black border-0">Category Name</th>
               <th className="text-black border-0">No of Items</th>
               <th className="text-black border-0">Description</th>
@@ -131,8 +131,13 @@ const CategoryScreen = () => {
                                 style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
                               />
                             )}
-                  </td>
-                  <LinkContainer to={{ pathname: `/home/category/${category.name}`, search: `?id=${category.id}` }}>
+                  </td> */}
+                  <LinkContainer
+                    to={{
+                      pathname: `/home/category/${category.name}`,
+                      search: `?id=${category.id}`,
+                    }}
+                  >
                     <td>{category.name}</td>
                   </LinkContainer>
 
@@ -146,22 +151,24 @@ const CategoryScreen = () => {
           </tbody>
         </Table>
 
-
         {/* Pagination */}
         {categories && categories.length > 0 && (
           <nav aria-label="Page navigation example mb-5">
             <ul className="pagination justify-content-center">
               <Pagination>
-                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                <Pagination.Next onClick={handleNextPage} disabled={categories.length < 10} />
+                <Pagination.Prev
+                  onClick={handlePrevPage}
+                  disabled={currentPage == 1}
+                />
+                <Pagination.Next
+                  onClick={handleNextPage}
+                  disabled={categories.length < 10}
+                />
               </Pagination>
             </ul>
           </nav>
         )}
-
       </div>
-
-
     </div>
   );
 };

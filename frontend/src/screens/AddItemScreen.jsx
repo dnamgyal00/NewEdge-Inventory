@@ -24,10 +24,9 @@ const AddItemScreen = () => {
     unit_price: 0,
     brand: "",
     description: "",
-    image:null
+    image: null,
   });
-  const [imageData,setImageData]= useState(null);
-  
+  const [imageData, setImageData] = useState(null);
 
   // form validation
   const [validated, setValidated] = useState(false);
@@ -35,38 +34,37 @@ const AddItemScreen = () => {
     e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-      e.preventDefault();
       e.stopPropagation();
+      setValidated(true);
+      return;
     }
-    setValidated(true);
 
-    try {
-      const formDataObj = new FormData();
-      formDataObj.append('name',formData.name);
-      formDataObj.append('category_id',formData.category_id);
-      formDataObj.append('unit',formData.unit);
-      formDataObj.append('unit_price',formData.unit_price);
-      formDataObj.append('brand',formData.brand);
-      formDataObj.append('description',formData.description);
-      formDataObj.append('image',formData.image)
-      const result = await createItem(formDataObj).unwrap();
-      console.log(result);
-      toast.success("item added successfully");
-      //navigate("/item-list");
+    // try {
+    //   const formDataObj = new FormData();
+    //   formDataObj.append("name", formData.name);
+    //   formDataObj.append("category_id", formData.category_id);
+    //   formDataObj.append("unit", formData.unit);
+    //   formDataObj.append("unit_price", formData.unit_price);
+    //   formDataObj.append("brand", formData.brand);
+    //   formDataObj.append("description", formData.description);
+    //   formDataObj.append("image", formData.image);
+    //   const result = await createItem(formDataObj).unwrap();
+    //   console.log(result);
+    //   toast.success("item added successfully");
+    //   //navigate("/item-list");
 
-      setFormData({
-        name: "",
-        category_id: 0,
-        unit: "",
-        unit_price: 0,
-        brand: "",
-        description: "",
-        image:null,
-      });
-
-    } catch (error) {
-      console.error("Error creating item:", error);
-    }
+    //   setFormData({
+    //     name: "",
+    //     category_id: 0,
+    //     unit: "",
+    //     unit_price: 0,
+    //     brand: "",
+    //     description: "",
+    //     image: null,
+    //   });
+    // } catch (error) {
+    //   console.error("Error creating item:", error);
+    // }
   };
 
   const handleInputChange = (e) => {
@@ -87,11 +85,36 @@ const AddItemScreen = () => {
 
   // Modal
   const [showModal, setShowModal] = useState(false);
-  const handleModelAction = () => {
+
+  const handleModelAction = async () => {
     // Implement the logic for the confirmed action here
     console.log("Confirmed action");
-    // Close the modal after handling the action
-    setShowModal(false);
+
+    const form = document.getElementById("your-form-id"); // replace "your-form-id" with the actual ID of your form
+    if (form && validated) {
+      try {
+        const formDataObj = new FormData(form);
+        const result = await createItem(formDataObj).unwrap();
+        console.log(result);
+        toast.success("item added successfully");
+        // navigate("/item-list");
+
+        setFormData({
+          name: "",
+          category_id: 0,
+          unit: "",
+          unit_price: 0,
+          brand: "",
+          description: "",
+          image: null,
+        });
+      } catch (error) {
+        console.error("Error creating item:", error);
+      }
+
+      // Close the modal after handling the action
+      setShowModal(false);
+    }
   };
 
   return (
@@ -109,7 +132,12 @@ const AddItemScreen = () => {
         <></>
       )}
       <div className="bg-white rounded p-4 ">
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form
+          id="your-form-id"
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
           <Row className="mb-3 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
@@ -280,4 +308,3 @@ const AddItemScreen = () => {
 };
 
 export default AddItemScreen;
-

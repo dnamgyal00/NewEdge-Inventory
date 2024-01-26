@@ -30,11 +30,10 @@ function CategoryAddItemScreen() {
     description: "",
   });
   const [imageData, setImageData] = useState(null);
-  
+
   // console.log(imageData)
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
@@ -56,7 +55,6 @@ function CategoryAddItemScreen() {
     }
   };
 
- 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     setImageData(file);

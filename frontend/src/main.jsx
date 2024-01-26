@@ -29,6 +29,8 @@ import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 import CategoryDetailsScreen from "./screens/CategoryDetailsScreen.jsx";
 import Error from "./Error404.jsx";
 import CategoryAddItemScreen from "./screens/CategoryAddItemScreen.jsx";
+import ItemStockInScreen from "./screens/ItemStockInScreen.jsx";
+import ItemStockOutScreen from "./screens/ItemStockOutScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,6 +51,16 @@ const router = createBrowserRouter(
           index={true}
           path="/home/item/add-item"
           element={<AddItemScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/item/:name/stock-in"
+          element={<ItemStockInScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/item/:name/stock-out"
+          element={<ItemStockOutScreen />}
         />
 
         {/* category routes */}
@@ -98,9 +110,9 @@ const router = createBrowserRouter(
           element={<AddItemScreen />}
         />
       </Route>
+
       {/* Error route */}
       <Route path="error" element={<Error />} />
-
       {/* Page Not Found route */}
       <Route path="*" element={<Navigate to="/error" />} />
     </>

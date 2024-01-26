@@ -117,18 +117,32 @@ const ItemDetailsScreen = () => {
             </Col>
           </Row>
           <div className="d-flex flex-column flex-md-row justify-content-end py-3 ">
-            <Button
-              className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2 "
-              type="button"
+            <LinkContainer
+              to={{
+                pathname: `/home/item/${name}/stock-in`,
+                search: `?id=${item.id}`,
+              }}
             >
-              Stock In
-            </Button>
-            <Button
-              className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2"
-              type="button"
+              <Button
+                className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2 "
+                type="button"
+              >
+                Stock In
+              </Button>
+            </LinkContainer>
+            <LinkContainer
+              to={{
+                pathname: `/home/item/${name}/stock-out`,
+                search: `?id=${item.id}`,
+              }}
             >
-              Stock Out
-            </Button>
+              <Button
+                className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2"
+                type="button"
+              >
+                Stock Out
+              </Button>
+            </LinkContainer>
           </div>
 
           <div className="container-fluid pt-3 px-1">
