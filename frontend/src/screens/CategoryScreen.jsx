@@ -43,7 +43,7 @@ const CategoryScreen = () => {
           <h5 className="text-black mb-0"> Category List</h5>
           Manage your category
         </div>
-        <LinkContainer to="/admin/add-category">
+        <LinkContainer to="/home/category/add-category">
           <Button variant="primary" size="sm" className="px-4 py-1">
             {" "}
             <FaPlus className="me-2 mb-1" />

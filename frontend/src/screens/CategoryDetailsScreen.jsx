@@ -110,6 +110,7 @@ const CategoryDetailsScreen = () => {
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h6 className="mb-0">Category Items</h6>
                 <div className="d-flex justify-content-between align-items-center">
+                 
                   <LinkContainer to={{ pathname: `/home/category/${name}/add-item`, search: `?id=${category.id}` }}>
                     <Button variant="primary" size="sm" className="px-4 py-1">
                       {" "}

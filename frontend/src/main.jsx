@@ -64,21 +64,13 @@ const router = createBrowserRouter(
         />
 
         {/* category routes */}
-        <Route
-          index={true}
-          path="/home/category"
-          element={<CategoryScreen />}
-        />
-        <Route
-          index={true}
-          path="home/category/:name"
-          element={<CategoryDetailsScreen />}
-        />
-        <Route
-          index={true}
-          path="home/category/:name/add-item"
-          element={<CategoryAddItemScreen />}
-        />
+        <Route index={true} path="/home/category" element={<CategoryScreen />} />
+        <Route index={true} path="/home/category/add-category" element={<AddCategoryScreen />} />
+        <Route index={true} path="/home/category/:name" element={<CategoryDetailsScreen />} />
+        <Route index={true} path="/home/category/:name/add-item" element={<CategoryAddItemScreen />} />
+
+
+
 
         <Route
           index={true}
@@ -99,16 +91,11 @@ const router = createBrowserRouter(
         />
 
         {/* Admin users */}
-        <Route
-          index={true}
-          path="/admin/add-category"
-          element={<AddCategoryScreen />}
-        />
-        <Route
+        {/* <Route
           index={true}
           path="/admin/add-item"
           element={<AddItemScreen />}
-        />
+        /> */}
       </Route>
 
       {/* Error route */}

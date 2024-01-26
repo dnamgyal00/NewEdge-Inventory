@@ -51,7 +51,7 @@ const Sidebar = () => {
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
-            <LinkContainer to="/admin/add-category">
+            <LinkContainer to="/home/category/add-category">
               <Nav.Link className="ml-3">Add Category</Nav.Link>
             </LinkContainer>
           </Nav.Item>
