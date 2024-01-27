@@ -10,10 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "./components/Breadcrumbs";
 
 const App = () => {
-  // const [toggle, setToggle] = useState(false);
-  // const Toggle = () => {
-  //   setToggle(!toggle);
-  // };
   return (
     <>
       <ToastContainer

@@ -246,14 +246,11 @@ export default function ItemStockInScreen() {
                         value={itemData.qty}
                         onChange={(e) => {
                           const enteredValue = parseInt(e.target.value, 10);
-                          const newQuantity = Math.max(
-                            1,
-                            Math.min(enteredValue, item.qty_on_hand)
-                          );
+                          const newValue = enteredValue >= 0 ? enteredValue : 0;
 
-                          // Update state with the new quantity
+                          // Update state with the new value
                           handleChange({
-                            target: { name: "qty", value: newQuantity },
+                            target: { name: "qty", value: newValue },
                           });
                         }}
                         required
