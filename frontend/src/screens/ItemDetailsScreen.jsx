@@ -143,55 +143,12 @@ const ItemDetailsScreen = () => {
           <div className="container-fluid pt-3 px-1">
             <div className="bg-white text-center rounded p-4">
               <Tabs
-                defaultActiveKey="itemInstance"
+                defaultActiveKey="transactions"
                 transition={false}
                 id="noanim-tab-example"
                 className="mb-3"
               >
-                <Tab eventKey="itemInstance" title="Item Instance">
-                  <div className="table-responsive">
-                    <Table responsive="sm" className="position-relative">
-                      <thead className="bg-light">
-                        <tr>
-                          <th className="text-black border-0">Instance Id</th>
-                          <th className="text-black border-0">Status</th>
-                          <th className="text-black border-0">Details</th>
-                          <th className="text-black border-0">StockIn Id</th>
-                          <th className="text-black border-0">StockOut ID</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {item.item_instance &&
-                          item.item_instance.map((ins) => (
-                            <tr key={ins.id}>
-                              <td>{ins.id}</td>
-                              <td>{ins.status}</td>
-                              <td>{ins.status_details}</td>
-                              <td>{ins.stock_in_id}</td>
-                              <td>{ins.stock_in_id}</td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                  {/* Pagination */}
-                  {item.item_instance && item.item_instance.length > 0 && (
-                    <nav aria-label="Page navigation example mb-5">
-                      <ul className="pagination justify-content-center">
-                        <Pagination>
-                          <Pagination.Prev
-                            onClick={handlePrevPage}
-                            disabled={currentPage == 1}
-                          />
-                          <Pagination.Next
-                            onClick={handleNextPage}
-                            disabled={item.item_instance.length < 10}
-                          />
-                        </Pagination>
-                      </ul>
-                    </nav>
-                  )}
-                </Tab>
+              
 
 
                 <Tab eventKey="transactions" title="Transactions">
@@ -236,6 +193,51 @@ const ItemDetailsScreen = () => {
                           <Pagination.Next
                             onClick={handleNextPage}
                             disabled={item.transactions.length < 10}
+                          />
+                        </Pagination>
+                      </ul>
+                    </nav>
+                  )}
+                </Tab>
+
+                <Tab eventKey="itemInstance" title="Item Instance">
+                  <div className="table-responsive">
+                    <Table responsive="sm" className="position-relative">
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="text-black border-0">Instance Id</th>
+                          <th className="text-black border-0">Status</th>
+                          <th className="text-black border-0">Details</th>
+                          <th className="text-black border-0">StockIn Id</th>
+                          <th className="text-black border-0">StockOut ID</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {item.item_instance &&
+                          item.item_instance.map((ins) => (
+                            <tr key={ins.id}>
+                              <td>{ins.id}</td>
+                              <td>{ins.status}</td>
+                              <td>{ins.status_details}</td>
+                              <td>{ins.stock_in_id}</td>
+                              <td>{ins.stock_in_id}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                  {/* Pagination */}
+                  {item.item_instance && item.item_instance.length > 0 && (
+                    <nav aria-label="Page navigation example mb-5">
+                      <ul className="pagination justify-content-center">
+                        <Pagination>
+                          <Pagination.Prev
+                            onClick={handlePrevPage}
+                            disabled={currentPage == 1}
+                          />
+                          <Pagination.Next
+                            onClick={handleNextPage}
+                            disabled={item.item_instance.length < 10}
                           />
                         </Pagination>
                       </ul>
