@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCreateCategoryMutation } from "../slices/categoriesApiSlice";
 import { useNavigate } from "react-router-dom";
+import Modals from "../components/Modals";
 
 const AddCategoryScreen = () => {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ const AddCategoryScreen = () => {
   const [description, setDescription] = useState("");
   console.log(name, description);
   const [validated, setValidated] = useState(false);
+  // Modal
+  const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +23,11 @@ const AddCategoryScreen = () => {
       e.stopPropagation();
       return;
     }
+  };
 
+  const handleModelAction = async () => {
+    // Implement the logic for the confirmed action here
+    console.log("Confirmed action");
     try {
       const result = await createCategory({
         name,
@@ -35,6 +42,8 @@ const AddCategoryScreen = () => {
         console.error("Error creating category:", err);
       }
     }
+    // Close the modal after handling the action
+    setShowModal(false);
   };
 
   return (
@@ -43,6 +52,7 @@ const AddCategoryScreen = () => {
       <p className="mb-3">Create a new category</p>
       <div className="bg-white rounded p-4">
         <form
+          id="add-category-form"
           noValidate
           className={`needs-validation ${validated ? "was-validated" : ""}`}
           onSubmit={handleSubmit}
@@ -80,6 +90,26 @@ const AddCategoryScreen = () => {
             type="submit"
             className="btn btn-primary py-1"
             disabled={isLoading}
+            onClick={() => {
+              const form = document.getElementById("add-category-form");
+              const formFields = form.querySelectorAll(
+                "input, select, textarea"
+              );
+
+              // Check if the form is valid and all fields are filled
+              const isValid =
+                form.checkValidity() &&
+                Array.from(formFields).every(
+                  (field) => field.value.trim() !== ""
+                );
+
+              if (isValid) {
+                setShowModal(true);
+              } else {
+                // If not valid, trigger form validation
+                setValidated(true);
+              }
+            }}
           >
             {isLoading ? "Submitting..." : "Submit"}
           </button>{" "}
@@ -90,6 +120,14 @@ const AddCategoryScreen = () => {
           >
             Cancel
           </button>
+          {/* ConfirmModal component */}
+          <Modals
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            onConfirm={handleModelAction}
+            title="Add Confirm"
+            body="Are you sure you want to perform this action?"
+          />
         </form>
       </div>
     </div>

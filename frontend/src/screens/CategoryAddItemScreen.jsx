@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useState } from "react";
+import Modals from "../components/Modals";
 
 function CategoryAddItemScreen() {
   const [createItem, { isLoading: isItemLoading, isError, error }] =
@@ -33,10 +34,20 @@ function CategoryAddItemScreen() {
   const [imageData, setImageData] = useState(null);
 
   // console.log(imageData)
-
+  const [validated, setValidated] = useState(false);
+  // Modal
+  const [showModal, setShowModal] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    setValidated(true);
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      return;
+    }
+  };
 
+  const handleModalAction = async () => {
     try {
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
@@ -67,7 +78,6 @@ function CategoryAddItemScreen() {
       console.error("Error creating item:", error);
     }
   };
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     setImageData(file);
@@ -102,7 +112,12 @@ function CategoryAddItemScreen() {
         <></>
       )}
       <div className="bg-white rounded p-4 ">
-        <Form onSubmit={handleSubmit}>
+        <Form
+          id="category-add-item-form"
+          noValidate
+          className={`needs-validation ${validated ? "was-validated" : ""}`}
+          onSubmit={handleSubmit}
+        >
           <Row className="mb-3 text-black">
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridItemName">
@@ -113,7 +128,11 @@ function CategoryAddItemScreen() {
                   value={formData.name}
                   onChange={handleInputChange}
                   className="py-1"
+                  required
                 />
+                <Form.Control.Feedback type="invalid">
+                  Please enter a name.
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
@@ -124,6 +143,7 @@ function CategoryAddItemScreen() {
                   readOnly
                   value={category?.name}
                   className="py-1"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -141,7 +161,11 @@ function CategoryAddItemScreen() {
                 value={formData.unit}
                 onChange={handleInputChange}
                 className="py-1"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a unit.
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group
@@ -156,7 +180,11 @@ function CategoryAddItemScreen() {
                 value={formData.unit_price}
                 onChange={handleInputChange}
                 className="py-1"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a unit price.
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row>
@@ -172,7 +200,11 @@ function CategoryAddItemScreen() {
                   value={formData.brand}
                   onChange={handleInputChange}
                   className="py-1"
+                  required
                 />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a brand.
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
@@ -188,7 +220,11 @@ function CategoryAddItemScreen() {
               value={formData.description}
               onChange={handleInputChange}
               className="py-1"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              Please provide a description.
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group
             className="mb-3 text-black col-md-10"
@@ -200,13 +236,37 @@ function CategoryAddItemScreen() {
               name="image"
               onChange={handleInputChange}
               className="py-1"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              Please upload an image.
+            </Form.Control.Feedback>
           </Form.Group>
           <Button
             variant="primary"
             type="submit"
             className="py-1"
             disabled={isItemLoading}
+            onClick={() => {
+              const form = document.getElementById("category-add-item-form");
+              const formFields = form.querySelectorAll(
+                "input, select, textarea"
+              );
+
+              // Check if the form is valid and all fields are filled
+              const isValid =
+                form.checkValidity() &&
+                Array.from(formFields).every(
+                  (field) => field.value.trim() !== ""
+                );
+
+              if (isValid) {
+                setShowModal(true);
+              } else {
+                // If not valid, trigger form validation
+                setValidated(true);
+              }
+            }}
           >
             Add
           </Button>{" "}
@@ -218,6 +278,14 @@ function CategoryAddItemScreen() {
           >
             Cancel
           </Button>
+          {/* Modal */}
+          <Modals
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            onConfirm={handleModalAction}
+            title="Confirm Action"
+            body="Are you sure you want to perform this action?"
+          />
         </Form>
       </div>
     </div>

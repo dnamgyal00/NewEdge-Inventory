@@ -128,115 +128,12 @@ export default function ItemStockOutScreen() {
           <h5 className="mb-0 text-black">Stock Out </h5>
           <p className="mb-3">Manage stock out </p>
           <div className="bg-white rounded p-4 d-flex">
-            {/* <Form onSubmit={handleSubmit}> */}
-            {/* <Row className="mb-2 text-black">
-            
-           
-              {/* //DATE */}
-            {/* <Form.Group controlId="formGridDate">
-                
-              </Form.Group> */}
-            {/* </Col>
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridBrand">
-                <Form.Label>Brand</Form.Label> */}
-            {/* <Form.Select className="py-1">
-                  <option>Choose...</option>
-                  <option>...</option>
-                </Form.Select> */}
-            {/* <Form.Control
-                  className="py-1"
-                  readOnly
-                  defaultValue={selectedItem ? selectedItem.brand : ""}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-2 text-black">
-            <Col xs={6} md={5}>
-              
-            </Col>
-
-            
-          </Row>
-          <Row className="mb-3 text-black ">
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnit">
-                <Form.Label>
-                  <i>Enter Quantity:</i>
-                </Form.Label>
-                <Form.Control
-                  required
-                  type="number"
-                  className="py-1"
-                  name="qty"
-                  value={itemData.qty}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-            </Col>
-
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnit">
-                <Form.Label>Quantity Available</Form.Label>
-                <Form.Control
-                  type="number"
-                  className="py-1"
-                  name="qty"
-                  value={selectedItem ? selectedItem.qty_on_hand : 0}
-                  readOnly
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3 text-black">
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnitPrice">
-                <Form.Label>Total Price</Form.Label>
-                <Form.Control
-                  className="py-1"
-                  readOnly
-                  value={`Nu.${totalPrice}`}
-                  // onChange={handleChange}
-                  name="total_price"
-                />
-              </Form.Group>
-            </Col>
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnitPrice">
-                <Form.Label>Unit Price</Form.Label>
-                <Form.Control
-                  className="py-1"
-                  readOnly
-                  defaultValue={
-                    selectedItem ? `Nu.${selectedItem.unit_price}` : ""
-                  }
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3 text-black">
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnitPrice">
-                <Form.Label>
-                  <i>Enter Description:</i>
-                </Form.Label>
-                <Form.Control
-                  required
-                  className="py-1" */}
-            {/* defaultValue={selectedItem ? itemData.status_details : ""}
-                  onChange={handleChange}
-                  name="status_details"
-                />
-              </Form.Group>
-            </Col>
-          </Row>  */}
             <div className="col-sm-5">
               <Image src={testImage} alt="" fluid />
             </div>
             <div className="col-sm-7">
               <Form
-                id="stock-out-form"
+                id="-item-stock-out-form"
                 noValidate
                 validated={validated}
                 onSubmit={handleSubmit}
@@ -255,7 +152,7 @@ export default function ItemStockOutScreen() {
                     />
                   </Col>
                 </Form.Group>
-                <Form.Group as={Row} controlId="formGridChooseCategory">
+                <Form.Group as={Row} controlId="formGridQuantityAvailable">
                   <Form.Label column sm="4">
                     Qty available:
                   </Form.Label>
@@ -338,7 +235,18 @@ export default function ItemStockOutScreen() {
                         className="py-1"
                         name="qty"
                         value={itemData.qty}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const enteredValue = parseInt(e.target.value, 10);
+                          const newQuantity = Math.max(
+                            1,
+                            Math.min(enteredValue, item.qty_on_hand)
+                          );
+
+                          // Update state with the new quantity
+                          handleChange({
+                            target: { name: "qty", value: newQuantity },
+                          });
+                        }}
                         required
                       />
                     </Form.Group>
@@ -369,6 +277,9 @@ export default function ItemStockOutScreen() {
                         required
                         onChange={handleChange}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Please select a date.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -383,7 +294,7 @@ export default function ItemStockOutScreen() {
                         name="type"
                         onChange={handleChange}
                         required
-                        value={selectedItem ? itemData.type : ""}
+                        value={itemData.type}
                       >
                         <option disabled value="">
                           Choose...
@@ -392,6 +303,9 @@ export default function ItemStockOutScreen() {
                         <option value="Issues">Issues</option>
                         <option value="Damaged">Damaged</option>
                       </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        Please select a type.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col sm={8}>
@@ -405,6 +319,9 @@ export default function ItemStockOutScreen() {
                         required
                         onChange={handleChange}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Please provide a description.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -414,8 +331,23 @@ export default function ItemStockOutScreen() {
                   className="py-1"
                   disabled={isStockOutLoading}
                   onClick={() => {
-                    if (validated) {
-                      showModal(true);
+                    const form = document.getElementById("item-stock-out-form");
+                    const formFields = form.querySelectorAll(
+                      "input, select, textarea"
+                    );
+
+                    // Check if the form is valid and all fields are filled
+                    const isValid =
+                      form.checkValidity() &&
+                      Array.from(formFields).every(
+                        (field) => field.value.trim() !== ""
+                      );
+
+                    if (isValid) {
+                      setShowModal(true);
+                    } else {
+                      // If not valid, trigger form validation
+                      setValidated(true);
                     }
                   }}
                 >
