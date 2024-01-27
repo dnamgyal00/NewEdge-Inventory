@@ -17,6 +17,9 @@ import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
 import { useState } from "react";
 import React from "react";
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import { format } from "date-fns";
 
 const ItemDetailsScreen = () => {
   const { name, id } = useParams();
@@ -145,11 +148,16 @@ const ItemDetailsScreen = () => {
             </LinkContainer>
           </div>
 
+
           <div className="container-fluid pt-3 px-1">
-            <div className="bg-white text-center rounded p-4">
-              <div className="d-flex align-items-center justify-content-between mb-4">
-                <h6 className="mb-0">Item Instances</h6>
-              </div>
+          <div className="bg-white text-center rounded p-4">
+            <Tabs
+              defaultActiveKey="itemInstance"
+              transition={false}
+              id="noanim-tab-example"
+              className="mb-3"
+            >
+              <Tab eventKey="itemInstance" title="Item Instance">
               <div className="table-responsive">
                 <Table responsive="sm" className="position-relative">
                   <thead className="bg-light">
@@ -192,6 +200,59 @@ const ItemDetailsScreen = () => {
                   </ul>
                 </nav>
               )}
+              </Tab>
+
+
+              <Tab eventKey="transactions" title="Transactions">
+              <div className="table-responsive">
+                <Table responsive="sm" className="position-relative">
+                  <thead className="bg-light">
+                    <tr>
+                    <th className="text-black border-0">Stock In/Out</th>
+                    <th className="text-black border-0">Details</th>
+                    <th className="text-black border-0">Qty</th>
+                    <th className="text-black border-0">Total Price</th>
+                    <th className="text-black border-0">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+              
+
+                  {item.transactions &&
+                    item.transactions.map((transaction) => (
+                      <tr>
+                        <td>{transaction.transaction_type}</td>
+                        <td>{transaction.type}</td>
+                        <td>{transaction.qty}</td>
+                        <td>{transaction.total_price}</td>
+                        <td>{format(transaction.created_at, "dd-mm-yyyy")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+
+
+              </div>
+              {/* Pagination */}
+              {item.item_instance && item.item_instance.length > 0 && (
+                <nav aria-label="Page navigation example mb-5">
+                  <ul className="pagination justify-content-center">
+                    <Pagination>
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={currentPage == 1}
+                      />
+                      <Pagination.Next
+                        onClick={handleNextPage}
+                        disabled={item.transactions.length < 10}
+                      />
+                    </Pagination>
+                  </ul>
+                </nav>
+              )}
+              </Tab>
+
+            </Tabs>
             </div>
           </div>
         </div>
