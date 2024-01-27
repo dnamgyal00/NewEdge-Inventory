@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetCategoriesQuery ,useSearchCategoriesByNameQuery} from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Collapse } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
@@ -32,6 +32,14 @@ const CategoryScreen = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
   };
+
+  const [search,setSearch]=useState("");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearch(value);
+  };
+
+  //api calls
   const {
     data: { data: categories } = {},
     refetch,
@@ -40,9 +48,15 @@ const CategoryScreen = () => {
     error,
   } = useGetCategoriesQuery(currentPage);
 
-  //console.log(categories.length);
-  console.log(categories);
+  const {
+    data: { data: CategorySearchResults } = {},
+    isLoading2,
+    isError2,
+    error2,
+  } = useSearchCategoriesByNameQuery (search?search:"1");
+  console.log(CategorySearchResults)
 
+  
   return (
     <>
       {isLoading ? (
@@ -89,48 +103,66 @@ const CategoryScreen = () => {
                 </span>
               </div>
 
-              {/* Search Bar */}
-              <div className="border border-solid d-flex py-0 rounded">
-                <span className="input-group-text bg-white border-0">
-                  <FaSearch />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="form-control border-0 px-0 py-0"
-                  style={{ boxShadow: "none" }}
-                />
-              </div>
-            </div>
-            <div className="input-group d-flex mb-3">
-              <Collapse in={open}>
-                <div id="example-collapse-text">
-                  <DropdownButton
-                    variant="white"
-                    id="dropdown-menu show"
-                    title="Choose Item"
-                    className="border border-solid rounded mt-2 lh-1"
+          {/* Search Bar */}
+          <div className="border border-solid d-flex py-0 rounded">
+            <span className="input-group-text bg-white border-0">
+              <FaSearch />
+            </span>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="form-control border-0 px-0 py-0"
+              name='search'
+              value={search}
+              onChange={handleInputChange}
+              style={{ boxShadow: "none" }}
+            />
+          </div>
+        </div>
+
+          {/* EDIT THIS SEARCH RESULT DISPLAY */}
+          {CategorySearchResults && CategorySearchResults.map((result)=>(
+            <LinkContainer key={result.id}
+                    to={{
+                      pathname: `/home/category/${result.name}`,
+                      search: `?id=${result.id}`,
+                    }}
                   >
-                    {refetch}
-                    {categories &&
-                      categories.map((category) =>
-                        category.item.map((item) => (
-                          <Dropdown.Item href="#/action-1" key={item.id}>
-                            {item.name}
-                          </Dropdown.Item>
-                        ))
-                      )}
-                  </DropdownButton>
-                </div>
-              </Collapse>
+                    <div key={result.id} className="border-0 "> {result.name} </div> 
+                  </LinkContainer>
+            )) 
+            }
+
+
+
+        <div className="input-group d-flex mb-3">
+          <Collapse in={open}>
+            <div id="example-collapse-text">
+              <DropdownButton
+                variant="white"
+                id="dropdown-menu show"
+                title="Choose Item"
+                className="border border-solid rounded mt-2 lh-1"
+              >
+                {categories &&
+                  categories.map((category) =>
+                    category.item.map((item) => (
+                      <Dropdown.Item href="#/action-1" key={item.id}>
+                        {item.name}
+                      </Dropdown.Item>
+                    ))
+                  )}
+              </DropdownButton>
             </div>
-            <Table responsive="sm">
-              <thead className="bg-light">
-                <tr>
-                  {/* <th className="text-black border-0"></th> */}
-                  <th className="text-black border-0">Category Name</th>
-                  <th className="text-black border-0">No of Items</th>
-                  <th className="text-black border-0">Description</th>
+          </Collapse>
+        </div>
+        <Table responsive="sm">
+          <thead className="bg-light">
+            <tr>
+              {/* <th className="text-black border-0"></th> */}
+              <th className="text-black border-0">Category Name</th>
+              <th className="text-black border-0">No of Items</th>
+              <th className="text-black border-0">Description</th>
 
                   {/* <th className="text-black border-0">Action</th> */}
                 </tr>

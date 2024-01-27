@@ -29,6 +29,13 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Item"],
     }),
+
+    searchItemByName: builder.query({
+      query: (name) => ({
+          url: `${ITEM_URL}/search?name=${name}`
+      }),
+      keepUnusedDataFor: 5
+  }),
   }),
 });
 
@@ -36,4 +43,5 @@ export const {
   useGetItemsQuery,
   useGetItemDetailsQuery,
   useCreateItemMutation,
+  useSearchItemByNameQuery,
 } = itemsApiSlice;
