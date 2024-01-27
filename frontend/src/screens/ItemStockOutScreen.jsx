@@ -16,7 +16,7 @@ export default function ItemStockOutScreen() {
   const itemId = useSelector((state) => state.item.itemId);
   const navigate = useNavigate();
   //api calls
-  
+
   const {
     data: { data: item } = {},
     isLoading,
@@ -138,7 +138,7 @@ export default function ItemStockOutScreen() {
             </div>
             <div className="col-sm-7">
               <Form
-                id="stock-out-form"
+                id="-item-stock-out-form"
                 noValidate
                 validated={validated}
                 onSubmit={handleSubmit}
@@ -157,7 +157,7 @@ export default function ItemStockOutScreen() {
                     />
                   </Col>
                 </Form.Group>
-                <Form.Group as={Row} controlId="formGridChooseCategory">
+                <Form.Group as={Row} controlId="formGridQuantityAvailable">
                   <Form.Label column sm="4">
                     Qty available:
                   </Form.Label>
@@ -240,7 +240,18 @@ export default function ItemStockOutScreen() {
                         className="py-1"
                         name="qty"
                         value={itemData.qty}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const enteredValue = parseInt(e.target.value, 10);
+                          const newQuantity = Math.max(
+                            1,
+                            Math.min(enteredValue, item.qty_on_hand)
+                          );
+
+                          // Update state with the new quantity
+                          handleChange({
+                            target: { name: "qty", value: newQuantity },
+                          });
+                        }}
                         required
                       />
                     </Form.Group>
@@ -271,6 +282,9 @@ export default function ItemStockOutScreen() {
                         required
                         onChange={handleChange}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Please select a date.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -294,6 +308,9 @@ export default function ItemStockOutScreen() {
                         <option value="Issues">Issues</option>
                         <option value="Damaged">Damaged</option>
                       </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        Please select a type.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col sm={8}>
@@ -307,6 +324,9 @@ export default function ItemStockOutScreen() {
                         required
                         onChange={handleChange}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Please provide a description.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -316,8 +336,23 @@ export default function ItemStockOutScreen() {
                   className="py-1"
                   disabled={isStockOutLoading}
                   onClick={() => {
-                    if (validated) {
-                      showModal(true);
+                    const form = document.getElementById("item-stock-out-form");
+                    const formFields = form.querySelectorAll(
+                      "input, select, textarea"
+                    );
+
+                    // Check if the form is valid and all fields are filled
+                    const isValid =
+                      form.checkValidity() &&
+                      Array.from(formFields).every(
+                        (field) => field.value.trim() !== ""
+                      );
+
+                    if (isValid) {
+                      setShowModal(true);
+                    } else {
+                      // If not valid, trigger form validation
+                      setValidated(true);
                     }
                   }}
                 >

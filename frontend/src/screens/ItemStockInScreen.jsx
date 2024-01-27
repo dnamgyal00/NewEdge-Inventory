@@ -145,6 +145,7 @@ export default function ItemStockInScreen() {
             </div>
             <div className="col-sm-7">
               <Form
+                id="item-stock-in-form"
                 noValidate
                 validated={validated}
                 onSubmit={handleSubmit}
@@ -159,6 +160,21 @@ export default function ItemStockInScreen() {
                       plaintext
                       readOnly
                       defaultValue={item.name}
+                      className="text-black"
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} controlId="formGridQuantityAvailable">
+                  <Form.Label column sm="4">
+                    Qty available:
+                  </Form.Label>
+
+                  <Col sm={6}>
+                    {" "}
+                    <Form.Control
+                      plaintext
+                      readOnly
+                      defaultValue={item.qty_on_hand}
                       className="text-black"
                     />
                   </Col>
@@ -231,7 +247,15 @@ export default function ItemStockInScreen() {
                         className="py-1"
                         name="qty"
                         value={itemData.qty}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const enteredValue = parseInt(e.target.value, 10);
+                          const newValue = enteredValue >= 0 ? enteredValue : 0;
+
+                          // Update state with the new value
+                          handleChange({
+                            target: { name: "qty", value: newValue },
+                          });
+                        }}
                         required
                       />
                     </Form.Group>
@@ -262,6 +286,9 @@ export default function ItemStockInScreen() {
                         required
                         onChange={handleChange}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Please select a date.
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -271,8 +298,23 @@ export default function ItemStockInScreen() {
                   className="py-1"
                   disabled={isStockInLoading}
                   onClick={() => {
-                    if (validated) {
+                    const form = document.getElementById("item-stock-in-form");
+                    const formFields = form.querySelectorAll(
+                      "input, select, textarea"
+                    );
+
+                    // Check if the form is valid and all fields are filled
+                    const isValid =
+                      form.checkValidity() &&
+                      Array.from(formFields).every(
+                        (field) => field.value.trim() !== ""
+                      );
+
+                    if (isValid) {
                       setShowModal(true);
+                    } else {
+                      // If not valid, trigger form validation
+                      setValidated(true);
                     }
                   }}
                 >
