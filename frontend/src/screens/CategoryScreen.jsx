@@ -1,17 +1,20 @@
 import React from "react";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button, Collapse, Row, Form, Col } from "react-bootstrap";
-import { FaPlus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
-import { FiFilter, FiEdit3 } from "react-icons/fi";
-import { BsEye } from "react-icons/bs";
+import { Table, Button, Collapse } from "react-bootstrap";
+import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
+import { FiFilter} from "react-icons/fi";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Pagination from "react-bootstrap/Pagination";
+import { useDispatch } from "react-redux";
+import { setCategoryId } from "../slices/categorySlice";
 
 import { useState } from "react";
 
 const CategoryScreen = () => {
+  const dispatch = useDispatch();
+
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -134,9 +137,9 @@ const CategoryScreen = () => {
                   </td> */}
                   <LinkContainer
                     to={{
-                      pathname: `/home/category/${category.name}`,
-                      search: `?id=${category.id}`,
+                      pathname: `/home/category/${category.name}`
                     }}
+                    onClick={() => dispatch(setCategoryId(category.id))}
                   >
                     <td>{category.name}</td>
                   </LinkContainer>
