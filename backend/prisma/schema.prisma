@@ -13,16 +13,17 @@ datasource db {
 //For Inventory
 model Category {
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String  @unique
   description String?
   item        Item[]
   item_count  Int      @default(0)
   created_at  DateTime @default(now())
+  image String?
 }
 
 model Item {
   id            Int            @id @default(autoincrement())
-  category      Category       @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category      Category       @relation(fields: [category_id], references: [id],onDelete: Cascade)
   category_id   Int
   name          String
   brand         String?
@@ -33,19 +34,22 @@ model Item {
   item_instance ItemInstance[]
   stock_in      StockIn[]
   stock_out     StockOut[]
+  stock_report  YearReport[]
   created_at    DateTime       @default(now())
+  image String?
 }
 
 model ItemInstance {
   id      Int    @id @default(autoincrement())
-  status  String @default("inStock")
-  item    Item   @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item    Item   @relation(fields: [item_id], references: [id],onDelete: Cascade)
   item_id Int
+  status  String @default("inStock")
+  status_details String?
 
-  stockOut     StockOut? @relation(fields: [stock_out_id], references: [id])
+  stockOut     StockOut? @relation(fields: [stock_out_id], references: [id],onDelete: Cascade)
   stock_out_id String?
 
-  stockIn     StockIn @relation(fields: [stock_in_id], references: [id])
+  stockIn     StockIn @relation(fields: [stock_in_id], references: [id],onDelete: Cascade)
   stock_in_id String
 }
 
@@ -55,8 +59,9 @@ model StockIn {
   item             Item           @relation(fields: [item_id], references: [id], onDelete: Cascade)
   item_id          Int
   qty              Int
-  ItemInstance_ids ItemInstance[]
-  type             String         @default("Purchased")
+  total_price      Int?
+  type             String         @default("Purchased") //purchased
+  ItemInstance_ids ItemInstance[] 
   created_at       DateTime       @default(now())
 }
 
@@ -65,7 +70,22 @@ model StockOut {
   item             Item           @relation(fields: [item_id], references: [id], onDelete: Cascade)
   item_id          Int
   qty              Int
+  total_price      Int?
+  type             String         @default("Sales") //sales, issused , damaged
   ItemInstance_ids ItemInstance[]
-  type             String         @default("Sales")
   created_at       DateTime       @default(now())
+}
+
+
+//Yearly Report 
+model YearReport{
+  id      Int    @id @default(autoincrement())
+  item    Item   @relation(fields:[item_id], references: [id],onDelete: Cascade )
+  item_id Int
+  year Int
+  opening_bal Int @default(0)
+  closing_bal Int
+  stock_in_qty Int
+  stock_out_qty Int
+  created_at DateTime @default(now())
 }
