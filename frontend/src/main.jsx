@@ -31,6 +31,7 @@ import Error from "./Error404.jsx";
 import CategoryAddItemScreen from "./screens/CategoryAddItemScreen.jsx";
 import ItemStockInScreen from "./screens/ItemStockInScreen.jsx";
 import ItemStockOutScreen from "./screens/ItemStockOutScreen.jsx";
+import ItemEditScreen from "./screens/ItemEditScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,14 +64,33 @@ const router = createBrowserRouter(
           element={<ItemStockOutScreen />}
         />
 
+        <Route
+          index={true}
+          path="/home/item/:name/edit"
+          element={<ItemEditScreen />}
+        />
+
         {/* category routes */}
-        <Route index={true} path="/home/category" element={<CategoryScreen />} />
-        <Route index={true} path="/home/category/add-category" element={<AddCategoryScreen />} />
-        <Route index={true} path="/home/category/:name" element={<CategoryDetailsScreen />} />
-        <Route index={true} path="/home/category/:name/add-item" element={<CategoryAddItemScreen />} />
-
-
-
+        <Route
+          index={true}
+          path="/home/category"
+          element={<CategoryScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/category/add-category"
+          element={<AddCategoryScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/category/:name"
+          element={<CategoryDetailsScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/category/:name/add-item"
+          element={<CategoryAddItemScreen />}
+        />
 
         <Route
           index={true}

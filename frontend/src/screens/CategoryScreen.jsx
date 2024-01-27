@@ -180,14 +180,14 @@ const CategoryScreen = () => {
                               />
                             )}
                   </td> */}
-                      <LinkContainer
-                        to={{
-                          pathname: `/home/category/${category.name}`,
-                        }}
-                        onClick={() => dispatch(setCategoryId(category.id))}
-                      >
-                        <td>{category.name}</td>
-                      </LinkContainer>
+                  <LinkContainer
+                    to={{
+                      pathname: `/home/category/${category.name}`
+                    }}
+                    onClick={() => dispatch(setCategoryId(category.id))}
+                  >
+                    <td className="clickable-cell">{category.name}</td>
+                  </LinkContainer>
 
                       <td>{category.item_count} </td>
                       <td>{category.description}</td>

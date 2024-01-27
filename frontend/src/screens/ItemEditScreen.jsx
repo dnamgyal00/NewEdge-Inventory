@@ -1,106 +1,67 @@
-import Form from "react-bootstrap/Form";
-import { Row, Col, Button } from "react-bootstrap";
-import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
-import { useCreateItemMutation } from "../slices/itemsApiSlice";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Card,
+  Button,
+  Table,
+  Dropdown,
+  Form,
+} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import testImage from "../assets/laptop.jpg";
+import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
+import { useGetItemsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Pagination } from "react-bootstrap";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import Modals from "../components/Modals";
-import { useDispatch, useSelector } from "react-redux";
 
-function CategoryAddItemScreen() {
+export default function ItemEditScreen() {
+  const itemId = useSelector((state) => state.item.itemId);
 
-  const dispatch = useDispatch();
-  const categoryId = useSelector((state) => state.category.categoryId);
-  const [createItem, { isLoading: isItemLoading, isError, error }] =
-    useCreateItemMutation();
+  //item Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
-  const { data: { data: category } = {}, refetch, isLoading } =
-    useGetCategoryDetailsQuery({ categoryId, currentPage: 1 });
+  //api call
+  const {
+    data: { data: item } = {},
+    isLoading,
+    isError,
+    error,
+  } = useGetItemDetailsQuery({ itemId, currentPage });
+  console.log(item);
 
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    category_id: categoryId ? categoryId : "",
-    unit: "",
-    unit_price: "",
-    brand: "",
-    description: "",
-    image: null,
-  });
-
-  // console.log(imageData)
-  const [validated, setValidated] = useState(false);
-  // Modal
+  // Modals
   const [showModal, setShowModal] = useState(false);
+  // form validation
+  const [validated, setValidated] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    setValidated(true);
     if (form.checkValidity() === false) {
       e.stopPropagation();
-      return;
     }
+    setValidated(true);
   };
-
-  const handleModalAction = async () => {
-    try {
-      const formDataObj = new FormData();
-      formDataObj.append("name", formData.name);
-      formDataObj.append("category_id", formData.category_id);
-      formDataObj.append("unit", formData.unit);
-      formDataObj.append("unit_price", formData.unit_price);
-      formDataObj.append("brand", formData.brand);
-      formDataObj.append("description", formData.description);
-      formDataObj.append("image", formData.image);
-      const result = await createItem(formDataObj).unwrap();
-      refetch();
-      toast.success("item added successfully");
-      navigate(`/home/category/${category.name}`);
-      console.log(result);
-      if (!result.status) {
-      } else {
-        setFormData({
-          name: "",
-          category_id: categoryId ? categoryId : "",
-          unit: "",
-          unit_price: "",
-          brand: "",
-          description: "",
-          image: null,
-        });
-      }
-    } catch (error) {
-      console.error("Error creating item:", error);
-    }
+  const handleModalAction = (e) => {
+    // handle modal action
   };
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    setImageData(file);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]:
-        name === "category_id" || name === "unit_price"
-          ? Math.max(0, parseInt(value, 10))
-          : name === "image"
-          ? files[0] // Set the selected file for the image
-          : value,
-    }));
-  };
-  console.log(formData);
-
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <h5 className="mb-0 text-black">Item Add</h5>
       <p className="mb-3">Add new item</p>
 
-      {isItemLoading ? (
+      {isLoading ? (
         <Loader />
       ) : isError ? (
         <Message variant="danger">
@@ -111,9 +72,9 @@ function CategoryAddItemScreen() {
       )}
       <div className="bg-white rounded p-4 ">
         <Form
-          id="category-add-item-form"
+          id="add-item-form"
           noValidate
-          className={`needs-validation ${validated ? "was-validated" : ""}`}
+          validated={validated}
           onSubmit={handleSubmit}
         >
           <Row className="mb-3 text-black">
@@ -121,29 +82,52 @@ function CategoryAddItemScreen() {
               <Form.Group controlId="formGridItemName">
                 <Form.Label>Item Name</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   name="name"
+                  defaultValue={item.name}
                   value={formData.name}
                   onChange={handleInputChange}
                   className="py-1"
-                  required
                 />
-                <Form.Control.Feedback type="invalid">
-                  Please enter a name.
-                </Form.Control.Feedback>
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
-              <Form.Group controlId="formGridChooseCategory">
-                <Form.Label>Category</Form.Label>
-                <Form.Control
-                  type="text"
-                  readOnly
-                  value={category?.name}
-                  className="py-1"
-                  required
-                />
-              </Form.Group>
+              {categoryId ? (
+                <Form.Group controlId="formGridChooseCategory">
+                  <Form.Label>Category</Form.Label>
+                  <Form.Control
+                    type="text"
+                    defaultValue={item.category.name}
+                    value={category?.name}
+                    className="py-1"
+                  />
+                </Form.Group>
+              ) : (
+                <Form.Group controlId="formGridChooseCategory">
+                  <Form.Label>Category</Form.Label>
+                  <Form.Select
+                    name="category_id"
+                    value={formData.category_id}
+                    onChange={handleInputChange}
+                    className="py-1"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select a category
+                    </option>
+                    {categories &&
+                      categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a category.
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
             </Col>
           </Row>
           <Row className="mb-3 text-black">
@@ -181,7 +165,7 @@ function CategoryAddItemScreen() {
                 required
               />
               <Form.Control.Feedback type="invalid">
-                Please provide a unit price.
+                Please provide a price.
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -231,9 +215,10 @@ function CategoryAddItemScreen() {
             <Form.Label>Item Image</Form.Label>
             <Form.Control
               type="file"
-              name="image"
+              name="image" // Make sure the name matches the property in formData
               onChange={handleInputChange}
               className="py-1"
+              accept="image/*"
               required
             />
             <Form.Control.Feedback type="invalid">
@@ -246,7 +231,7 @@ function CategoryAddItemScreen() {
             className="py-1"
             disabled={isItemLoading}
             onClick={() => {
-              const form = document.getElementById("category-add-item-form");
+              const form = document.getElementById("add-item-form");
               const formFields = form.querySelectorAll(
                 "input, select, textarea"
               );
@@ -276,12 +261,12 @@ function CategoryAddItemScreen() {
           >
             Cancel
           </Button>
-          {/* Modal */}
+          {/* ConfirmModal component */}
           <Modals
             show={showModal}
             onHide={() => setShowModal(false)}
-            onConfirm={handleModalAction}
-            title="Confirm Action"
+            onConfirm={handleModelAction}
+            title="Add Confirm"
             body="Are you sure you want to perform this action?"
           />
         </Form>
@@ -289,5 +274,3 @@ function CategoryAddItemScreen() {
     </div>
   );
 }
-
-export default CategoryAddItemScreen;
