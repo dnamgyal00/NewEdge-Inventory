@@ -138,7 +138,19 @@ export default function ItemStockInScreen() {
           <p className="mb-3">Manage stock in </p>
           <div className="bg-white rounded p-4 d-flex">
             <div className="col-sm-5">
-              <Image src={testImage} alt="" fluid />
+              {item.image ? (
+                <Image
+                  src={item.image} // Assuming item.image contains the URL
+                  alt={`Image for ${item.name}`}
+                  fluid
+                />
+              ) : (
+                <Image
+                  src={testImage} // Replace testImage with your default image URL
+                  alt="Test"
+                  fluid
+                />
+              )}
             </div>
             <div className="col-sm-7">
               <Form
