@@ -43,33 +43,6 @@ const AddItemScreen = () => {
       e.stopPropagation();
     }
     setValidated(true);
-
-    try {
-      const formDataObj = new FormData();
-      formDataObj.append("name", formData.name);
-      formDataObj.append("category_id", formData.category_id);
-      formDataObj.append("unit", formData.unit);
-      formDataObj.append("unit_price", formData.unit_price);
-      formDataObj.append("brand", formData.brand);
-      formDataObj.append("description", formData.description);
-      formDataObj.append("image", formData.image);
-      const result = await createItem(formDataObj).unwrap();
-      console.log(result);
-      toast.success("item added successfully");
-      //navigate("/item-list");
-
-      setFormData({
-        name: "",
-        category_id: 0,
-        unit: "",
-        unit_price: 0,
-        brand: "",
-        description: "",
-        image: null,
-      });
-    } catch (error) {
-      console.error("Error creating item:", error);
-    }
   };
 
   const handleInputChange = (e) => {
@@ -94,7 +67,7 @@ const AddItemScreen = () => {
     // Implement the logic for the confirmed action here
     console.log("Confirmed action");
 
-    const form = document.getElementById("your-form-id"); // replace "your-form-id" with the actual ID of your form
+    const form = document.getElementById("add-item-form"); // replace "your-form-id" with the actual ID of your form
     if (form && validated) {
       try {
         const formDataObj = new FormData(form);
@@ -115,9 +88,6 @@ const AddItemScreen = () => {
       } catch (error) {
         console.error("Error creating item:", error);
       }
-
-      // Close the modal after handling the action
-      setShowModal(false);
     }
   };
 
@@ -137,7 +107,7 @@ const AddItemScreen = () => {
       )}
       <div className="bg-white rounded p-4 ">
         <Form
-          id="your-form-id"
+          id="add-item-form"
           noValidate
           validated={validated}
           onSubmit={handleSubmit}
@@ -295,8 +265,23 @@ const AddItemScreen = () => {
             className="py-1"
             disabled={isItemLoading}
             onClick={() => {
-              if (validated) {
+              const form = document.getElementById("add-item-form");
+              const formFields = form.querySelectorAll(
+                "input, select, textarea"
+              );
+
+              // Check if the form is valid and all fields are filled
+              const isValid =
+                form.checkValidity() &&
+                Array.from(formFields).every(
+                  (field) => field.value.trim() !== ""
+                );
+
+              if (isValid) {
                 setShowModal(true);
+              } else {
+                // If not valid, trigger form validation
+                setValidated(true);
               }
             }}
           >
