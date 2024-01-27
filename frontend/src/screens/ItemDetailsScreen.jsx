@@ -5,24 +5,19 @@ import {
   ListGroup,
   Card,
   Button,
-  Form,
   Table,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import testImage from "../assets/laptop.jpg";
-import { useLocation, useParams } from "react-router-dom";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
 import { useState } from "react";
-import React from "react";
+import { useSelector } from "react-redux";
 
 const ItemDetailsScreen = () => {
-  const { name, id } = useParams();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const itemId = searchParams.get("id");
+  const itemId = useSelector((state) => state.item.itemId);
 
   //item Pagenation
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,10 +113,7 @@ const ItemDetailsScreen = () => {
           </Row>
           <div className="d-flex flex-column flex-md-row justify-content-end py-3 ">
             <LinkContainer
-              to={{
-                pathname: `/home/item/${name}/stock-in`,
-                search: `?id=${item.id}`,
-              }}
+              to={{ pathname: `/home/item/${item.name}/stock-in` }}
             >
               <Button
                 className="btn-block me-md-2 mb-2 mb-md-0 px-4 py-2 "
@@ -132,8 +124,7 @@ const ItemDetailsScreen = () => {
             </LinkContainer>
             <LinkContainer
               to={{
-                pathname: `/home/item/${name}/stock-out`,
-                search: `?id=${item.id}`,
+                pathname: `/home/item/${item.name}/stock-out`,
               }}
             >
               <Button

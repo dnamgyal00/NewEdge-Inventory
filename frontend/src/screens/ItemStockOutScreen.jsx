@@ -5,17 +5,18 @@ import Form from "react-bootstrap/Form";
 import { Row, Col, Button, Image } from "react-bootstrap";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import testImage from "../assets/laptop.jpg";
-import { useParams, useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Modals from "../components/Modals";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ItemStockOutScreen() {
-  const { name, id } = useParams();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const itemId = searchParams.get("id");
+  const itemId = useSelector((state) => state.item.itemId);
+  const navigate = useNavigate();
   //api calls
+  
   const {
     data: { data: item } = {},
     isLoading,
@@ -29,7 +30,7 @@ export default function ItemStockOutScreen() {
 
   // stock in data
   const [itemData, setItemData] = useState({
-    item_id: 0,
+    item_id: itemId,
     qty: 0,
     total_price: 0,
     type: "",
@@ -40,10 +41,15 @@ export default function ItemStockOutScreen() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name == "item_id" || name == "qty") {
+    if (name == "qty") {
       setItemData((prevData) => ({
         ...prevData,
         [name]: parseInt(value, 10) || 0,
+      }));
+    } else if (name == "created_at" && value) {
+      setItemData((prevData) => ({
+        ...prevData,
+        created_at: value,
       }));
     } else {
       setItemData((prevData) => ({
@@ -53,18 +59,10 @@ export default function ItemStockOutScreen() {
     }
   };
 
-  const [selectedItem, setSelectedItem] = useState(null);
-  useEffect(() => {
-    if (item && item.length > 0) {
-      const item = item.find((item) => item.id === itemData.item_id);
-      setSelectedItem(item);
-    }
-  }, [itemData.item_id]);
-
   const [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
-    if (selectedItem) {
-      const total = selectedItem.unit_price * itemData.qty;
+    if (item) {
+      const total = item.unit_price * itemData.qty;
       setTotalPrice(total);
       setItemData((prevData) => ({
         ...prevData,
@@ -78,7 +76,6 @@ export default function ItemStockOutScreen() {
   //submit function
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // form validation
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -93,9 +90,15 @@ export default function ItemStockOutScreen() {
   const handleModalAction = async () => {
     // Close the modal
     setShowModal(false);
+    const loadingToastId = toast.info("Submitting...");
+
     try {
       const result = await createStockOut(itemData).unwrap();
       console.log(result);
+      toast.dismiss(loadingToastId);
+      // Show success toast
+      toast.success("Item added successfully");
+      navigate(`/home/item/${item.name}`);
       setItemData({
         item_id: 0,
         qty: 0,
@@ -128,109 +131,6 @@ export default function ItemStockOutScreen() {
           <h5 className="mb-0 text-black">Stock Out </h5>
           <p className="mb-3">Manage stock out </p>
           <div className="bg-white rounded p-4 d-flex">
-            {/* <Form onSubmit={handleSubmit}> */}
-            {/* <Row className="mb-2 text-black">
-            
-           
-              {/* //DATE */}
-            {/* <Form.Group controlId="formGridDate">
-                
-              </Form.Group> */}
-            {/* </Col>
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridBrand">
-                <Form.Label>Brand</Form.Label> */}
-            {/* <Form.Select className="py-1">
-                  <option>Choose...</option>
-                  <option>...</option>
-                </Form.Select> */}
-            {/* <Form.Control
-                  className="py-1"
-                  readOnly
-                  defaultValue={selectedItem ? selectedItem.brand : ""}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-2 text-black">
-            <Col xs={6} md={5}>
-              
-            </Col>
-
-            
-          </Row>
-          <Row className="mb-3 text-black ">
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnit">
-                <Form.Label>
-                  <i>Enter Quantity:</i>
-                </Form.Label>
-                <Form.Control
-                  required
-                  type="number"
-                  className="py-1"
-                  name="qty"
-                  value={itemData.qty}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-            </Col>
-
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnit">
-                <Form.Label>Quantity Available</Form.Label>
-                <Form.Control
-                  type="number"
-                  className="py-1"
-                  name="qty"
-                  value={selectedItem ? selectedItem.qty_on_hand : 0}
-                  readOnly
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3 text-black">
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnitPrice">
-                <Form.Label>Total Price</Form.Label>
-                <Form.Control
-                  className="py-1"
-                  readOnly
-                  value={`Nu.${totalPrice}`}
-                  // onChange={handleChange}
-                  name="total_price"
-                />
-              </Form.Group>
-            </Col>
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnitPrice">
-                <Form.Label>Unit Price</Form.Label>
-                <Form.Control
-                  className="py-1"
-                  readOnly
-                  defaultValue={
-                    selectedItem ? `Nu.${selectedItem.unit_price}` : ""
-                  }
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3 text-black">
-            <Col xs={6} md={5}>
-              <Form.Group controlId="formGridUnitPrice">
-                <Form.Label>
-                  <i>Enter Description:</i>
-                </Form.Label>
-                <Form.Control
-                  required
-                  className="py-1" */}
-            {/* defaultValue={selectedItem ? itemData.status_details : ""}
-                  onChange={handleChange}
-                  name="status_details"
-                />
-              </Form.Group>
-            </Col>
-          </Row>  */}
             <div className="col-sm-5">
               <Image src={testImage} alt="" fluid />
             </div>
@@ -383,7 +283,7 @@ export default function ItemStockOutScreen() {
                         name="type"
                         onChange={handleChange}
                         required
-                        value={selectedItem ? itemData.type : ""}
+                        value={item ? itemData.type : ""}
                       >
                         <option disabled value="">
                           Choose...
@@ -400,8 +300,8 @@ export default function ItemStockOutScreen() {
                       <Form.Label>Description</Form.Label>
                       <Form.Control
                         className="py-1"
-                        name="created_at"
-                        //value={new Date(itemData.created_at)}
+                        name="status_details"
+                        defaultValue={item ? item.status_details : ""}
                         required
                         onChange={handleChange}
                       />
