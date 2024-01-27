@@ -2,27 +2,18 @@ import { useLocation, useParams } from "react-router-dom";
 import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
-import {
-  Row,
-  Col,
-  Image,
-  ListGroup,
-  Card,
-  Button,
-  Form,
-  Table,
-} from "react-bootstrap";
+import { FaPlus } from "react-icons/fa";
+import { Row, Col, Image, ListGroup, Button, Table } from "react-bootstrap";
 import testImage from "../assets/laptop.jpg";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import { Pagination } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { setItemId } from "../slices/itemSlice";
 
 const CategoryDetailsScreen = () => {
-  const { name, id } = useParams();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const categoryId = searchParams.get('id');
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.category.categoryId);
 
   //item Pagenation
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,19 +52,19 @@ const CategoryDetailsScreen = () => {
             <div className="bg-white rounded p-4">
               <Row>
                 <Col>
-                {category.image ? (
-            <Image
-              src={category.image} // Assuming category.image contains the URL
-              alt={`Image for ${category.name}`}
-              fluid
-            />
-          ) : (
-            <Image
-              src={testImage} // Replace testImage with your default image URL
-              alt="Test"
-              fluid
-            />
-          )}
+                  {category.image ? (
+                    <Image
+                      src={category.image} // Assuming category.image contains the URL
+                      alt={`Image for ${category.name}`}
+                      fluid
+                    />
+                  ) : (
+                    <Image
+                      src={testImage} // Replace testImage with your default image URL
+                      alt="Test"
+                      fluid
+                    />
+                  )}
                 </Col>
 
                 <Col xs={6}>
@@ -98,7 +89,6 @@ const CategoryDetailsScreen = () => {
                         <Col md={5}>{category.created_at}</Col>
                       </Row>
                     </ListGroup.Item>
-
                   </ListGroup>
                 </Col>
               </Row>
@@ -110,8 +100,11 @@ const CategoryDetailsScreen = () => {
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h6 className="mb-0">Category Items</h6>
                 <div className="d-flex justify-content-between align-items-center">
-                 
-                  <LinkContainer to={{ pathname: `/home/category/${name}/add-item`, search: `?id=${category.id}` }}>
+                  <LinkContainer
+                    to={{
+                      pathname: `/home/category/${category.name}/add-item`,
+                    }}
+                  >
                     <Button variant="primary" size="sm" className="px-4 py-1">
                       {" "}
                       <FaPlus className="me-2 mb-1" />
@@ -135,7 +128,13 @@ const CategoryDetailsScreen = () => {
                     {category.item &&
                       category.item.map((item) => (
                         <tr key={item.id}>
-                          <td>{item.name}</td>
+                          <LinkContainer
+                            to={{ pathname: `/home/item/${item.name}` }}
+                            onClick={() => dispatch(setItemId(item.id))}
+                          >
+                            <td>{item.name}</td>
+                          </LinkContainer>
+                          {/* <td>{item.name}</td> */}
                           <td>{item.brand}</td>
                           <td>{item.unit_price}</td>
                           <td>{item.unit}</td>
@@ -147,19 +146,22 @@ const CategoryDetailsScreen = () => {
               </div>
 
               {/* Pagination */}
-        {category.item && category.item.length > 0 && (
-          <nav aria-label="Page navigation example mb-5">
-            <ul className="pagination justify-content-center">
-              <Pagination>
-                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                <Pagination.Next onClick={handleNextPage} disabled={category.item.length < 5} />
-              </Pagination>
-            </ul>
-          </nav>
-        )}
-
-
-        
+              {category.item && category.item.length > 0 && (
+                <nav aria-label="Page navigation example mb-5">
+                  <ul className="pagination justify-content-center">
+                    <Pagination>
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={currentPage == 1}
+                      />
+                      <Pagination.Next
+                        onClick={handleNextPage}
+                        disabled={category.item.length < 5}
+                      />
+                    </Pagination>
+                  </ul>
+                </nav>
+              )}
             </div>
           </div>
         </div>
