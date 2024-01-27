@@ -66,7 +66,7 @@ function CategoryAddItemScreen() {
 
         setFormData({
           name: "",
-          category_id: "",
+          category_id: categoryId ? categoryId : "",
           unit: "",
           unit_price: "",
           brand: "",

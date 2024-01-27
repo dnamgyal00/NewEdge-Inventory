@@ -12,8 +12,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useState } from "react";
 import { Pagination } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { setItemId } from "../slices/itemSlice";
 
 const ItemScreen = () => {
+
+  const dispatch = useDispatch();
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -54,7 +58,7 @@ const ItemScreen = () => {
           <h5 className="text-black mb-0"> Item List</h5>
           Manage your item
         </div>
-        <LinkContainer to="/admin/add-item">
+        <LinkContainer to="/home/category/add-item">
           <Button variant="primary" size="sm" className="px-4 py-1">
             {" "}
             <FaPlus className="me-2 mb-1" />
@@ -161,7 +165,8 @@ const ItemScreen = () => {
                               />
                             )}
                             </td> */}
-                    <LinkContainer to={{ pathname: `/home/item/${item.name}`, search: `?id=${item.id}` }}>
+                    <LinkContainer to={{ pathname: `/home/item/${item.name}`}}
+                    onClick={() => dispatch(setItemId(item.id))}>
                       <td>{item.name}</td>
                     </LinkContainer>
                     <td>{item.category.name}</td>

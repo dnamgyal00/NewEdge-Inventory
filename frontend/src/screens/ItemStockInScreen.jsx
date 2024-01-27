@@ -4,17 +4,17 @@ import { useCreateStockInMutation } from "../slices/transactionsApiSlice";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button, Image } from "react-bootstrap";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
-import { useLocation, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import testImage from "../assets/laptop.jpg";
 import Modals from "../components/Modals";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ItemStockInScreen() {
-  const { name, id } = useParams();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const itemId = searchParams.get("id");
+  const navigate = useNavigate();
+  const itemId = useSelector((state) => state.item.itemId);
   //api calls
   const {
     data: { data: item } = {},
@@ -29,12 +29,13 @@ export default function ItemStockInScreen() {
 
   // stock in data
   const [itemData, setItemData] = useState({
-    item_id: 0,
+    item_id: itemId,
     qty: 0,
     total_price: 0,
     created_at: "",
   });
   console.log(itemData);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -54,19 +55,10 @@ export default function ItemStockInScreen() {
     }
   };
 
-  // console.log(itemData);
-  const [selectedItem, setSelectedItem] = useState(null);
-  useEffect(() => {
-    if (item && item.length > 0) {
-      const item = item.find((item) => item.id === itemData.item_id);
-      setSelectedItem(item);
-    }
-  }, [itemData.item_id]);
-
   const [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
-    if (selectedItem) {
-      const total = selectedItem.unit_price * itemData.qty;
+    if (item) {
+      const total = item.unit_price * itemData.qty;
       setTotalPrice(total);
       setItemData((prevData) => ({
         ...prevData,
@@ -97,16 +89,29 @@ export default function ItemStockInScreen() {
     // Close the modal
     setShowModal(false);
 
+    const loadingToastId = toast.info("Submitting...");
+
     try {
       // If the form is valid and confirmed, proceed with the submission
+      console.log(itemData);
       const result = await createStockIn(itemData).unwrap();
-      console.log(result);
+
+      // console.log(result);
+      // toast.success("item added successfully");
+      toast.dismiss(loadingToastId);
+      // Show success toast
+      toast.success("Item added successfully");
+      navigate(`/home/item/${item.name}`);
       setItemData({
         item_id: 0,
         qty: 0,
         total_price: 0,
       });
     } catch (error) {
+      // Close loading toast
+      toast.dismiss(loadingToastId);
+      // Show error toast
+      toast.error("Error submitting stock in data");
       console.error("Error creating submitting stock in data:", error);
     }
 

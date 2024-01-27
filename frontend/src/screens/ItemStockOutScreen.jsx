@@ -5,17 +5,18 @@ import Form from "react-bootstrap/Form";
 import { Row, Col, Button, Image } from "react-bootstrap";
 import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import testImage from "../assets/laptop.jpg";
-import { useParams, useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Modals from "../components/Modals";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ItemStockOutScreen() {
-  const { name, id } = useParams();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const itemId = searchParams.get("id");
+  const itemId = useSelector((state) => state.item.itemId);
+  const navigate = useNavigate();
   //api calls
+
   const {
     data: { data: item } = {},
     isLoading,
@@ -29,7 +30,7 @@ export default function ItemStockOutScreen() {
 
   // stock in data
   const [itemData, setItemData] = useState({
-    item_id: 0,
+    item_id: itemId,
     qty: 0,
     total_price: 0,
     type: "",
@@ -40,10 +41,15 @@ export default function ItemStockOutScreen() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name == "item_id" || name == "qty") {
+    if (name == "qty") {
       setItemData((prevData) => ({
         ...prevData,
         [name]: parseInt(value, 10) || 0,
+      }));
+    } else if (name == "created_at" && value) {
+      setItemData((prevData) => ({
+        ...prevData,
+        created_at: value,
       }));
     } else {
       setItemData((prevData) => ({
@@ -53,18 +59,10 @@ export default function ItemStockOutScreen() {
     }
   };
 
-  const [selectedItem, setSelectedItem] = useState(null);
-  useEffect(() => {
-    if (item && item.length > 0) {
-      const item = item.find((item) => item.id === itemData.item_id);
-      setSelectedItem(item);
-    }
-  }, [itemData.item_id]);
-
   const [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
-    if (selectedItem) {
-      const total = selectedItem.unit_price * itemData.qty;
+    if (item) {
+      const total = item.unit_price * itemData.qty;
       setTotalPrice(total);
       setItemData((prevData) => ({
         ...prevData,
@@ -78,7 +76,6 @@ export default function ItemStockOutScreen() {
   //submit function
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // form validation
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -93,9 +90,15 @@ export default function ItemStockOutScreen() {
   const handleModalAction = async () => {
     // Close the modal
     setShowModal(false);
+    const loadingToastId = toast.info("Submitting...");
+
     try {
       const result = await createStockOut(itemData).unwrap();
       console.log(result);
+      toast.dismiss(loadingToastId);
+      // Show success toast
+      toast.success("Item added successfully");
+      navigate(`/home/item/${item.name}`);
       setItemData({
         item_id: 0,
         qty: 0,
@@ -294,7 +297,7 @@ export default function ItemStockOutScreen() {
                         name="type"
                         onChange={handleChange}
                         required
-                        value={itemData.type}
+                        value={item ? itemData.type : ""}
                       >
                         <option disabled value="">
                           Choose...
@@ -314,8 +317,8 @@ export default function ItemStockOutScreen() {
                       <Form.Label>Description</Form.Label>
                       <Form.Control
                         className="py-1"
-                        name="created_at"
-                        //value={new Date(itemData.created_at)}
+                        name="status_details"
+                        defaultValue={item ? item.status_details : ""}
                         required
                         onChange={handleChange}
                       />
