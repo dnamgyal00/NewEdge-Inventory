@@ -178,7 +178,13 @@ function CategoryAddItemScreen() {
                 type="number"
                 name="unit_price"
                 value={formData.unit_price}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  const enteredValue = parseInt(e.target.value, 10);
+                  const newValue = enteredValue >= 0 ? enteredValue : 0;
+
+                  // Update state with the new value
+                  handleChange({ target: { name: "qty", value: newValue } });
+                }}
                 className="py-1"
                 required
               />
