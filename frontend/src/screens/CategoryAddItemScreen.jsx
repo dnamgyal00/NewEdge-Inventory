@@ -14,10 +14,10 @@ function CategoryAddItemScreen() {
 
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.category.categoryId);
-  const [createItem, { isLoading: isItemLoading, refetch, isError, error }] =
+  const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
 
-  const { data: { data: category } = {}, isLoading } =
+  const { data: { data: category } = {}, refetch, isLoading } =
     useGetCategoryDetailsQuery({ categoryId, currentPage: 1 });
 
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ function CategoryAddItemScreen() {
     description: "",
     image: null,
   });
-  const [imageData, setImageData] = useState(null);
 
   // console.log(imageData)
   const [validated, setValidated] = useState(false);
@@ -58,12 +57,11 @@ function CategoryAddItemScreen() {
       formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       refetch();
+      toast.success("item added successfully");
+      navigate(`/home/category/${category.name}`);
       console.log(result);
       if (!result.status) {
       } else {
-        toast.success("item added successfully");
-        //navigate("/item-list");
-
         setFormData({
           name: "",
           category_id: categoryId ? categoryId : "",
@@ -178,6 +176,7 @@ function CategoryAddItemScreen() {
                 type="number"
                 name="unit_price"
                 value={formData.unit_price}
+                
                 onChange={(e) => {
                   const enteredValue = parseInt(e.target.value, 10);
                   const newValue = enteredValue >= 0 ? enteredValue : 0;
