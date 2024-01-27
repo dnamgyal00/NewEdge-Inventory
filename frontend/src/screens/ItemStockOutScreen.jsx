@@ -20,6 +20,7 @@ export default function ItemStockOutScreen() {
   const {
     data: { data: item } = {},
     isLoading,
+    refetch,
     error,
   } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
 
@@ -94,6 +95,7 @@ export default function ItemStockOutScreen() {
 
     try {
       const result = await createStockOut(itemData).unwrap();
+      refetch();
       console.log(result);
       toast.dismiss(loadingToastId);
       // Show success toast

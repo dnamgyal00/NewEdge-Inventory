@@ -19,6 +19,7 @@ export default function ItemStockInScreen() {
   const {
     data: { data: item } = {},
     isLoading,
+    refetch,
     error,
   } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
 
@@ -95,6 +96,7 @@ export default function ItemStockInScreen() {
       // If the form is valid and confirmed, proceed with the submission
       console.log(itemData);
       const result = await createStockIn(itemData).unwrap();
+      refetch();
 
       // console.log(result);
       // toast.success("item added successfully");
@@ -102,6 +104,7 @@ export default function ItemStockInScreen() {
       // Show success toast
       toast.success("Item added successfully");
       navigate(`/home/item/${item.name}`);
+
       setItemData({
         item_id: 0,
         qty: 0,
