@@ -282,6 +282,7 @@ const AddItemScreen = () => {
               name="image" // Make sure the name matches the property in formData
               onChange={handleInputChange}
               className="py-1"
+              accept="image/*"
               required
             />
             <Form.Control.Feedback type="invalid">

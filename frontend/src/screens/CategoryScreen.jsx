@@ -116,7 +116,7 @@ const CategoryScreen = () => {
               <th className="text-black border-0">No of Items</th>
               <th className="text-black border-0">Description</th>
 
-              <th className="text-black border-0">Action</th>
+              {/* <th className="text-black border-0">Action</th> */}
             </tr>
           </thead>
           <tbody>
@@ -141,11 +141,11 @@ const CategoryScreen = () => {
                     <td>{category.name}</td>
                   </LinkContainer>
 
-                  <td>{category.item_count}</td>
+                  <td>{category.item_count} </td>
                   <td>{category.description}</td>
-                  <td>
+                  {/* <td>
                     <BsEye /> <FiEdit3 /> <FaTrashAlt />
-                  </td>
+                  </td> */}
                 </tr>
               ))}
           </tbody>
