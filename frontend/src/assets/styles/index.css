@@ -84,3 +84,16 @@ button.dropdown-toggle {
     display: none;
   }
 } */
+
+.clickable-cell {
+  cursor: pointer;
+
+  /* Add any additional styles as needed */
+}
+.clickable-cell:hover {
+  color: black;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}

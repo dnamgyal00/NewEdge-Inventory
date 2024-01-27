@@ -6,6 +6,7 @@ import {
   Card,
   Button,
   Table,
+  Dropdown,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import testImage from "../assets/laptop.jpg";
@@ -15,9 +16,11 @@ import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import { format } from "date-fns";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import Modals from "../components/Modals";
 
 const ItemDetailsScreen = () => {
   const itemId = useSelector((state) => state.item.itemId);
@@ -39,6 +42,12 @@ const ItemDetailsScreen = () => {
     error,
   } = useGetItemDetailsQuery({ itemId, currentPage });
   console.log(item);
+
+  // Modals
+  const [showModal, setShowModal] = useState(false);
+  const handleModalAction = (e) => {
+    // handle modal action
+  };
 
   return (
     <>
@@ -71,8 +80,36 @@ const ItemDetailsScreen = () => {
               )}
             </Col>
             <Col md={8}>
-              <Card className="p-3 border-0 shadow-none">
-                <ListGroup variant="flush" className="p-2">
+              <Card className="p-3 border-0 shadow-none ">
+                <Dropdown className="position-absolute top-0 end-0 p-2 me-2 mb-2">
+                  <Dropdown.Toggle
+                    variant="transparent"
+                    className="p-0 shadow-none"
+                  >
+                    <BsThreeDotsVertical />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="shadow-none">
+                    <Dropdown.Item>
+                      <LinkContainer
+                        to={{ pathname: `/home/item/${item.name}/edit` }}
+                      >
+                        <a className="text-decoration-none text-dark">Edit</a>
+                      </LinkContainer>
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setShowModal(true)}>
+                      Delete
+                    </Dropdown.Item>
+                    {/* ConfirmModal component */}
+                    <Modals
+                      show={showModal}
+                      onHide={() => setShowModal(false)}
+                      onConfirm={handleModalAction}
+                      title="Confirm Delete"
+                      body="Are you sure you want to perform this action?"
+                    />
+                  </Dropdown.Menu>
+                </Dropdown>
+                <ListGroup variant="flush" className="p-2 mt-2">
                   <ListGroup.Item className="lh-1">
                     <h3>{item.name}</h3>
                     <Row>
@@ -139,111 +176,106 @@ const ItemDetailsScreen = () => {
             </LinkContainer>
           </div>
 
-
           <div className="container-fluid pt-3 px-1">
-          <div className="bg-white text-center rounded p-4">
-            <Tabs
-              defaultActiveKey="itemInstance"
-              transition={false}
-              id="noanim-tab-example"
-              className="mb-3"
-            >
-              <Tab eventKey="itemInstance" title="Item Instance">
-              <div className="table-responsive">
-                <Table responsive="sm" className="position-relative">
-                  <thead className="bg-light">
-                    <tr>
-                      <th className="text-black border-0">Instance Id</th>
-                      <th className="text-black border-0">Status</th>
-                      <th className="text-black border-0">Details</th>
-                      <th className="text-black border-0">StockIn Id</th>
-                      <th className="text-black border-0">StockOut ID</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {item.item_instance &&
-                      item.item_instance.map((ins) => (
-                        <tr key={ins.id}>
-                          <td>{ins.id}</td>
-                          <td>{ins.status}</td>
-                          <td>{ins.status_details}</td>
-                          <td>{ins.stock_in_id}</td>
-                          <td>{ins.stock_in_id}</td>
+            <div className="bg-white text-center rounded p-4">
+              <Tabs
+                defaultActiveKey="itemInstance"
+                transition={false}
+                id="noanim-tab-example"
+                className="mb-3"
+              >
+                <Tab eventKey="itemInstance" title="Item Instance">
+                  <div className="table-responsive">
+                    <Table responsive="sm" className="position-relative">
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="text-black border-0">Instance Id</th>
+                          <th className="text-black border-0">Status</th>
+                          <th className="text-black border-0">Details</th>
+                          <th className="text-black border-0">StockIn Id</th>
+                          <th className="text-black border-0">StockOut ID</th>
                         </tr>
-                      ))}
-                  </tbody>
-                </Table>
-              </div>
-              {/* Pagination */}
-              {item.item_instance && item.item_instance.length > 0 && (
-                <nav aria-label="Page navigation example mb-5">
-                  <ul className="pagination justify-content-center">
-                    <Pagination>
-                      <Pagination.Prev
-                        onClick={handlePrevPage}
-                        disabled={currentPage == 1}
-                      />
-                      <Pagination.Next
-                        onClick={handleNextPage}
-                        disabled={item.item_instance.length < 10}
-                      />
-                    </Pagination>
-                  </ul>
-                </nav>
-              )}
-              </Tab>
+                      </thead>
+                      <tbody>
+                        {item.item_instance &&
+                          item.item_instance.map((ins) => (
+                            <tr key={ins.id}>
+                              <td>{ins.id}</td>
+                              <td>{ins.status}</td>
+                              <td>{ins.status_details}</td>
+                              <td>{ins.stock_in_id}</td>
+                              <td>{ins.stock_in_id}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                  {/* Pagination */}
+                  {item.item_instance && item.item_instance.length > 0 && (
+                    <nav aria-label="Page navigation example mb-5">
+                      <ul className="pagination justify-content-center">
+                        <Pagination>
+                          <Pagination.Prev
+                            onClick={handlePrevPage}
+                            disabled={currentPage == 1}
+                          />
+                          <Pagination.Next
+                            onClick={handleNextPage}
+                            disabled={item.item_instance.length < 10}
+                          />
+                        </Pagination>
+                      </ul>
+                    </nav>
+                  )}
+                </Tab>
 
-
-              <Tab eventKey="transactions" title="Transactions">
-              <div className="table-responsive">
-                <Table responsive="sm" className="position-relative">
-                  <thead className="bg-light">
-                    <tr>
-                    <th className="text-black border-0">Stock In/Out</th>
-                    <th className="text-black border-0">Details</th>
-                    <th className="text-black border-0">Qty</th>
-                    <th className="text-black border-0">Total Price</th>
-                    <th className="text-black border-0">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-              
-
-                  {item.transactions &&
-                    item.transactions.map((transaction) => (
-                      <tr>
-                        <td>{transaction.transaction_type}</td>
-                        <td>{transaction.type}</td>
-                        <td>{transaction.qty}</td>
-                        <td>{transaction.total_price}</td>
-                        <td>{format(transaction.created_at, "dd-mm-yyyy")}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-
-
-              </div>
-              {/* Pagination */}
-              {item.item_instance && item.item_instance.length > 0 && (
-                <nav aria-label="Page navigation example mb-5">
-                  <ul className="pagination justify-content-center">
-                    <Pagination>
-                      <Pagination.Prev
-                        onClick={handlePrevPage}
-                        disabled={currentPage == 1}
-                      />
-                      <Pagination.Next
-                        onClick={handleNextPage}
-                        disabled={item.transactions.length < 10}
-                      />
-                    </Pagination>
-                  </ul>
-                </nav>
-              )}
-              </Tab>
-
-            </Tabs>
+                <Tab eventKey="transactions" title="Transactions">
+                  <div className="table-responsive">
+                    <Table responsive="sm" className="position-relative">
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="text-black border-0">Stock In/Out</th>
+                          <th className="text-black border-0">Details</th>
+                          <th className="text-black border-0">Qty</th>
+                          <th className="text-black border-0">Total Price</th>
+                          <th className="text-black border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {item.transactions &&
+                          item.transactions.map((transaction) => (
+                            <tr>
+                              <td>{transaction.transaction_type}</td>
+                              <td>{transaction.type}</td>
+                              <td>{transaction.qty}</td>
+                              <td>{transaction.total_price}</td>
+                              <td>
+                                {format(transaction.created_at, "dd-mm-yyyy")}
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                  {/* Pagination */}
+                  {item.item_instance && item.item_instance.length > 0 && (
+                    <nav aria-label="Page navigation example mb-5">
+                      <ul className="pagination justify-content-center">
+                        <Pagination>
+                          <Pagination.Prev
+                            onClick={handlePrevPage}
+                            disabled={currentPage == 1}
+                          />
+                          <Pagination.Next
+                            onClick={handleNextPage}
+                            disabled={item.transactions.length < 10}
+                          />
+                        </Pagination>
+                      </ul>
+                    </nav>
+                  )}
+                </Tab>
+              </Tabs>
             </div>
           </div>
         </div>

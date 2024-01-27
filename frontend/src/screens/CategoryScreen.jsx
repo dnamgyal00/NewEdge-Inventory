@@ -138,7 +138,7 @@ const CategoryScreen = () => {
                       search: `?id=${category.id}`,
                     }}
                   >
-                    <td>{category.name}</td>
+                    <td className="clickable-cell">{category.name}</td>
                   </LinkContainer>
 
                   <td>{category.item_count} </td>

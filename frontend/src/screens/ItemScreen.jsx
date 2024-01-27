@@ -16,7 +16,6 @@ import { useDispatch } from "react-redux";
 import { setItemId } from "../slices/itemSlice";
 
 const ItemScreen = () => {
-
   const dispatch = useDispatch();
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,13 +27,13 @@ const ItemScreen = () => {
   };
 
   //Filter
-  const [categoryName, setCategoryName] = useState("")
+  const [categoryName, setCategoryName] = useState("");
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
-    setCategoryName("")
+    setCategoryName("");
   };
 
   //API calls
@@ -142,21 +141,20 @@ const ItemScreen = () => {
           <Table responsive="sm">
             <thead className="bg-light">
               <tr>
-              {/* <th className="text-black border-0">Image</th> */}
+                {/* <th className="text-black border-0">Image</th> */}
                 <th className="text-black border-0">Name</th>
                 <th className="text-black border-0">Category</th>
                 <th className="text-black border-0">Brand Name</th>
                 <th className="text-black border-0">Price</th>
                 <th className="text-black border-0">Unit</th>
                 <th className="text-black border-0">Qty</th>
-                <th className="text-black border-0">Action</th>
               </tr>
             </thead>
             <tbody>
               {items &&
                 items.map((item) => (
                   <tr key={item.id}>
-                      {/* <td>
+                    {/* <td>
                             {item.image && (
                               <img
                                 src={item.image} // Assuming item.image contains the URL
@@ -165,16 +163,17 @@ const ItemScreen = () => {
                               />
                             )}
                             </td> */}
-                    <LinkContainer to={{ pathname: `/home/item/${item.name}`}}
-                    onClick={() => dispatch(setItemId(item.id))}>
-                      <td>{item.name}</td>
+                    <LinkContainer
+                      to={{ pathname: `/home/item/${item.name}` }}
+                      onClick={() => dispatch(setItemId(item.id))}
+                    >
+                      <td className="clickable-cell">{item.name}</td>
                     </LinkContainer>
-                    <td>{item.category.name}</td>
+                    <td className="clickable-cell">{item.category.name}</td>
                     <td>{item.brand}</td>
                     <td>{item.unit_price}</td>
                     <td>{item.unit}</td>
                     <td>{item.qty_on_hand}</td>
-                    <td>test</td>
                   </tr>
                 ))}
             </tbody>
@@ -186,8 +185,14 @@ const ItemScreen = () => {
           <nav aria-label="Page navigation example mb-5">
             <ul className="pagination justify-content-center">
               <Pagination>
-                <Pagination.Prev onClick={handlePrevPage} disabled={currentPage == 1} />
-                <Pagination.Next onClick={handleNextPage} disabled={items.length < 10} />
+                <Pagination.Prev
+                  onClick={handlePrevPage}
+                  disabled={currentPage == 1}
+                />
+                <Pagination.Next
+                  onClick={handleNextPage}
+                  disabled={items.length < 10}
+                />
               </Pagination>
             </ul>
           </nav>

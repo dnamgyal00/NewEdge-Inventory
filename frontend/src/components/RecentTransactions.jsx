@@ -54,7 +54,9 @@ const RecentTransactions = () => {
                             search: `?id=${transaction.item.id}`,
                           }}
                         >
-                          <td>{transaction.item.name}</td>
+                          <td className="clickable-cell">
+                            {transaction.item.name}
+                          </td>
                         </LinkContainer>
                         <LinkContainer
                           to={{
@@ -62,7 +64,9 @@ const RecentTransactions = () => {
                             search: `?id=${transaction.item.category.id}`,
                           }}
                         >
-                          <td>{transaction.item.category.name}</td>
+                          <td className="clickable-cell">
+                            {transaction.item.category.name}
+                          </td>
                         </LinkContainer>
 
                         <td>{transaction.transaction_type}</td>

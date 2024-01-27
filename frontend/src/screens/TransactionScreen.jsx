@@ -155,57 +155,6 @@ const TransactionScreen = () => {
     }
   };
 
-  // const fetchTransactionData = async (page) => {
-  //   try {
-  //     const { data } = await useGetTransactionsQuery({
-  //       filters,
-  //       page,
-  //     });
-
-  //     return data?.data || [];
-  //   } catch (error) {
-  //     console.error("Error fetching transaction data:", error);
-  //     return [];
-  //   }
-  // };
-
-  // const handleDownloadPDF = async () => {
-  //   try {
-  //     const allPdfData = [];
-
-  //     // Fetch data from all pages
-  //     let nextPage = 1;
-  //     while (true) {
-  //       const paginatedTransactions = await fetchTransactionData(nextPage);
-
-  //       if (!paginatedTransactions || paginatedTransactions.length === 0) {
-  //         // No more pages to fetch
-  //         break;
-  //       }
-
-  //       // Add data from the current page to the overall array
-  //       allPdfData.push(
-  //         ...paginatedTransactions.map((transaction) => ({
-  //           item_name: transaction.item.name,
-  //           category: transaction.item.category.name,
-  //           transaction_type: transaction.transaction_type,
-  //           qty: transaction.qty,
-  //           unit_price: `Nu.${transaction.item.unit_price}`,
-  //           total_price: `Nu.${transaction.total_price}`,
-  //           date: format(transaction.created_at, "yyyy-MM-dd"),
-  //         }))
-  //       );
-
-  //       nextPage++;
-  //     }
-
-  //     // Generate PDF with all data
-  //     downloadFile(allPdfData, "pdf", "Transactions");
-  //   } catch (error) {
-  //     console.error("Error downloading PDF:", error);
-  //   }
-  // };
-
   return (
     <div className=" col-sm-12 col-xl-6 w-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -272,7 +221,7 @@ const TransactionScreen = () => {
             </div>
           </div>
 
-            {/* Print Options */}
+          {/* Print Options */}
           <div className="d-flex flex-row">
             <PiMicrosoftExcelLogoFill size={25} onClick={handleDownloadExcel} />
           </div>
