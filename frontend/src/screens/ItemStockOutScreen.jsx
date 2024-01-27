@@ -20,6 +20,7 @@ export default function ItemStockOutScreen() {
   const {
     data: { data: item } = {},
     isLoading,
+    refetch,
     error,
   } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
 
@@ -94,6 +95,7 @@ export default function ItemStockOutScreen() {
 
     try {
       const result = await createStockOut(itemData).unwrap();
+      refetch();
       console.log(result);
       toast.dismiss(loadingToastId);
       // Show success toast
@@ -132,7 +134,19 @@ export default function ItemStockOutScreen() {
           <p className="mb-3">Manage stock out </p>
           <div className="bg-white rounded p-4 d-flex">
             <div className="col-sm-5">
-              <Image src={testImage} alt="" fluid />
+            {item.image ? (
+                <Image
+                  src={item.image} // Assuming item.image contains the URL
+                  alt={`Image for ${item.name}`}
+                  fluid
+                />
+              ) : (
+                <Image
+                  src={testImage} // Replace testImage with your default image URL
+                  alt="Test"
+                  fluid
+                />
+              )}
             </div>
             <div className="col-sm-7">
               <Form

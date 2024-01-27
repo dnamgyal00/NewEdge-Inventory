@@ -24,7 +24,14 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Category'],
         }),
+
+        searchCategoriesByName: builder.query({
+            query: (name) => ({
+                url: `${CATEGORY_URL}/search?name=${name}`
+            }),
+            keepUnusedDataFor: 5
+        }),
     }),
 });
 
-export const { useGetCategoriesQuery,useGetCategoryDetailsQuery, useCreateCategoryMutation } = itemsApiSlice; 
+export const { useGetCategoriesQuery,useGetCategoryDetailsQuery, useCreateCategoryMutation,useSearchCategoriesByNameQuery } = itemsApiSlice; 

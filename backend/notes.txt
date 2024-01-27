@@ -17,6 +17,8 @@ Follow the following steps to set up project:
 6.Install the dotenv package
     npm i dotenv
 7.Create .env file
+8.Install: -
+     npm install date-fns
 
 Follow the following steps to connect with prisma:
 1.Install the prisma

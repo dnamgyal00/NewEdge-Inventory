@@ -19,6 +19,7 @@ export default function ItemStockInScreen() {
   const {
     data: { data: item } = {},
     isLoading,
+    refetch,
     error,
   } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
 
@@ -95,6 +96,7 @@ export default function ItemStockInScreen() {
       // If the form is valid and confirmed, proceed with the submission
       console.log(itemData);
       const result = await createStockIn(itemData).unwrap();
+      refetch();
 
       // console.log(result);
       // toast.success("item added successfully");
@@ -102,6 +104,7 @@ export default function ItemStockInScreen() {
       // Show success toast
       toast.success("Item added successfully");
       navigate(`/home/item/${item.name}`);
+
       setItemData({
         item_id: 0,
         qty: 0,
@@ -138,7 +141,19 @@ export default function ItemStockInScreen() {
           <p className="mb-3">Manage stock in </p>
           <div className="bg-white rounded p-4 d-flex">
             <div className="col-sm-5">
-              <Image src={testImage} alt="" fluid />
+              {item.image ? (
+                <Image
+                  src={item.image} // Assuming item.image contains the URL
+                  alt={`Image for ${item.name}`}
+                  fluid
+                />
+              ) : (
+                <Image
+                  src={testImage} // Replace testImage with your default image URL
+                  alt="Test"
+                  fluid
+                />
+              )}
             </div>
             <div className="col-sm-7">
               <Form

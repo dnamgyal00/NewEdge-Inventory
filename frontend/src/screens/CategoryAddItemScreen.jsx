@@ -3,20 +3,19 @@ import { Row, Col, Button } from "react-bootstrap";
 import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
 import { useCreateItemMutation } from "../slices/itemsApiSlice";
 import { toast } from "react-toastify";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useState } from "react";
 import Modals from "../components/Modals";
+import { useDispatch, useSelector } from "react-redux";
 
 function CategoryAddItemScreen() {
-  const [createItem, { isLoading: isItemLoading, isError, error }] =
-    useCreateItemMutation();
 
-  // const { name } = useParams();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const categoryId = searchParams.get("id");
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.category.categoryId);
+  const [createItem, { isLoading: isItemLoading, refetch, isError, error }] =
+    useCreateItemMutation();
 
   const { data: { data: category } = {}, isLoading } =
     useGetCategoryDetailsQuery({ categoryId, currentPage: 1 });
@@ -58,6 +57,7 @@ function CategoryAddItemScreen() {
       formDataObj.append("description", formData.description);
       formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
+      refetch();
       console.log(result);
       if (!result.status) {
       } else {
