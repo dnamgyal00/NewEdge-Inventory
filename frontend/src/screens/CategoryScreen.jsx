@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetCategoriesQuery ,useSearchCategoriesByNameQuery} from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Collapse, Row, Form, Col } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTrashAlt, FaTimes } from "react-icons/fa";
@@ -27,15 +27,29 @@ const CategoryScreen = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
   };
+
+  const [search,setSearch]=useState("");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearch(value);
+  };
+
+  //api calls
   const {
     data: { data: categories } = {},
     isLoading,
     isError,
   } = useGetCategoriesQuery(currentPage);
 
-  //console.log(categories.length);
-  console.log(categories);
+  const {
+    data: { data: CategorySearchResults } = {},
+    isLoading2,
+    isError2,
+    error2,
+  } = useSearchCategoriesByNameQuery (search?search:"1");
+  console.log(CategorySearchResults)
 
+  
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -83,10 +97,29 @@ const CategoryScreen = () => {
               type="text"
               placeholder="Search..."
               className="form-control border-0 px-0 py-0"
+              name='search'
+              value={search}
+              onChange={handleInputChange}
               style={{ boxShadow: "none" }}
             />
           </div>
         </div>
+
+          {/* EDIT THIS SEARCH RESULT DISPLAY */}
+          {CategorySearchResults && CategorySearchResults.map((result)=>(
+            <LinkContainer key={result.id}
+                    to={{
+                      pathname: `/home/category/${result.name}`,
+                      search: `?id=${result.id}`,
+                    }}
+                  >
+                    <div key={result.id} className="border-0 "> {result.name} </div> 
+                  </LinkContainer>
+            )) 
+            }
+
+
+
         <div className="input-group d-flex mb-3">
           <Collapse in={open}>
             <div id="example-collapse-text">

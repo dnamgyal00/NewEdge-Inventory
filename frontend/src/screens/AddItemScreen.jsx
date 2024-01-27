@@ -127,18 +127,7 @@ const AddItemScreen = () => {
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
-              {categoryId ? (
-                <Form.Group controlId="formGridChooseCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    readOnly
-                    value={category?.name}
-                    className="py-1"
-                  />
-                </Form.Group>
-              ) : (
-                <Form.Group controlId="formGridChooseCategory">
+            <Form.Group controlId="formGridChooseCategory">
                   <Form.Label>Category</Form.Label>
                   <Form.Select
                     name="category_id"
@@ -161,7 +150,6 @@ const AddItemScreen = () => {
                     Please choose a category.
                   </Form.Control.Feedback>
                 </Form.Group>
-              )}
             </Col>
           </Row>
           <Row className="mb-3 text-black">
