@@ -3,6 +3,8 @@ import { FaUser, FaBars } from "react-icons/fa";
 import { MdOutlineWarehouse } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
 import { IoMdLogOut } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "react-oidc-context";
 
 // import { useState } from "react";
 // import Sidebar from "./Sidebar.jsx";
@@ -13,6 +15,19 @@ const Header = () => {
   // const toggleSidebar = () => {
   //   setSidebarVisible(!sidebarVisible);
   // };
+
+  const auth = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await auth.signoutRedirect();
+      navigate('/home')
+    } catch (error) {
+      console.error("Error during sign out:", error);
+    }
+  };
   return (
     <header>
       <Navbar className="navbar navbar-expand bg-dark navbar-dark sticky-top px-md-2 py-0">
@@ -33,7 +48,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <LinkContainer to="/profile">
+              <LinkContainer to="home/profile">
                 <Nav.Link>
                   <Dropdown className="d-flex custom-dropdown">
                     <div className=" d-flex align-items-center text-white">
@@ -48,7 +63,8 @@ const Header = () => {
                     <div>
                       <Dropdown.Menu className="border-0">
                         <Dropdown.Item>Profile</Dropdown.Item>
-                        <Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignOut}>
+                        {/* <Dropdown.Item> */}
                           <IoMdLogOut /> Log Out
                         </Dropdown.Item>
                       </Dropdown.Menu>
