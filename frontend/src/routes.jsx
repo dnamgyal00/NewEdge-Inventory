@@ -130,12 +130,12 @@ export const router = createBrowserRouter(
 export const AppRoutes = () => {
   const auth = useAuth();
 
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
       await auth.signoutRedirect();
-      auth.signinRedirect()
+      auth.signinRedirect();
     } catch (error) {
       console.error("Error during sign out:", error);
     }
@@ -164,8 +164,6 @@ export const AppRoutes = () => {
         <button onClick={() => void auth.signinRedirect()}>Log In</button>
       </div>
     );
-  } else {
-    return <button onClick={handleSignOut}>Log Out</button>;
   }
   return <RouterProvider router={router} />;
 };

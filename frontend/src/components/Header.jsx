@@ -36,14 +36,14 @@ const Header = () => {
               <LinkContainer to="/profile">
                 <Nav.Link>
                   <Dropdown className="d-flex custom-dropdown">
-                    <div className=" d-flex align-items-center text-white">
-                      <Dropdown.Toggle variant="link text-white">
-                        <FaUser className="me-1 " size={21} />
+                    <div className=" d-flex text-white">
+                      <Dropdown.Toggle variant="border-0 shadow-none text-white d-flex py-0">
+                        <FaUser className="me-2 mt-2" size={21} />
+                        <div className="d-flex flex-column align-items-start">
+                          Dechen Namgyal
+                          <div className="">Admin</div>
+                        </div>
                       </Dropdown.Toggle>
-                      <div>
-                        Dechen Namgyal
-                        <div>Admin</div>
-                      </div>
                     </div>
                     <div>
                       <Dropdown.Menu className="border-0">
