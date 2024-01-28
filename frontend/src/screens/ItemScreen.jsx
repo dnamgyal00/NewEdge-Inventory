@@ -109,7 +109,7 @@ const ItemScreen = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="border border-solid d-flex py-0 rounded">
+          <div className="d-flex py-0 border border-solid d-flex rounded">
             <span className="input-group-text bg-white border-0">
               <FaSearch />
             </span>
@@ -122,22 +122,17 @@ const ItemScreen = () => {
               onChange={handleInputChange}
               style={{ boxShadow: "none" }}
             />
+
           </div>
         </div>
-        {/* EDIT THIS SEARCH RESULT DISPLAY */}
-        {itemSearchResults &&
-          itemSearchResults.map((result) => (
-            <LinkContainer
-              key={result.id}
-              to={{ pathname: `/home/item/${result.name}` }}
-              onClick={() => dispatch(setItemId(result.id))}
-            >
-              <div key={result.id} className="border-0 ">
-                {" "}
-                {result.name}{" "}
-              </div>
-            </LinkContainer>
-          ))}
+         {/* EDIT THIS SEARCH RESULT DISPLAY */}
+         {itemSearchResults && itemSearchResults.map((result)=>(
+              <LinkContainer key={result.id} to={{ pathname: `/home/item/${result.name}`}}
+                    onClick={() => dispatch(setItemId(result.id))}>
+                    <div key={result.id} className="border-0 "> {result.name} </div> 
+             </LinkContainer>
+            )) 
+            }
 
         {/* Filter Options*/}
         <div className="input-group mb-3  ">

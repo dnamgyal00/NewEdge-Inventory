@@ -2,6 +2,8 @@ import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
 import { FaUser, FaBars } from "react-icons/fa";
 import { MdOutlineWarehouse } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
+import { IoMdLogOut } from "react-icons/io";
+
 // import { useState } from "react";
 // import Sidebar from "./Sidebar.jsx";
 
@@ -33,23 +35,22 @@ const Header = () => {
             <Nav className="ms-auto">
               <LinkContainer to="/profile">
                 <Nav.Link>
-                  <div className="d-none d-md-flex align-items-center text-white">
-                    <FaUser className="me-2 " size={21} />
-                    <div>
-                      Dechen Namgyal
-                      <div>Admin</div>
+                  <Dropdown className="d-flex custom-dropdown">
+                    <div className=" d-flex align-items-center text-white">
+                      <Dropdown.Toggle variant="link text-white">
+                        <FaUser className="me-1 " size={21} />
+                      </Dropdown.Toggle>
+                      <div>
+                        Dechen Namgyal
+                        <div>Admin</div>
+                      </div>
                     </div>
-                  </div>
-                  <Dropdown className="d-flex d-md-none custom-dropdown">
-                    <Dropdown.Toggle variant="link text-white">
-                      <FaUser className="me-1 " size={21} />
-                    </Dropdown.Toggle>
-
                     <div>
-                      <Dropdown.Menu>
-                        <Dropdown.Item>Dechen Namgyal</Dropdown.Item>
-                        <Dropdown.Item>Admin</Dropdown.Item>
-                        <Dropdown.Item>Log Out</Dropdown.Item>
+                      <Dropdown.Menu className="border-0">
+                        <Dropdown.Item>Profile</Dropdown.Item>
+                        <Dropdown.Item>
+                          <IoMdLogOut /> Log Out
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </div>
                   </Dropdown>

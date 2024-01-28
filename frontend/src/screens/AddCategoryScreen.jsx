@@ -55,7 +55,7 @@ const AddCategoryScreen = () => {
       if (err.data) {
         console.error("Error creating category:", err.data);
         toast.dismiss(loadingToastId);
-        toast.error("Error submitting stock in data");
+        toast.error(err.data.msg);
       } else {
         console.error("Error creating category:", err);
       }
