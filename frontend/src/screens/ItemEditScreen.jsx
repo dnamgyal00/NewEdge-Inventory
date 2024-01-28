@@ -1,50 +1,75 @@
-import {
-  Row,
-  Col,
-  Image,
-  ListGroup,
-  Card,
-  Button,
-  Table,
-  Dropdown,
-  Form,
-} from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import testImage from "../assets/laptop.jpg";
-import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
-import { useGetItemsQuery } from "../slices/itemsApiSlice";
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
+import { Row, Col, Button } from "react-bootstrap";
+import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useCreateItemMutation } from "../slices/itemsApiSlice";
+import { toast } from "react-toastify";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { Pagination } from "react-bootstrap";
-import { useState } from "react";
+import Modals from "../components/Modals.jsx";
+import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import { useSelector } from "react-redux";
-import Modals from "../components/Modals";
 
 export default function ItemEditScreen() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const categoryId = searchParams.get("id");
+  const navigate = useNavigate();
   const itemId = useSelector((state) => state.item.itemId);
 
-  //item Pagenation
-  const [currentPage, setCurrentPage] = useState(1);
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  //api call
+  //api calls
+  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
+    useGetCategoriesQuery();
+  const [createItem, { isLoading: isItemLoading, isError, error }] =
+    useCreateItemMutation();
   const {
     data: { data: item } = {},
     isLoading,
-    isError,
-    error,
-  } = useGetItemDetailsQuery({ itemId, currentPage });
-  console.log(item);
+    refetch,
+  } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
 
-  // Modals
+  console.log(item);
+  // const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    category_id: categoryId ? categoryId : "",
+    unit: "",
+    unit_price: "",
+    brand: "",
+    description: "",
+    image: null,
+  });
+  const [imageData, setImageData] = useState(null);
+  // stock in data
+  const [itemData, setItemData] = useState({
+    item_id: itemId,
+    qty: 0,
+    total_price: 0,
+    created_at: "",
+  });
+  console.log(itemData);
+
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]:
+        name === "category_id" || name === "unit_price"
+          ? parseInt(value, 10)
+          : name === "image"
+          ? files[0] // Set the selected file for the image
+          : value,
+    }));
+  };
+
+  console.log(formData);
+
+  // Modal
   const [showModal, setShowModal] = useState(false);
   // form validation
   const [validated, setValidated] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -53,9 +78,35 @@ export default function ItemEditScreen() {
     }
     setValidated(true);
   };
-  const handleModalAction = (e) => {
-    // handle modal action
+
+  const handleModelAction = async () => {
+    // Implement the logic for the confirmed action here
+    console.log("Confirmed action");
+
+    const form = document.getElementById("add-item-form"); // replace "your-form-id" with the actual ID of your form
+    if (form && validated) {
+      try {
+        const formDataObj = new FormData(form);
+        const result = await createItem(formDataObj).unwrap();
+        console.log(result);
+        toast.success("item added successfully");
+        // navigate("/item-list");
+
+        setFormData({
+          name: "",
+          category_id: 0,
+          unit: "",
+          unit_price: 0,
+          brand: "",
+          description: "",
+          image: null,
+        });
+      } catch (error) {
+        console.error("Error creating item:", error);
+      }
+    }
   };
+
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <h5 className="mb-0 text-black">Item Add</h5>
@@ -72,7 +123,7 @@ export default function ItemEditScreen() {
       )}
       <div className="bg-white rounded p-4 ">
         <Form
-          id="add-item-form"
+          id="edit-item-form"
           noValidate
           validated={validated}
           onSubmit={handleSubmit}
@@ -86,48 +137,37 @@ export default function ItemEditScreen() {
                   type="text"
                   name="name"
                   defaultValue={item.name}
-                  value={formData.name}
+                  // value={formData.name}
                   onChange={handleInputChange}
                   className="py-1"
                 />
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
-              {categoryId ? (
-                <Form.Group controlId="formGridChooseCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    defaultValue={item.category.name}
-                    value={category?.name}
-                    className="py-1"
-                  />
-                </Form.Group>
-              ) : (
-                <Form.Group controlId="formGridChooseCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Select
-                    name="category_id"
-                    value={formData.category_id}
-                    onChange={handleInputChange}
-                    className="py-1"
-                    required
-                  >
-                    <option value="" disabled>
-                      Select a category
-                    </option>
-                    {categories &&
-                      categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                  </Form.Select>
-                  <Form.Control.Feedback type="invalid">
-                    Please choose a category.
-                  </Form.Control.Feedback>
-                </Form.Group>
-              )}
+              <Form.Group controlId="formGridChooseCategory">
+                <Form.Label>Category</Form.Label>
+                <Form.Select
+                  name="category_id"
+                  defaultValue={item.category.name}
+                  // value={formData.category_id}
+                  onChange={handleInputChange}
+                  className="py-1"
+                  required
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Please choose a category.
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
           </Row>
           <Row className="mb-3 text-black">
@@ -140,7 +180,8 @@ export default function ItemEditScreen() {
               <Form.Control
                 type="text"
                 name="unit"
-                value={formData.unit}
+                defaultValue={item.unit}
+                // value={formData.unit}
                 onChange={handleInputChange}
                 className="py-1"
                 required
@@ -159,7 +200,8 @@ export default function ItemEditScreen() {
               <Form.Control
                 type="number"
                 name="unit_price"
-                value={formData.unit_price}
+                defaultValue={item.unit_price}
+                // value={formData.unit_price}
                 onChange={handleInputChange}
                 className="py-1"
                 required
@@ -179,7 +221,8 @@ export default function ItemEditScreen() {
                 <Form.Control
                   type="text"
                   name="brand"
-                  value={formData.brand}
+                  defaultValue={item.brand}
+                  // value={formData.brand}
                   onChange={handleInputChange}
                   className="py-1"
                   required
@@ -199,7 +242,8 @@ export default function ItemEditScreen() {
               as="textarea"
               rows={3}
               name="description"
-              value={formData.description}
+              defaultValue={item.description}
+              // value={formData.description}
               onChange={handleInputChange}
               className="py-1"
               required
@@ -229,9 +273,9 @@ export default function ItemEditScreen() {
             variant="primary"
             type="submit"
             className="py-1"
-            disabled={isItemLoading}
+            disabled={isLoading}
             onClick={() => {
-              const form = document.getElementById("add-item-form");
+              const form = document.getElementById("edit-item-form");
               const formFields = form.querySelectorAll(
                 "input, select, textarea"
               );
@@ -251,7 +295,7 @@ export default function ItemEditScreen() {
               }
             }}
           >
-            Add
+            Update
           </Button>{" "}
           <Button
             variant="danger"
@@ -266,7 +310,7 @@ export default function ItemEditScreen() {
             show={showModal}
             onHide={() => setShowModal(false)}
             onConfirm={handleModelAction}
-            title="Add Confirm"
+            title="Confirm Update"
             body="Are you sure you want to perform this action?"
           />
         </Form>
