@@ -122,17 +122,28 @@ const ItemScreen = () => {
               onChange={handleInputChange}
               style={{ boxShadow: "none" }}
             />
+            <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-2">
+              {itemSearchResults &&
+                itemSearchResults.map((result) => (
+                  <LinkContainer
+                    key={result.id}
+                    to={{ pathname: `/home/item/${result.name}` }}
+                    onClick={() => dispatch(setItemId(result.id))}
+                  >
+                    <div
+                      key={result.id}
+                      className="border-0 clickable-cell py-1"
+                    >
+                      {" "}
+                      {result.name}{" "}
+                    </div>
+                  </LinkContainer>
+                ))}
+            </div>
 
+            {/* EDIT THIS SEARCH RESULT DISPLAY */}
           </div>
         </div>
-         {/* EDIT THIS SEARCH RESULT DISPLAY */}
-         {itemSearchResults && itemSearchResults.map((result)=>(
-              <LinkContainer key={result.id} to={{ pathname: `/home/item/${result.name}`}}
-                    onClick={() => dispatch(setItemId(result.id))}>
-                    <div key={result.id} className="border-0 "> {result.name} </div> 
-             </LinkContainer>
-            )) 
-            }
 
         {/* Filter Options*/}
         <div className="input-group mb-3  ">
