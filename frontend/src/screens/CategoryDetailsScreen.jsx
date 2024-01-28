@@ -1,5 +1,5 @@
-import { useLocation, useParams } from "react-router-dom";
-import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useGetCategoryDetailsQuery, useDeleteCategoryMutation } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { FaPlus } from "react-icons/fa";
@@ -21,8 +21,11 @@ import { Pagination } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setItemId } from "../slices/itemSlice";
 import Modals from "../components/Modals";
+import { toast } from "react-toastify";
+
 
 const CategoryDetailsScreen = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.category.categoryId);
 
@@ -44,8 +47,24 @@ const CategoryDetailsScreen = () => {
   } = useGetCategoryDetailsQuery({ categoryId, currentPage });
   console.log(category);
 
+  const [deleteCategory, { isLoading2 }] = useDeleteCategoryMutation();
+
+  // Handle delete action
+  const handleDeleteAction = async () => {
+    const loadingToastId = toast.info("Deleting...");
+    try {
+      const result = await deleteCategory(categoryId);
+      toast.dismiss(loadingToastId);
+      toast.success("Category deleted successfully");
+      navigate("/home/category");
+      setShowModal(false);
+
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
   const [showModal, setShowModal] = useState(false);
-  const handleModalAction = async () => {};
+
 
   return (
     <>
@@ -107,7 +126,7 @@ const CategoryDetailsScreen = () => {
                       <Modals
                         show={showModal}
                         onHide={() => setShowModal(false)}
-                        onConfirm={handleModalAction}
+                        onConfirm={handleDeleteAction}
                         title={
                           <>
                             Confirm Delete <IoWarningOutline className="mb-1" />
