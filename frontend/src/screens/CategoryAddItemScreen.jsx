@@ -14,10 +14,10 @@ function CategoryAddItemScreen() {
 
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.category.categoryId);
-  const [createItem, { isLoading: isItemLoading, refetch, isError, error }] =
+  const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
 
-  const { data: { data: category } = {}, isLoading } =
+  const { data: { data: category } = {}, refetch, isLoading } =
     useGetCategoryDetailsQuery({ categoryId, currentPage: 1 });
 
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ function CategoryAddItemScreen() {
     description: "",
     image: null,
   });
-  const [imageData, setImageData] = useState(null);
 
   // console.log(imageData)
   const [validated, setValidated] = useState(false);
@@ -47,6 +46,7 @@ function CategoryAddItemScreen() {
   };
 
   const handleModalAction = async () => {
+    const loadingToastId = toast.info("Adding Item...");
     try {
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
@@ -58,12 +58,12 @@ function CategoryAddItemScreen() {
       formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       refetch();
+      toast.dismiss(loadingToastId);
+      toast.success("item added successfully");
+      navigate(`/home/category/${category.name}`);
       console.log(result);
       if (!result.status) {
       } else {
-        toast.success("item added successfully");
-        //navigate("/item-list");
-
         setFormData({
           name: "",
           category_id: categoryId ? categoryId : "",
@@ -75,6 +75,10 @@ function CategoryAddItemScreen() {
         });
       }
     } catch (error) {
+      // Close loading toast
+      toast.dismiss(loadingToastId);
+      // Show error toast
+      toast.error("Error creating item:", error);
       console.error("Error creating item:", error);
     }
   };

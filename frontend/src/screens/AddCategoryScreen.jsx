@@ -2,22 +2,22 @@ import { useState } from "react";
 import { useCreateCategoryMutation } from "../slices/categoriesApiSlice";
 import { useNavigate } from "react-router-dom";
 import Modals from "../components/Modals";
+import { toast } from "react-toastify";
 
 const AddCategoryScreen = () => {
   const navigate = useNavigate();
-  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+  const [createCategory, {isLoading }] = useCreateCategoryMutation();
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    image: null
+    image: null,
   });
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]:
-        name === "image" ? files[0] : value,
+      [name]: name === "image" ? files[0] : value,
     }));
   };
   console.log(formData);
@@ -39,18 +39,23 @@ const AddCategoryScreen = () => {
 
   const handleModelAction = async () => {
     // Implement the logic for the confirmed action here
-    console.log("Confirmed action");
+    // console.log("Confirmed action");
+    const loadingToastId = toast.info("Submitting...");
     try {
       const formDataObj = new FormData();
-      formDataObj.append('name',formData.name);
-      formDataObj.append('description',formData.description);
-      formDataObj.append('image',formData.image)
+      formDataObj.append("name", formData.name);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("image", formData.image);
       const result = await createCategory(formDataObj).unwrap();
-      console.log(result);
-      // navigate("/category");
+      // refetch();
+      toast.dismiss(loadingToastId);
+      toast.success("Item added successfully");
+      navigate("/home/category");
     } catch (err) {
       if (err.data) {
         console.error("Error creating category:", err.data);
+        toast.dismiss(loadingToastId);
+        toast.error("Error submitting stock in data");
       } else {
         console.error("Error creating category:", err);
       }
@@ -79,12 +84,14 @@ const AddCategoryScreen = () => {
               className="form-control py-1"
               id="exampleInputText"
               aria-describedby="emailHelp"
-              name='name'
+              name="name"
               value={formData.name}
               onChange={handleInputChange}
               required
             />
-            <div class="invalid-feedback">Please enter a category name.</div>
+            <div className="invalid-feedback">
+              Please enter a category name.
+            </div>
           </div>
           <div className="mb-3 col-sm-6 col-md-10">
             <label htmlFor="floatingTextarea" className="form-label text-black">
@@ -93,17 +100,19 @@ const AddCategoryScreen = () => {
             <textarea
               className="form-control py-2"
               id="floatingTextarea"
-              name='description'
+              name="description"
               rows={4}
               value={formData.description}
               onChange={handleInputChange}
               required
             ></textarea>
-            <div class="invalid-feedback">Please provide a description.</div>
+            <div className="invalid-feedback">
+              Please provide a description.
+            </div>
           </div>
           <div className="mb-3 col-sm-6 col-md-10">
             <label htmlFor="imageInput" className="form-label text-black">
-              Category Image 
+              Category Image
             </label>
             <input
               type="file"
@@ -111,10 +120,10 @@ const AddCategoryScreen = () => {
               id="image"
               name="image"
               onChange={handleInputChange}
-              accept="image/*" 
+              accept="image/*"
               required
             />
-            <div class="invalid-feedback">Please upload an image.</div>
+            <div className="invalid-feedback">Please upload an image.</div>
           </div>
           <button
             type="submit"

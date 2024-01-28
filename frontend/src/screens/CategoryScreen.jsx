@@ -3,7 +3,7 @@ import { useGetCategoriesQuery ,useSearchCategoriesByNameQuery} from "../slices/
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Collapse } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
-import { FiFilter} from "react-icons/fi";
+import { FiFilter } from "react-icons/fi";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Pagination from "react-bootstrap/Pagination";
@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { setCategoryId } from "../slices/categorySlice";
 
 import { useState } from "react";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 const CategoryScreen = () => {
   const dispatch = useDispatch();
@@ -40,8 +42,10 @@ const CategoryScreen = () => {
   //api calls
   const {
     data: { data: categories } = {},
+    refetch,
     isLoading,
     isError,
+    error,
   } = useGetCategoriesQuery(currentPage);
 
   const {
@@ -54,42 +58,50 @@ const CategoryScreen = () => {
 
   
   return (
-    <div className="col-sm-12 col-xl-6 w-100">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <div>
-          <h5 className="text-black mb-0"> Category List</h5>
-          Manage your category
-        </div>
-        <LinkContainer to="/home/category/add-category">
-          <Button variant="primary" size="sm" className="px-4 py-1">
-            {" "}
-            <FaPlus className="me-2 mb-1" />
-            Add Category
-          </Button>
-        </LinkContainer>
-      </div>
-
-      <div className="bg-white rounded p-4">
-        <div className="input-group d-flex mb-1">
-          <div className="input-group-prepend me-1">
-            <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
-              onClick={toggleFilters}
-              aria-controls="example-collapse-text"
-              aria-expanded={open}
-            >
-              {/* <FiFilter />{" "} */}
-              {showFilters ? (
-                // Cross Button when filters are displayed
-                <FaTimes className="text-white" />
-              ) : (
-                // Filter Icon when filters are hidden
-                <FiFilter />
-              )}
-            </span>
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : isError ? (
+        <Message variant="danger">
+          {error?.code?.message || error.error}
+        </Message>
+      ) : (
+        <div className="col-sm-12 col-xl-6 w-100">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 className="text-black mb-0"> Category List</h5>
+              Manage your category
+            </div>
+            <LinkContainer to="/home/category/add-category">
+              <Button variant="primary" size="sm" className="px-4 py-1">
+                {" "}
+                <FaPlus className="me-2 mb-1" />
+                Add Category
+              </Button>
+            </LinkContainer>
           </div>
+
+          <div className="bg-white rounded p-4">
+            <div className="input-group d-flex mb-1">
+              <div className="input-group-prepend me-1">
+                <span
+                  className={`input-group-text  ${
+                    showFilters ? "bg-primary" : "bg-white"
+                  }`}
+                  onClick={toggleFilters}
+                  aria-controls="example-collapse-text"
+                  aria-expanded={open}
+                >
+                  {/* <FiFilter />{" "} */}
+                  {showFilters ? (
+                    // Cross Button when filters are displayed
+                    <FaTimes className="text-white" />
+                  ) : (
+                    // Filter Icon when filters are hidden
+                    <FiFilter />
+                  )}
+                </span>
+              </div>
 
           {/* Search Bar */}
           <div className="border border-solid d-flex py-0 rounded">
@@ -152,14 +164,14 @@ const CategoryScreen = () => {
               <th className="text-black border-0">No of Items</th>
               <th className="text-black border-0">Description</th>
 
-              {/* <th className="text-black border-0">Action</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {categories &&
-              categories.map((category) => (
-                <tr key={category.id}>
-                  {/* <td>
+                  {/* <th className="text-black border-0">Action</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {categories &&
+                  categories.map((category) => (
+                    <tr key={category.id}>
+                      {/* <td>
                   {category.image && (
                               <img
                                 src={category.image} // Assuming category.image contains the URL
@@ -177,35 +189,37 @@ const CategoryScreen = () => {
                     <td className="clickable-cell">{category.name}</td>
                   </LinkContainer>
 
-                  <td>{category.item_count} </td>
-                  <td>{category.description}</td>
-                  {/* <td>
+                      <td>{category.item_count} </td>
+                      <td>{category.description}</td>
+                      {/* <td>
                     <BsEye /> <FiEdit3 /> <FaTrashAlt />
                   </td> */}
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
 
-        {/* Pagination */}
-        {categories && categories.length > 0 && (
-          <nav aria-label="Page navigation example mb-5">
-            <ul className="pagination justify-content-center">
-              <Pagination>
-                <Pagination.Prev
-                  onClick={handlePrevPage}
-                  disabled={currentPage == 1}
-                />
-                <Pagination.Next
-                  onClick={handleNextPage}
-                  disabled={categories.length < 10}
-                />
-              </Pagination>
-            </ul>
-          </nav>
-        )}
-      </div>
-    </div>
+            {/* Pagination */}
+            {categories && categories.length > 0 && (
+              <nav aria-label="Page navigation example mb-5">
+                <ul className="pagination justify-content-center">
+                  <Pagination>
+                    <Pagination.Prev
+                      onClick={handlePrevPage}
+                      disabled={currentPage == 1}
+                    />
+                    <Pagination.Next
+                      onClick={handleNextPage}
+                      disabled={categories.length < 10}
+                    />
+                  </Pagination>
+                </ul>
+              </nav>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
