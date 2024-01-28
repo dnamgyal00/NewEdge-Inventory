@@ -13,6 +13,7 @@ const AddCategoryScreen = () => {
     description: "",
     image: null,
   });
+
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prevData) => ({
@@ -23,12 +24,10 @@ const AddCategoryScreen = () => {
   console.log(formData);
 
   const [validated, setValidated] = useState(false);
-  // Modal
   const [showModal, setShowModal] = useState(false);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const form = e.currentTarget;
     setValidated(true);
     if (form.checkValidity() === false) {
