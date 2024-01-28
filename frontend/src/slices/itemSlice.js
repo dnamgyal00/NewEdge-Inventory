@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  itemId: 0,
+  itemId: localStorage.getItem("itemId") ? parseInt(localStorage.getItem("itemId")) : 0,
 };
 
 export const itemSlice = createSlice({
@@ -10,6 +10,7 @@ export const itemSlice = createSlice({
   reducers: {
     setItemId: (state, action) => {
       state.itemId = action.payload;
+      localStorage.setItem("itemId", action.payload);
     },
   },
 });

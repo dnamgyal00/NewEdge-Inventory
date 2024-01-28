@@ -250,7 +250,8 @@ const ItemDetailsScreen = () => {
                               <td>{transaction.qty}</td>
                               <td>{transaction.total_price}</td>
                               <td>
-                                {format(transaction.created_at, "dd-mm-yyyy")}
+                                {format(transaction.created_at, "yyyy-MM-dd")}
+                                {/* {transaction.created_at} */}
                               </td>
                             </tr>
                           ))}

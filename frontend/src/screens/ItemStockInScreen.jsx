@@ -33,9 +33,18 @@ export default function ItemStockInScreen() {
     item_id: itemId,
     qty: 0,
     total_price: 0,
-    created_at: "",
+    created_at: getCurrentDate(),
   });
   console.log(itemData);
+
+
+  function getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -294,7 +303,7 @@ export default function ItemStockInScreen() {
                         type="date"
                         className="py-1"
                         name="created_at"
-                        //value={new Date(itemData.created_at)}
+                        defaultValue={itemData.created_at}
                         required
                         onChange={handleChange}
                       />
