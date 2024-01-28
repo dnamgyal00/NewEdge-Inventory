@@ -3,7 +3,10 @@ import Table from "react-bootstrap/Table";
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
-import { useGetItemsQuery ,useSearchItemByNameQuery } from "../slices/itemsApiSlice";
+import {
+  useGetItemsQuery,
+  useSearchItemByNameQuery,
+} from "../slices/itemsApiSlice";
 import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
 
 import Loader from "../components/Loader";
@@ -15,6 +18,7 @@ import { useState } from "react";
 import { Pagination } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { setItemId } from "../slices/itemSlice";
+import { setCategoryId } from "../slices/categorySlice";
 
 const ItemScreen = () => {
   const dispatch = useDispatch();
@@ -37,7 +41,7 @@ const ItemScreen = () => {
     setCategoryName("");
   };
 
-  const [search,setSearch]=useState("");
+  const [search, setSearch] = useState("");
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSearch(value);
@@ -57,8 +61,8 @@ const ItemScreen = () => {
     isLoading2,
     isError2,
     error2,
-  } = useSearchItemByNameQuery (search?search:"1");
-  console.log(itemSearchResults)
+  } = useSearchItemByNameQuery(search ? search : "1");
+  console.log(itemSearchResults);
 
   const {
     data: { data: categories } = {},
@@ -105,7 +109,7 @@ const ItemScreen = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="border border-solid d-flex py-0 rounded">
+          <div className="d-flex py-0 border border-solid d-flex rounded">
             <span className="input-group-text bg-white border-0">
               <FaSearch />
             </span>
@@ -113,23 +117,33 @@ const ItemScreen = () => {
               type="text"
               placeholder="Search..."
               className="form-control border-0 px-0 py-0"
-              name='search'
+              name="search"
               value={search}
               onChange={handleInputChange}
               style={{ boxShadow: "none" }}
             />
+            <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-2">
+              {itemSearchResults &&
+                itemSearchResults.map((result) => (
+                  <LinkContainer
+                    key={result.id}
+                    to={{ pathname: `/home/item/${result.name}` }}
+                    onClick={() => dispatch(setItemId(result.id))}
+                  >
+                    <div
+                      key={result.id}
+                      className="border-0 clickable-cell py-1"
+                    >
+                      {" "}
+                      {result.name}{" "}
+                    </div>
+                  </LinkContainer>
+                ))}
+            </div>
 
+            {/* EDIT THIS SEARCH RESULT DISPLAY */}
           </div>
-          
         </div>
-         {/* EDIT THIS SEARCH RESULT DISPLAY */}
-         {itemSearchResults && itemSearchResults.map((result)=>(
-              <LinkContainer key={result.id} to={{ pathname: `/home/item/${result.name}`}}
-                    onClick={() => dispatch(setItemId(result.id))}>
-                    <div key={result.id} className="border-0 "> {result.name} </div> 
-             </LinkContainer>
-            )) 
-            }
 
         {/* Filter Options*/}
         <div className="input-group mb-3  ">
@@ -198,7 +212,14 @@ const ItemScreen = () => {
                     >
                       <td className="clickable-cell">{item.name}</td>
                     </LinkContainer>
-                    <td className="clickable-cell">{item.category.name}</td>
+                    <LinkContainer
+                      to={{
+                        pathname: `/home/category/${item.category.name}`,
+                      }}
+                      onClick={() => dispatch(setCategoryId(item.category.id))}
+                    >
+                      <td className="clickable-cell">{item.category.name}</td>
+                    </LinkContainer>
                     <td>{item.brand}</td>
                     <td>{item.unit_price}</td>
                     <td>{item.unit}</td>
