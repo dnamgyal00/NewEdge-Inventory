@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react'
 import App from "./App.jsx";
 import "./assets/styles/bootstrap.custom.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
+    createBrowserRouter,
+    createRoutesFromElements,
+    Route,
+    RouterProvider,
+  } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import AddCategoryScreen from "./screens/AddCategoryScreen.jsx";
@@ -35,7 +35,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         <Route index={true} path="/" element={<HomeScreen />} />
         <Route index={true} path="/home" element={<HomeScreen />} />
-        <Route index={true} path="/profile" element={<ProfileScreen />} />
+        <Route index={true} path="/home/profile" element={<ProfileScreen />} />
 
         {/* Item routes */}
         <Route index={true} path="/home/item" element={<ItemScreen />} />
@@ -127,19 +127,8 @@ export const router = createBrowserRouter(
   )
 );
 
-export const AppRoutes = () => {
-  const auth = useAuth();
-
-  //   const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    try {
-      await auth.signoutRedirect();
-      auth.signinRedirect();
-    } catch (error) {
-      console.error("Error during sign out:", error);
-    }
-  };
+export const AppRoutes = ()=>{
+    const auth = useAuth();
   const { user } = auth;
   console.log("user", user);
   switch (auth.activeNavigator) {
@@ -158,12 +147,15 @@ export const AppRoutes = () => {
   }
 
   if (!auth.isAuthenticated) {
-    return (
-      <div>
-        Hello {auth.user?.profile.name}{" "}
-        <button onClick={() => void auth.signinRedirect()}>Log In</button>
-      </div>
-    );
+    auth.signinRedirect()
+    // return (
+    //   <div>
+    //     Hello {auth.user?.profile.name}{" "}
+    //     <button onClick={() => void auth.signinRedirect()}>Log In</button>
+    //   </div>
+    // );
   }
-  return <RouterProvider router={router} />;
-};
+    return (
+        <RouterProvider router={router} />
+    );
+}
