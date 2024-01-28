@@ -111,7 +111,7 @@ export default function ItemStockInScreen() {
       // toast.success("item added successfully");
       toast.dismiss(loadingToastId);
       // Show success toast
-      toast.success("Item added successfully");
+      toast.success("Item stocked in successfully");
       navigate(`/home/item/${item.name}`);
 
       setItemData({

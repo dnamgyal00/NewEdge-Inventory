@@ -97,11 +97,11 @@ const Sidebar = () => {
           Report
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
-          <Nav.Item>
+          {/* <Nav.Item>
             <LinkContainer to="/inventory-report">
               <Nav.Link className="ml-3 hover-cell">Inventory Report</Nav.Link>
             </LinkContainer>
-          </Nav.Item>
+          </Nav.Item> */}
           <Nav.Item>
             <LinkContainer to="/schedule-report">
               <Nav.Link className="ml-3 hover-cell">Schedule Report</Nav.Link>

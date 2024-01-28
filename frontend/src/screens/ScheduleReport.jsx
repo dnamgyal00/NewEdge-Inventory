@@ -103,9 +103,9 @@ const ScheduleReport = () => {
 
           {/* Print options */}
           <div>
-            <FaFilePdf size={25} />
+            {/* <FaFilePdf size={25} />
             <PiMicrosoftExcelLogoFill size={25} />{" "}
-            <FaPrint size={25} />
+            <FaPrint size={25} /> */}
           </div>
 
         </div>

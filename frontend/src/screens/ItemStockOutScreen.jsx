@@ -107,7 +107,7 @@ export default function ItemStockOutScreen() {
       console.log(result);
       toast.dismiss(loadingToastId);
       // Show success toast
-      toast.success("Item added successfully");
+      toast.success("Item stocked out successfully");
       navigate(`/home/item/${item.name}`);
       setItemData({
         item_id: 0,

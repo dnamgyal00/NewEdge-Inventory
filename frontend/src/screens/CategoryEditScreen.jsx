@@ -12,7 +12,6 @@ export default function CategoryEditScreen() {
   const categoryId = useSelector((state) => state.category.categoryId);
   const currentPage=1;
 
-
   //api call
   const {
     data: { data: category } = {},
@@ -54,9 +53,8 @@ export default function CategoryEditScreen() {
 
 
   const handleModelAction = async () => {
-    // Implement the logic for the confirmed action here
     const loadingToastId = toast.info("Submitting...");
-    console.log("Confirmed action");
+ 
     try {
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
@@ -67,7 +65,6 @@ export default function CategoryEditScreen() {
       toast.dismiss(loadingToastId);
       toast.success("Category updated successfully");
       console.log(result);
-
       navigate(`/home/category/${formData.name}`);
     } catch (err) {
       if (err.data) {
