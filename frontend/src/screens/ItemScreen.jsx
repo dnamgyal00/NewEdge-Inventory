@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Pagination } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { setItemId } from "../slices/itemSlice";
+import { setCategoryId } from "../slices/categorySlice";
 
 const ItemScreen = () => {
   const dispatch = useDispatch();
@@ -211,7 +212,14 @@ const ItemScreen = () => {
                     >
                       <td className="clickable-cell">{item.name}</td>
                     </LinkContainer>
-                    <td className="clickable-cell">{item.category.name}</td>
+                    <LinkContainer
+                      to={{
+                        pathname: `/home/category/${item.category.name}`,
+                      }}
+                      onClick={() => dispatch(setCategoryId(item.category.id))}
+                    >
+                      <td className="clickable-cell">{item.category.name}</td>
+                    </LinkContainer>
                     <td>{item.brand}</td>
                     <td>{item.unit_price}</td>
                     <td>{item.unit}</td>
