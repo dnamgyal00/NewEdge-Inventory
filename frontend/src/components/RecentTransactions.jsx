@@ -5,8 +5,12 @@ import Loader from "./Loader";
 import Message from "./Message";
 import { format } from "date-fns";
 import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch } from "react-redux";
+import { setItemId } from "../slices/itemSlice";
+import { setCategoryId } from "../slices/categorySlice";
 
 const RecentTransactions = () => {
+  const dispatch = useDispatch();
   const {
     data: { data: transactions } = {},
     isLoading,
@@ -50,9 +54,9 @@ const RecentTransactions = () => {
                       <tr>
                         <LinkContainer
                           to={{
-                            pathname: `/home/item/${transaction.item.name}`,
-                            search: `?id=${transaction.item.id}`,
+                            pathname: `/home/item/${transaction.item.name}`
                           }}
+                          onClick={() => dispatch(setItemId(transaction.item.id))}
                         >
                           <td className="clickable-cell">
                             {transaction.item.name}
@@ -60,9 +64,9 @@ const RecentTransactions = () => {
                         </LinkContainer>
                         <LinkContainer
                           to={{
-                            pathname: `/home/category/${transaction.item.category.name}`,
-                            search: `?id=${transaction.item.category.id}`,
+                            pathname: `/home/category/${transaction.item.category.name}`
                           }}
+                          onClick={() => dispatch(setCategoryId(transaction.item.category.id))}
                         >
                           <td className="clickable-cell">
                             {transaction.item.category.name}
@@ -72,7 +76,7 @@ const RecentTransactions = () => {
                         <td>{transaction.transaction_type}</td>
                         <td>{transaction.item.unit}</td>
                         <td>{transaction.qty}</td>
-                        <td>{format(transaction.created_at, "dd-mm-yyyy")}</td>
+                        <td>{format(transaction.created_at, "dd-MM-yyyy")}</td>
                       </tr>
                     ))}
                 </tbody>

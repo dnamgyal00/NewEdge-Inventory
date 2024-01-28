@@ -46,6 +46,7 @@ function CategoryAddItemScreen() {
   };
 
   const handleModalAction = async () => {
+    const loadingToastId = toast.info("Adding Item...");
     try {
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
@@ -57,6 +58,7 @@ function CategoryAddItemScreen() {
       formDataObj.append("image", formData.image);
       const result = await createItem(formDataObj).unwrap();
       refetch();
+      toast.dismiss(loadingToastId);
       toast.success("item added successfully");
       navigate(`/home/category/${category.name}`);
       console.log(result);
@@ -73,6 +75,10 @@ function CategoryAddItemScreen() {
         });
       }
     } catch (error) {
+      // Close loading toast
+      toast.dismiss(loadingToastId);
+      // Show error toast
+      toast.error("Error creating item:", error);
       console.error("Error creating item:", error);
     }
   };

@@ -4,8 +4,11 @@ import Loader from "./Loader";
 import { Row, Col, Table } from "react-bootstrap";
 import Message from "./Message";
 import { LinkContainer } from "react-router-bootstrap";
+import { setItemId } from "../slices/itemSlice";
+import { useDispatch } from "react-redux";
 
 const Charts = () => {
+  const dispatch = useDispatch();
   const {
     data: { data: data } = {},
     isLoading,
@@ -78,9 +81,9 @@ const Charts = () => {
                             </td> */}
                             <LinkContainer
                               to={{
-                                pathname: `/home/item/${item.name}`,
-                                search: `?id=${item.id}`,
+                                pathname: `/home/item/${item.name}`
                               }}
+                              onClick={() => dispatch(setItemId(item.id))}
                             >
                               <td>{item.name}</td>
                             </LinkContainer>

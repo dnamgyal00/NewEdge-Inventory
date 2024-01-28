@@ -3,13 +3,24 @@ import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { FaPlus } from "react-icons/fa";
-import { Row, Col, Image, ListGroup, Button, Table } from "react-bootstrap";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { IoWarningOutline } from "react-icons/io5";
+import {
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Button,
+  Table,
+  Dropdown,
+} from "react-bootstrap";
 import testImage from "../assets/laptop.jpg";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import { Pagination } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setItemId } from "../slices/itemSlice";
+import Modals from "../components/Modals";
 
 const CategoryDetailsScreen = () => {
   const dispatch = useDispatch();
@@ -32,6 +43,9 @@ const CategoryDetailsScreen = () => {
     error,
   } = useGetCategoryDetailsQuery({ categoryId, currentPage });
   console.log(category);
+
+  const [showModal, setShowModal] = useState(false);
+  const handleModalAction = async () => {};
 
   return (
     <>
@@ -68,6 +82,41 @@ const CategoryDetailsScreen = () => {
                 </Col>
 
                 <Col xs={6}>
+                  <Dropdown className="d-flex justify-content-end">
+                    <Dropdown.Toggle
+                      variant="transparent"
+                      className="p-0 shadow-none"
+                    >
+                      <BsThreeDotsVertical />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="shadow-none">
+                      <LinkContainer
+                        to={{
+                          pathname: `/home/category/${category.name}/edit`,
+                        }}
+                      >
+                        <Dropdown.Item>
+                          <a className="text-decoration-none text-dark">Edit</a>
+                        </Dropdown.Item>
+                      </LinkContainer>
+
+                      <Dropdown.Item onClick={() => setShowModal(true)}>
+                        Delete
+                      </Dropdown.Item>
+                      {/* ConfirmModal component */}
+                      <Modals
+                        show={showModal}
+                        onHide={() => setShowModal(false)}
+                        onConfirm={handleModalAction}
+                        title={
+                          <>
+                            Confirm Delete <IoWarningOutline className="mb-1" />
+                          </>
+                        }
+                        body="Are you sure you want to delete this category?"
+                      />
+                    </Dropdown.Menu>
+                  </Dropdown>
                   <ListGroup variant="flush">
                     <ListGroup.Item className="lh-1">
                       <h3>{category.name}</h3>

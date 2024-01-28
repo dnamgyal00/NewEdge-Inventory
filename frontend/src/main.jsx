@@ -32,6 +32,7 @@ import CategoryAddItemScreen from "./screens/CategoryAddItemScreen.jsx";
 import ItemStockInScreen from "./screens/ItemStockInScreen.jsx";
 import ItemStockOutScreen from "./screens/ItemStockOutScreen.jsx";
 import ItemEditScreen from "./screens/ItemEditScreen.jsx";
+import CategoryEditScreen from "./screens/CategoryEditScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -90,6 +91,11 @@ const router = createBrowserRouter(
           index={true}
           path="/home/category/:name/add-item"
           element={<CategoryAddItemScreen />}
+        />
+        <Route
+          index={true}
+          path="/home/category/:name/edit"
+          element={<CategoryEditScreen />}
         />
 
         <Route

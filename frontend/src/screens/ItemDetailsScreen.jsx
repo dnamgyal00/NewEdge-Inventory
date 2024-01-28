@@ -21,6 +21,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { format } from "date-fns";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modals from "../components/Modals";
+import { IoWarningOutline } from "react-icons/io5";
 
 const ItemDetailsScreen = () => {
   const itemId = useSelector((state) => state.item.itemId);
@@ -89,13 +90,14 @@ const ItemDetailsScreen = () => {
                     <BsThreeDotsVertical />
                   </Dropdown.Toggle>
                   <Dropdown.Menu className="shadow-none">
-                    <Dropdown.Item>
-                      <LinkContainer
-                        to={{ pathname: `/home/item/${item.name}/edit` }}
-                      >
+                    <LinkContainer
+                      to={{ pathname: `/home/item/${item.name}/edit` }}
+                    >
+                      <Dropdown.Item>
                         <a className="text-decoration-none text-dark">Edit</a>
-                      </LinkContainer>
-                    </Dropdown.Item>
+                      </Dropdown.Item>
+                    </LinkContainer>
+
                     <Dropdown.Item onClick={() => setShowModal(true)}>
                       Delete
                     </Dropdown.Item>
@@ -104,8 +106,12 @@ const ItemDetailsScreen = () => {
                       show={showModal}
                       onHide={() => setShowModal(false)}
                       onConfirm={handleModalAction}
-                      title="Confirm Delete"
-                      body="Are you sure you want to perform this action?"
+                      title={
+                        <>
+                          Confirm Delete <IoWarningOutline className="mb-1" />
+                        </>
+                      }
+                      body="Are you sure you want to delete this item?"
                     />
                   </Dropdown.Menu>
                 </Dropdown>
@@ -250,7 +256,8 @@ const ItemDetailsScreen = () => {
                               <td>{transaction.qty}</td>
                               <td>{transaction.total_price}</td>
                               <td>
-                                {format(transaction.created_at, "dd-mm-yyyy")}
+                                {format(transaction.created_at, "yyyy-MM-dd")}
+                                {/* {transaction.created_at} */}
                               </td>
                             </tr>
                           ))}
