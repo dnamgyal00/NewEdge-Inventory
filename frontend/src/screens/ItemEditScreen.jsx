@@ -1,61 +1,58 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button } from "react-bootstrap";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
-import { useCreateItemMutation } from "../slices/itemsApiSlice";
+import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
+import { useUpdateItemMutation,useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Modals from "../components/Modals.jsx";
-import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import { useSelector } from "react-redux";
 
 export default function ItemEditScreen() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryId = searchParams.get("id");
-  const navigate = useNavigate();
+  //const categoryId = useSelector((state) => state.category.categoryId);
   const itemId = useSelector((state) => state.item.itemId);
 
+  const navigate = useNavigate();
+
   //api calls
-  const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
-    useGetCategoriesQuery();
-  const [createItem, { isLoading: isItemLoading, isError, error }] =
-    useCreateItemMutation();
+  const [updateItem,  { isLoading: isItemLoading }] = useUpdateItemMutation();
+
   const {
     data: { data: item } = {},
     isLoading,
+    isError,
+    error,
     refetch,
   } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
 
-  console.log(item);
-  // const navigate = useNavigate();
+  // const {
+  //   data: { data: category } = {},
+  //   isError2,
+  //   error2,
+  // } = useGetCategoryDetailsQuery({ categoryId, currentPage:1 });
+  // console.log(category)
+
+  
   const [formData, setFormData] = useState({
-    name: "",
-    category_id: categoryId ? categoryId : "",
-    unit: "",
-    unit_price: "",
-    brand: "",
-    description: "",
+    name: item.name,
+    unit: item.unit,
+    unit_price: item.unit_price,
+    brand: item.brand,
+    description:item.description,
     image: null,
   });
-  const [imageData, setImageData] = useState(null);
-  // stock in data
-  const [itemData, setItemData] = useState({
-    item_id: itemId,
-    qty: 0,
-    total_price: 0,
-    created_at: "",
-  });
-  console.log(itemData);
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-        name === "category_id" || name === "unit_price"
+        name === "unit_price"
           ? parseInt(value, 10)
           : name === "image"
           ? files[0] // Set the selected file for the image
@@ -70,41 +67,67 @@ export default function ItemEditScreen() {
   // form validation
   const [validated, setValidated] = useState(false);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const form = e.currentTarget;
+  //   if (form.checkValidity() === false) {
+  //     e.stopPropagation();
+  //   }
+  //   setValidated(true);
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
+    setValidated(true);
     if (form.checkValidity() === false) {
       e.stopPropagation();
+      return;
     }
-    setValidated(true);
   };
 
   const handleModelAction = async () => {
-    // Implement the logic for the confirmed action here
-    console.log("Confirmed action");
+    
+    const loadingToastId = toast.info("Submitting...");
 
-    const form = document.getElementById("add-item-form"); // replace "your-form-id" with the actual ID of your form
-    if (form && validated) {
-      try {
-        const formDataObj = new FormData(form);
-        const result = await createItem(formDataObj).unwrap();
-        console.log(result);
-        toast.success("item added successfully");
-        // navigate("/item-list");
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append("name", formData.name);
+      formDataObj.append("unit", formData.unit);
+      formDataObj.append("unit_price", formData.unit_price);
+      formDataObj.append("brand", formData.brand);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("image", formData.image);
 
-        setFormData({
-          name: "",
-          category_id: 0,
-          unit: "",
-          unit_price: 0,
-          brand: "",
-          description: "",
-          image: null,
-        });
-      } catch (error) {
-        console.error("Error creating item:", error);
+      const result = await updateItem({itemId,formDataObj}).unwrap();
+      toast.dismiss(loadingToastId);
+      toast.success("Item updated successfully");
+      console.log(result);
+      navigate(`/home/item/${formData.name}`);
+    } catch (err) {
+      if (err.data) {
+        console.error("Error updating item:", err.data);
+        toast.dismiss(loadingToastId);
+        toast.error(err.data.msg);
+      } else {
+        console.error("Error updating item:", err);
       }
     }
+    // Close the modal after handling the action
+    setShowModal(false);
+
+    // const form = document.getElementById("update-item-form"); // replace "your-form-id" with the actual ID of your form
+    // if (form && validated) {
+    //   try {
+    //     const formDataObj = new FormData(form);
+    //     const result = await createItem(formDataObj).unwrap();
+    //     console.log(result);
+    //     toast.success("item added successfully");
+    //     // navigate("/item-list");
+
+    //   } catch (error) {
+    //     console.error("Error creating item:", error);
+    //   }
+    // }
   };
 
   return (
@@ -123,7 +146,7 @@ export default function ItemEditScreen() {
       )}
       <div className="bg-white rounded p-4 ">
         <Form
-          id="edit-item-form"
+          id="update-item-form"
           noValidate
           validated={validated}
           onSubmit={handleSubmit}
@@ -136,8 +159,8 @@ export default function ItemEditScreen() {
                   required
                   type="text"
                   name="name"
-                  defaultValue={item.name}
-                  // value={formData.name}
+                  //defaultValue={item.name}
+                  value={formData.name}
                   onChange={handleInputChange}
                   className="py-1"
                 />
@@ -146,27 +169,13 @@ export default function ItemEditScreen() {
             <Col sm={6} md={5}>
               <Form.Group controlId="formGridChooseCategory">
                 <Form.Label>Category</Form.Label>
-                <Form.Select
-                  name="category_id"
-                  defaultValue={item.category.name}
-                  // value={formData.category_id}
-                  onChange={handleInputChange}
-                  className="py-1"
-                  required
-                >
-                  <option value="" disabled>
-                    Select a category
-                  </option>
-                  {categories &&
-                    categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  Please choose a category.
-                </Form.Control.Feedback>
+                <Form.Control
+                 type="text"
+                 readOnly
+                 value={item.category.name}
+                 className="py-1"
+                 required
+               />
               </Form.Group>
             </Col>
           </Row>
@@ -180,8 +189,7 @@ export default function ItemEditScreen() {
               <Form.Control
                 type="text"
                 name="unit"
-                defaultValue={item.unit}
-                // value={formData.unit}
+                value={formData.unit}
                 onChange={handleInputChange}
                 className="py-1"
                 required
@@ -200,8 +208,7 @@ export default function ItemEditScreen() {
               <Form.Control
                 type="number"
                 name="unit_price"
-                defaultValue={item.unit_price}
-                // value={formData.unit_price}
+                value={formData.unit_price}
                 onChange={handleInputChange}
                 className="py-1"
                 required
@@ -221,8 +228,7 @@ export default function ItemEditScreen() {
                 <Form.Control
                   type="text"
                   name="brand"
-                  defaultValue={item.brand}
-                  // value={formData.brand}
+                  value={formData.brand}
                   onChange={handleInputChange}
                   className="py-1"
                   required
@@ -242,8 +248,7 @@ export default function ItemEditScreen() {
               as="textarea"
               rows={3}
               name="description"
-              defaultValue={item.description}
-              // value={formData.description}
+              value={formData.description}
               onChange={handleInputChange}
               className="py-1"
               required
@@ -263,7 +268,6 @@ export default function ItemEditScreen() {
               onChange={handleInputChange}
               className="py-1"
               accept="image/*"
-              required
             />
             <Form.Control.Feedback type="invalid">
               Please upload an image.
@@ -275,9 +279,9 @@ export default function ItemEditScreen() {
             className="py-1"
             disabled={isLoading}
             onClick={() => {
-              const form = document.getElementById("edit-item-form");
+              const form = document.getElementById("update-item-form");
               const formFields = form.querySelectorAll(
-                "input, select, textarea"
+                "select, textarea"
               );
 
               // Check if the form is valid and all fields are filled

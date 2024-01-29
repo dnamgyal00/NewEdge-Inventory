@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import testImage from "../assets/laptop.jpg";
-import { useGetItemDetailsQuery } from "../slices/itemsApiSlice";
+import { useGetItemDetailsQuery,useDeleteItemMutation } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
@@ -22,8 +22,11 @@ import { format } from "date-fns";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modals from "../components/Modals";
 import { IoWarningOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ItemDetailsScreen = () => {
+  const navigate = useNavigate();
   const itemId = useSelector((state) => state.item.itemId);
 
   //item Pagenation
@@ -35,14 +38,32 @@ const ItemDetailsScreen = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  //api call
+  //api calls
   const {
     data: { data: item } = {},
     isLoading,
+    refetch,
     isError,
     error,
   } = useGetItemDetailsQuery({ itemId, currentPage });
   console.log(item);
+
+  const [deleteItem, { isLoading2 }] = useDeleteItemMutation();
+
+    // Handle delete action
+    const handleDeleteAction = async () => {
+      const loadingToastId = toast.info("Deleting...");
+      try {
+        const result = await deleteItem(itemId);
+        toast.dismiss(loadingToastId);
+        toast.success("Item deleted successfully");
+        navigate("/home/item");
+        setShowModal(false);
+  
+      } catch (error) {
+        console.error("Error deleting category:", error);
+      }
+    };
 
   // Modals
   const [showModal, setShowModal] = useState(false);
@@ -105,7 +126,7 @@ const ItemDetailsScreen = () => {
                     <Modals
                       show={showModal}
                       onHide={() => setShowModal(false)}
-                      onConfirm={handleModalAction}
+                      onConfirm={handleDeleteAction}
                       title={
                         <>
                           Confirm Delete <IoWarningOutline className="mb-1" />

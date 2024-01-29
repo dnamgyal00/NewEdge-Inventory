@@ -23,11 +23,25 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
         url: ITEM_URL,
         method: "POST",
         body: formDataObj,
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
       }),
       invalidatesTags: ["Item"],
+    }),
+
+    updateItem: builder.mutation({
+      query: ({ itemId, formDataObj }) => ({
+        url: `${ITEM_URL}/${itemId}`,
+        method: 'PUT',
+        body: formDataObj,
+      }),
+      invalidatesTags: ['Item'],
+    }),
+
+    deleteItem: builder.mutation({
+      query: (itemId) => ({
+        url: `${ITEM_URL}/${itemId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Item'],
     }),
 
     searchItemByName: builder.query({
@@ -44,4 +58,6 @@ export const {
   useGetItemDetailsQuery,
   useCreateItemMutation,
   useSearchItemByNameQuery,
+  useUpdateItemMutation,
+  useDeleteItemMutation
 } = itemsApiSlice;
