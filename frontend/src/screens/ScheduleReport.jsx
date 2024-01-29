@@ -102,7 +102,7 @@ const ScheduleReport = () => {
           </div>
 
           {/* Print options */}
-          <div>q
+          <div>
             {/* <FaFilePdf size={25} />
             <PiMicrosoftExcelLogoFill size={25} />{" "}
             <FaPrint size={25} /> */}
@@ -138,7 +138,7 @@ const ScheduleReport = () => {
               </Form.Group>
 
 
-              <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
+              {/* <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
                 <Form.Label>Year</Form.Label>
                 <Form.Select
                   className="py-1 shadow-none"
@@ -150,7 +150,7 @@ const ScheduleReport = () => {
                   <option value="2024">2024</option>
                   <option value="2023">2023</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
 
             </Row>
           </div>
