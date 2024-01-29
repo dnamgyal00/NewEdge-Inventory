@@ -22,7 +22,7 @@ const Header = () => {
 
   const handleSignOut = async () => {
     try {
-      await auth.signoutRedirect();
+      await auth.signoutPopup();
       navigate('/home')
     } catch (error) {
       console.error("Error during sign out:", error);
