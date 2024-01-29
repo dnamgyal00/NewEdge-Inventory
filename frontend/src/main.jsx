@@ -10,7 +10,7 @@ const oidcConfig = {
   client_secret: "78Lv7hU3cZOzAPM3F840caSKI9m5HcZa",
   client_id: "inventory",
   redirect_uri: "http://localhost:5173",
-  authority: "http://192.168.131.134:8080/realms/neterp",
+  authority: "http://192.168.131.160:8080/realms/neterp",
 };
 
 ReactDOM.createRoot(document.getElementById("root")).render(
