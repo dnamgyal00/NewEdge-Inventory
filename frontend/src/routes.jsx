@@ -1,7 +1,7 @@
 import React from 'react'
 import App from "./App.jsx";
 import "./assets/styles/bootstrap.custom.css";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import {
     createBrowserRouter,
@@ -128,6 +128,7 @@ export const router = createBrowserRouter(
 );
 
 export const AppRoutes = ()=>{
+  // const navigate = useNavigate();
     const auth = useAuth();
   const { user } = auth;
   console.log("user", user);
@@ -143,17 +144,16 @@ export const AppRoutes = ()=>{
   }
 
   if (auth.error) {
+    const test =1;
+    if(auth.error.message == "Popup closed by user" && test === 1) {
+      auth.signinPopup();
+      test++;
+    }
     return <div>Oops... {auth.error.message}</div>;
   }
 
   if (!auth.isAuthenticated) {
-    auth.signinRedirect()
-    // return (
-    //   <div>
-    //     Hello {auth.user?.profile.name}{" "}
-    //     <button onClick={() => void auth.signinRedirect()}>Log In</button>
-    //   </div>
-    // );
+    auth.signinPopup();
   }
     return (
         <RouterProvider router={router} />
