@@ -29,7 +29,7 @@ const RecentTransactions = () => {
         </Message>
       ) : (
         <div className="container-fluid pt-4 px-4">
-          <div className="bg-white text-center rounded p-4">
+          <div className="bg-white text-center text-black rounded p-4">
             <div className="d-flex align-items-center justify-content-between mb-4">
               <h6 className="mb-0">Recent Transactions</h6>
               <LinkContainer to="/transactions-history">
@@ -54,9 +54,11 @@ const RecentTransactions = () => {
                       <tr>
                         <LinkContainer
                           to={{
-                            pathname: `/home/item/${transaction.item.name}`
+                            pathname: `/home/item/${transaction.item.name}`,
                           }}
-                          onClick={() => dispatch(setItemId(transaction.item.id))}
+                          onClick={() =>
+                            dispatch(setItemId(transaction.item.id))
+                          }
                         >
                           <td className="clickable-cell">
                             {transaction.item.name}
@@ -64,9 +66,13 @@ const RecentTransactions = () => {
                         </LinkContainer>
                         <LinkContainer
                           to={{
-                            pathname: `/home/category/${transaction.item.category.name}`
+                            pathname: `/home/category/${transaction.item.category.name}`,
                           }}
-                          onClick={() => dispatch(setCategoryId(transaction.item.category.id))}
+                          onClick={() =>
+                            dispatch(
+                              setCategoryId(transaction.item.category.id)
+                            )
+                          }
                         >
                           <td className="clickable-cell">
                             {transaction.item.category.name}

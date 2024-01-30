@@ -118,6 +118,7 @@ const CategoryScreen = () => {
                   value={search}
                   onChange={handleInputChange}
                   style={{ boxShadow: "none" }}
+                  autoComplete="off"
                 />
                 <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-2">
                   {/* EDIT THIS SEARCH RESULT DISPLAY */}
@@ -166,7 +167,7 @@ const CategoryScreen = () => {
                 <tr>
                   {/* <th className="text-black border-0"></th> */}
                   <th className="text-black border-0">Category Name</th>
-                  <th className="text-black border-0">No of Items</th>
+                  <th className="text-black border-0 ">No of Items</th>
                   <th className="text-black border-0">Description</th>
 
                   {/* <th className="text-black border-0">Action</th> */}
@@ -176,15 +177,6 @@ const CategoryScreen = () => {
                 {categories &&
                   categories.map((category) => (
                     <tr key={category.id}>
-                      {/* <td>
-                  {category.image && (
-                              <img
-                                src={category.image} // Assuming category.image contains the URL
-                                alt={`Image for ${category.name}`}
-                                style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
-                              />
-                            )}
-                  </td> */}
                       <LinkContainer
                         to={{
                           pathname: `/home/category/${category.name}`,

@@ -110,3 +110,16 @@ button.dropdown-toggle {
 .hover-cell:hover {
   font-weight: 600;
 }
+
+/* table header styles */
+th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* bg-color for header */
+.custom-bg-color {
+  background-color: #7d7d7d;
+}

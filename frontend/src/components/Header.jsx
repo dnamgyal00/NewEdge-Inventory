@@ -23,14 +23,14 @@ const Header = () => {
   const handleSignOut = async () => {
     try {
       await auth.signoutRedirect();
-      navigate('/home')
+      navigate("/home");
     } catch (error) {
       console.error("Error during sign out:", error);
     }
   };
   return (
     <header>
-      <Navbar className="navbar navbar-expand bg-dark navbar-dark sticky-top px-md-2 py-0">
+      <Navbar className="navbar navbar-expand custom-bg-color navbar-dark sticky-top px-md-2 py-0">
         <Container
           fluid
           className="d-flex justify-content-between align-items-center"
@@ -64,7 +64,7 @@ const Header = () => {
                       <Dropdown.Menu className="border-0">
                         <Dropdown.Item>Profile</Dropdown.Item>
                         <Dropdown.Item onClick={handleSignOut}>
-                        {/* <Dropdown.Item> */}
+                          {/* <Dropdown.Item> */}
                           <IoMdLogOut /> Log Out
                         </Dropdown.Item>
                       </Dropdown.Menu>

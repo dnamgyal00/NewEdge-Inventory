@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "./components/Breadcrumbs";
 
 const App = () => {
-
   return (
     <>
       <ToastContainer
