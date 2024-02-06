@@ -144,17 +144,15 @@ export const AppRoutes = ()=>{
   }
 
   if (auth.error) {
-    const test =1;
-    if(auth.error.message == "Popup closed by user" && test === 1) {
+    if(auth.error.message == "Popup closed by user") {
       auth.signinPopup();
-      test++;
     }
     return <div>Oops... {auth.error.message}</div>;
   }
 
-  if (!auth.isAuthenticated) {
-    auth.signinPopup();
-  }
+  // if (!auth.isAuthenticated) {
+  //   auth.signinPopup();
+  // }
     return (
         <RouterProvider router={router} />
     );
