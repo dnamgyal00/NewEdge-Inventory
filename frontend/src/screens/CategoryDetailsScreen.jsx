@@ -3,6 +3,7 @@ import { useGetCategoryDetailsQuery, useDeleteCategoryMutation } from "../slices
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { FaPlus } from "react-icons/fa";
+import { MdEdit, MdDelete } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoWarningOutline } from "react-icons/io5";
 import {
@@ -88,16 +89,17 @@ const CategoryDetailsScreen = () => {
 
 
           <div className="container-fluid  px-1">
-            <div className="bg-white rounded p-4">
-              <Row>
+            <div className="bg-white rounded">
+              <Row className="p-2">
 
-                <Col >
+                <Col  >
                   {category.image && (
                     <Image
                       src={category.image} // Assuming category.image contains the URL
                       alt={`Image for ${category.name}`}
                       fluid
                       onError={() => setShowDefaultImage(true)} // Add this line to handle image load error
+                      className="rounded"
                     />
                   )}
 
@@ -123,12 +125,12 @@ const CategoryDetailsScreen = () => {
                         }}
                       >
                         <Dropdown.Item>
-                          <a className="text-decoration-none text-dark">Edit</a>
+                          <a className="text-decoration-none text-dark">Edit</a> <MdEdit/>
                         </Dropdown.Item>
                       </LinkContainer>
 
                       <Dropdown.Item onClick={() => setShowModal(true)}>
-                        Delete
+                        Delete <MdDelete/>
                       </Dropdown.Item>
                       {/* ConfirmModal component */}
                       <Modals

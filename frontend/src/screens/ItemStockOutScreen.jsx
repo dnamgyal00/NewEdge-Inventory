@@ -22,7 +22,7 @@ export default function ItemStockOutScreen() {
     isLoading,
     refetch,
     error,
-  } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
+  } = useGetItemDetailsQuery({ itemId, currentPage: 1, currentPage2: 1 });
 
   console.log(item);
 
@@ -128,6 +128,10 @@ export default function ItemStockOutScreen() {
     setShowModal(false);
   };
 
+  const handleCancel = () => {
+    navigate(`/home/item/${item.name}`);
+  }
+
   return (
     <>
       {isLoading ? (
@@ -141,8 +145,8 @@ export default function ItemStockOutScreen() {
           <h5 className="mb-0 text-black">Stock Out </h5>
           <p className="mb-3">Manage stock out </p>
           <div className="bg-white rounded p-4 d-flex">
-            <div className="col-sm-5">
-            {item.image ? (
+            <div className="col-sm-5 p-1">
+              {item.image ? (
                 <Image
                   src={item.image} // Assuming item.image contains the URL
                   alt={`Image for ${item.name}`}
@@ -156,7 +160,7 @@ export default function ItemStockOutScreen() {
                 />
               )}
             </div>
-            <div className="col-sm-7">
+            <div className="col-sm-7 p-2">
               <Form
                 id="-item-stock-out-form"
                 noValidate
@@ -166,7 +170,7 @@ export default function ItemStockOutScreen() {
               >
                 <Form.Group as={Row} controlId="formGridItemName">
                   <Form.Label column sm="4" size="sm">
-                    <i>Item : </i>
+                    Item:
                   </Form.Label>
                   <Col sm={6}>
                     <Form.Control
@@ -263,7 +267,7 @@ export default function ItemStockOutScreen() {
                         onChange={(e) => {
                           const enteredValue = parseInt(e.target.value, 10);
                           const newQuantity = Math.max(
-                            1,
+                            0,
                             Math.min(enteredValue, item.qty_on_hand)
                           );
 
@@ -383,6 +387,7 @@ export default function ItemStockOutScreen() {
                   variant="danger"
                   type="button"
                   className="text-white py-1"
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>
@@ -391,8 +396,8 @@ export default function ItemStockOutScreen() {
                   show={showModal}
                   onHide={handleModalCancel}
                   onConfirm={handleModalAction}
-                  title="Confirm Action"
-                  body="Are you sure you want to perform this action?"
+                  title="Confirm Stock Out"
+                  body="Are you sure you want to stock out this item?"
                 />
               </Form>
             </div>

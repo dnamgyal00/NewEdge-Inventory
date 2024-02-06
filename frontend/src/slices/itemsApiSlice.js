@@ -4,7 +4,7 @@ import { apiSlice } from "./apiSlice";
 export const itemsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getItems: builder.query({
-      query: ({ categoryName, currentPage }) => ({
+      query: ({ categoryName, currentPage}) => ({
         url:
           categoryName || currentPage
             ? `${ITEM_URL}?categoryName=${categoryName}&page=${currentPage}`
@@ -13,8 +13,8 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     getItemDetails: builder.query({
-      query: ({ itemId, currentPage }) => ({
-        url: `${ITEM_URL}/${itemId}?page=${currentPage}`,
+      query: ({ itemId, currentPage, currentPage2  }) => ({
+        url: `${ITEM_URL}/${itemId}?pageT=${currentPage}&pageI=${currentPage2}`,
       }),
       keepUnusedDataFor: 5,
     }),
@@ -30,26 +30,26 @@ export const itemsApiSlice = apiSlice.injectEndpoints({
     updateItem: builder.mutation({
       query: ({ itemId, formDataObj }) => ({
         url: `${ITEM_URL}/${itemId}`,
-        method: 'PUT',
+        method: "PUT",
         body: formDataObj,
       }),
-      invalidatesTags: ['Item'],
+      invalidatesTags: ["Item"],
     }),
 
     deleteItem: builder.mutation({
       query: (itemId) => ({
         url: `${ITEM_URL}/${itemId}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Item'],
+      invalidatesTags: ["Item"],
     }),
 
     searchItemByName: builder.query({
       query: (name) => ({
-          url: `${ITEM_URL}/search?name=${name}`
+        url: `${ITEM_URL}/search?name=${name}`,
       }),
-      keepUnusedDataFor: 5
-  }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
@@ -59,5 +59,5 @@ export const {
   useCreateItemMutation,
   useSearchItemByNameQuery,
   useUpdateItemMutation,
-  useDeleteItemMutation
+  useDeleteItemMutation,
 } = itemsApiSlice;

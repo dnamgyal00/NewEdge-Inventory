@@ -250,7 +250,7 @@ const StockOutScreen = () => {
                     const enteredValue = parseInt(e.target.value, 10);
                     const newQuantity = Math.max(
                       1,
-                      Math.min(enteredValue, item.qty_on_hand)
+                      Math.min(enteredValue, selectedItem.qty_on_hand)
                     );
 
                     // Update state with the new quantity
@@ -349,8 +349,8 @@ const StockOutScreen = () => {
             show={showModal}
             onHide={() => setShowModal(false)}
             onConfirm={handleModalAction}
-            title="Add Confirm"
-            body="Are you sure you want to perform this action?"
+            title="Confirm Stock Out"
+            body="Are you sure you want to stock out this item?"
           />
         </Form>
       </div>

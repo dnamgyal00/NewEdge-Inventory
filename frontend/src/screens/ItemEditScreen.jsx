@@ -28,7 +28,7 @@ export default function ItemEditScreen() {
     isError,
     error,
     refetch,
-  } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
+  } = useGetItemDetailsQuery({ itemId, currentPage: 1, currentPage2: 1 });
 
   // const {
   //   data: { data: category } = {},

@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modals from "../components/Modals";
 import { IoWarningOutline } from "react-icons/io5";
+import { MdEdit, MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +21,7 @@ const ItemDetailsScreen = () => {
   const navigate = useNavigate();
   const itemId = useSelector((state) => state.item.itemId);
 
-  //item Pagenation
+  //Pagenation: transactions
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -28,15 +29,22 @@ const ItemDetailsScreen = () => {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+  //Pagenation: item instance
+  const [currentPage2, setCurrentPage2] = useState(1);
+  const handleNextPage2 = () => {
+    setCurrentPage2((prevPage2) => prevPage2 + 1);
+  };
+  const handlePrevPage2 = () => {
+    setCurrentPage2((prevPage2) => Math.max(prevPage2 - 1, 1));
+  };
 
   //api calls
   const {
     data: { data: item } = {},
     isLoading,
-    refetch,
     isError,
     error,
-  } = useGetItemDetailsQuery({ itemId, currentPage });
+  } = useGetItemDetailsQuery({ itemId, currentPage, currentPage2 });
   console.log(item);
 
   const [deleteItem, { isLoading2 }] = useDeleteItemMutation();
@@ -79,26 +87,25 @@ const ItemDetailsScreen = () => {
 
           {/* Item Detail Card */}
           <div className="container-fluid px-1">
-            <div className="bg-white rounded p-4">
-              <Row>
-                <Col md={5}>
+            <div className="bg-white rounded">
+              <Row className="p-2" >
+                <Col md={5} >
                   {item.image ? (
                     <Image
                       src={item.image}
                       alt={`Image for ${item.name}`}
                       fluid
-
+                      className="rounded"
                     />
                   ) : (
                     <Image
                       src={testImage}
                       alt="Test"
                       fluid
-
                     />
                   )}
                 </Col>
-                <Col md={7}>
+                <Col md={7} >
                   <Card className="p-3 border-0 shadow-none ">
                     <Dropdown className="position-absolute top-0 end-0 p-2 me-2 mb-2">
                       <Dropdown.Toggle
@@ -112,12 +119,12 @@ const ItemDetailsScreen = () => {
                           to={{ pathname: `/home/item/${item.name}/edit` }}
                         >
                           <Dropdown.Item>
-                            <a className="text-decoration-none text-dark">Edit</a>
+                            <span><a className="text-decoration-none text-dark">Edit </a>{" "}<MdEdit /></span>
                           </Dropdown.Item>
                         </LinkContainer>
 
                         <Dropdown.Item onClick={() => setShowModal(true)}>
-                          Delete
+                          Delete {" "}<MdDelete />
                         </Dropdown.Item>
                         {/* ConfirmModal component */}
                         <Modals
@@ -133,42 +140,42 @@ const ItemDetailsScreen = () => {
                         />
                       </Dropdown.Menu>
                     </Dropdown>
-                    <ListGroup variant="flush" className="p-2 mt-2">
+                    <ListGroup variant="flush" className="p-2 mt-0">
                       <ListGroup.Item className="lh-1">
                         <h3>{item.name}</h3>
                         <Row>
                           <Col md={3}>Description:</Col>
-                          <Col md={5}>{item.description}</Col>
+                          <Col md={9}>{item.description}</Col>
                         </Row>
                       </ListGroup.Item>
                       <ListGroup.Item className="lh-1">
                         <Row>
                           <Col md={3}>Category:</Col>
-                          <Col md={5}>{item.category.name}</Col>
+                          <Col md={9}>{item.category.name}</Col>
                         </Row>
                       </ListGroup.Item>
                       <ListGroup.Item className="lh-1">
                         <Row>
                           <Col md={3}>Brand:</Col>
-                          <Col md={5}>{item.brand}</Col>
+                          <Col md={9}>{item.brand}</Col>
                         </Row>
                       </ListGroup.Item>
                       <ListGroup.Item className="lh-1">
                         <Row>
                           <Col md={3}>Price: </Col>
-                          <Col md={5}>Nu.{item.unit_price}</Col>
+                          <Col md={9}>Nu.{item.unit_price}</Col>
                         </Row>
                       </ListGroup.Item>
                       <ListGroup.Item className="lh-1">
                         <Row>
                           <Col md={3}>Created at:</Col>
-                          <Col md={5}>{item.created_at}</Col>
+                          <Col md={9}>{item.created_at}</Col>
                         </Row>
                       </ListGroup.Item>
                       <ListGroup.Item>
                         <Row>
                           <Col md={3}>Quantity in Stock:</Col>
-                          <Col md={5}>{item.qty_on_hand}</Col>
+                          <Col md={9}>{item.qty_on_hand}</Col>
                         </Row>
                       </ListGroup.Item>
                     </ListGroup>
@@ -233,8 +240,8 @@ const ItemDetailsScreen = () => {
                               <td>{transaction.qty}</td>
                               <td>{transaction.total_price}</td>
                               <td>
-                                {format(transaction.created_at, "yyyy-MM-dd")}
-                                {/* {transaction.created_at} */}
+                                {/* {format(transaction.created_at, "yyyy-MM-dd")} */}
+                                {transaction.created_at}
                               </td>
                             </tr>
                           ))}
@@ -242,7 +249,7 @@ const ItemDetailsScreen = () => {
                     </Table>
                   </div>
                   {/* Pagination */}
-                  {item.item_instance && item.item_instance.length > 0 && (
+                  {item.transactions && item.transactions.length > 0 && (
                     <nav aria-label="Page navigation example mb-5">
                       <ul className="pagination justify-content-center">
                         <Pagination>
@@ -259,6 +266,7 @@ const ItemDetailsScreen = () => {
                     </nav>
                   )}
                 </Tab>
+
                 <Tab eventKey="itemInstance" title="Item Instance">
                   <div className="table-responsive">
                     <Table responsive="sm" className="position-relative">
@@ -291,11 +299,11 @@ const ItemDetailsScreen = () => {
                       <ul className="pagination justify-content-center">
                         <Pagination>
                           <Pagination.Prev
-                            onClick={handlePrevPage}
-                            disabled={currentPage == 1}
+                            onClick={handlePrevPage2}
+                            disabled={currentPage2 == 1}
                           />
                           <Pagination.Next
-                            onClick={handleNextPage}
+                            onClick={handleNextPage2}
                             disabled={item.item_instance.length < 10}
                           />
                         </Pagination>

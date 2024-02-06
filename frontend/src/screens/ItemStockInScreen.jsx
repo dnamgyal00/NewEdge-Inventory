@@ -21,7 +21,7 @@ export default function ItemStockInScreen() {
     isLoading,
     refetch,
     error,
-  } = useGetItemDetailsQuery({ itemId, currentPage: 1 });
+  } = useGetItemDetailsQuery({ itemId, currentPage: 1, currentPage2: 1 });
 
   console.log(item);
 
@@ -136,6 +136,10 @@ export default function ItemStockInScreen() {
     setShowModal(false);
   };
 
+  const handleCancel = () => {
+    navigate(`/home/item/${item.name}`);
+  }
+
   return (
     <>
       {isLoading ? (
@@ -149,7 +153,7 @@ export default function ItemStockInScreen() {
           <h5 className="mb-0 text-black">Stock In </h5>
           <p className="mb-3">Manage stock in </p>
           <div className="bg-white rounded p-4 d-flex">
-            <div className="col-sm-5">
+            <div className="col-sm-5 p-1">
               {item.image ? (
                 <Image
                   src={item.image} // Assuming item.image contains the URL
@@ -164,7 +168,8 @@ export default function ItemStockInScreen() {
                 />
               )}
             </div>
-            <div className="col-sm-7">
+
+            <div className="col-sm-7 p-2">
               <Form
                 id="item-stock-in-form"
                 noValidate
@@ -174,7 +179,7 @@ export default function ItemStockInScreen() {
               >
                 <Form.Group as={Row} controlId="formGridItemName" size="sm">
                   <Form.Label column sm="4" size="sm">
-                    <i>Item : </i>
+                    Item :
                   </Form.Label>
                   <Col sm={6}>
                     <Form.Control
@@ -345,6 +350,7 @@ export default function ItemStockInScreen() {
                   variant="danger"
                   type="button"
                   className="text-white py-1"
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>
@@ -354,8 +360,8 @@ export default function ItemStockInScreen() {
                   show={showModal}
                   onHide={handleModalCancel}
                   onConfirm={handleModalAction}
-                  title="Confirm Action"
-                  body="Are you sure you want to perform this action?"
+                  title="Confirm Item Stock In"
+                  body="Are you sure you want to stock in this item?"
                 />
               </Form>
             </div>
