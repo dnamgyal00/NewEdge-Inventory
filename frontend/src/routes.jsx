@@ -143,19 +143,17 @@ export const AppRoutes = () => {
     return <div>Loading...</div>;
   }
 
-  // if (auth.error) {
-  //   const test =1;
-  //   if(auth.error.message == "Popup closed by user" && test === 1) {
-  //     auth.signinPopup();
-  //     test++;
-  //   }
-  //   return <div>Oops... {auth.error.message}</div>;
-  // }
+  if (auth.error) {
+    if(auth.error.message == "Popup closed by user") {
+      auth.signinPopup();
+    }
+    return <div>Oops... {auth.error.message}</div>;
+  }
 
   // if (!auth.isAuthenticated) {
   //   auth.signinPopup();
   // }
-  return (
-    <RouterProvider router={router} />
-  );
+    return (
+        <RouterProvider router={router} />
+    );
 }
