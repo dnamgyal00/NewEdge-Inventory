@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button } from "react-bootstrap";
 import { useGetCategoryDetailsQuery } from "../slices/categoriesApiSlice";
-import { useUpdateItemMutation,useGetItemDetailsQuery } from "../slices/itemsApiSlice";
+import { useUpdateItemMutation, useGetItemDetailsQuery } from "../slices/itemsApiSlice";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
@@ -20,7 +20,7 @@ export default function ItemEditScreen() {
   const navigate = useNavigate();
 
   //api calls
-  const [updateItem,  { isLoading: isItemLoading }] = useUpdateItemMutation();
+  const [updateItem, { isLoading: updateLoding }] = useUpdateItemMutation();
 
   const {
     data: { data: item } = {},
@@ -37,13 +37,13 @@ export default function ItemEditScreen() {
   // } = useGetCategoryDetailsQuery({ categoryId, currentPage:1 });
   // console.log(category)
 
-  
+
   const [formData, setFormData] = useState({
     name: item.name,
     unit: item.unit,
     unit_price: item.unit_price,
     brand: item.brand,
-    description:item.description,
+    description: item.description,
     image: null,
   });
 
@@ -55,8 +55,8 @@ export default function ItemEditScreen() {
         name === "unit_price"
           ? parseInt(value, 10)
           : name === "image"
-          ? files[0] // Set the selected file for the image
-          : value,
+            ? files[0] // Set the selected file for the image
+            : value,
     }));
   };
 
@@ -86,7 +86,7 @@ export default function ItemEditScreen() {
   };
 
   const handleModelAction = async () => {
-    
+
     const loadingToastId = toast.info("Submitting...");
 
     try {
@@ -98,10 +98,11 @@ export default function ItemEditScreen() {
       formDataObj.append("description", formData.description);
       formDataObj.append("image", formData.image);
 
-      const result = await updateItem({itemId,formDataObj}).unwrap();
+      const result = await updateItem({ itemId, formDataObj }).unwrap();
       toast.dismiss(loadingToastId);
       toast.success("Item updated successfully");
       console.log(result);
+      refetch();
       navigate(`/home/item/${formData.name}`);
     } catch (err) {
       if (err.data) {
@@ -129,6 +130,10 @@ export default function ItemEditScreen() {
     //   }
     // }
   };
+
+  const handleCancel = () => {
+    navigate(`/home/item/${formData.name}`);
+  }
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -170,12 +175,12 @@ export default function ItemEditScreen() {
               <Form.Group controlId="formGridChooseCategory">
                 <Form.Label>Category</Form.Label>
                 <Form.Control
-                 type="text"
-                 readOnly
-                 value={item.category.name}
-                 className="py-1"
-                 required
-               />
+                  type="text"
+                  readOnly
+                  value={item.category.name}
+                  className="py-1"
+                  required
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -299,13 +304,15 @@ export default function ItemEditScreen() {
               }
             }}
           >
-            Update
+            {updateLoding ? "Updating..." : "Update"}
           </Button>{" "}
           <Button
             variant="danger"
             type="button"
             className="text-white py-1"
-            disabled={isItemLoading}
+            disabled={updateLoding}
+            onClick={handleCancel}
+
           >
             Cancel
           </Button>
@@ -314,8 +321,8 @@ export default function ItemEditScreen() {
             show={showModal}
             onHide={() => setShowModal(false)}
             onConfirm={handleModelAction}
-            title="Confirm Update"
-            body="Are you sure you want to perform this action?"
+            title="Confirm Edit"
+            body="Are you sure you want to save the changes?"
           />
         </Form>
       </div>

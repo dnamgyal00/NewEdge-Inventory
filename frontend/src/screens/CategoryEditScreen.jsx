@@ -10,13 +10,14 @@ import { toast } from "react-toastify";
 export default function CategoryEditScreen() {
   const navigate = useNavigate();
   const categoryId = useSelector((state) => state.category.categoryId);
-  const currentPage=1;
+  const currentPage = 1;
 
   //api call
   const {
     data: { data: category } = {},
     isError,
     error,
+    refetch,
   } = useGetCategoryDetailsQuery({ categoryId, currentPage });
   //console.log(category);
 
@@ -54,18 +55,20 @@ export default function CategoryEditScreen() {
 
   const handleModelAction = async () => {
     const loadingToastId = toast.info("Submitting...");
- 
+
     try {
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
       formDataObj.append("description", formData.description);
       formDataObj.append("image", formData.image);
 
-      const result = await updateCategory({categoryId,formDataObj}).unwrap();
+      const result = await updateCategory({ categoryId, formDataObj }).unwrap();
       toast.dismiss(loadingToastId);
       toast.success("Category updated successfully");
       console.log(result);
+      refetch();
       navigate(`/home/category/${formData.name}`);
+
     } catch (err) {
       if (err.data) {
         console.error("Error updating category:", err.data);
@@ -78,6 +81,10 @@ export default function CategoryEditScreen() {
     // Close the modal after handling the action
     setShowModal(false);
   };
+
+  const handleCancel = () => {
+    navigate(`/home/category/${formData.name}`);
+  }
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -136,7 +143,7 @@ export default function CategoryEditScreen() {
               name="image"
               onChange={handleInputChange}
               accept="image/*"
-              
+
             />
             <div className="invalid-feedback">Please upload an image.</div>
           </div>
@@ -165,12 +172,13 @@ export default function CategoryEditScreen() {
               }
             }}
           >
-            {isLoading ? "Submitting..." : "Submit"}
+            {isLoading ? "Updating..." : "Update"}
           </button>{" "}
           <button
             type="button"
             className="btn btn-danger text-white py-1"
             size="sm"
+            onClick={handleCancel}
           >
             Cancel
           </button>
@@ -179,8 +187,8 @@ export default function CategoryEditScreen() {
             show={showModal}
             onHide={() => setShowModal(false)}
             onConfirm={handleModelAction}
-            title="Add Confirm"
-            body="Are you sure you want to perform this action?"
+            title="Confirm Edit"
+            body="Are you sure you want to save the changes?"
           />
         </form>
       </div>

@@ -15,10 +15,13 @@ const oidcConfig = {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    
     <AuthProvider {...oidcConfig}>
       <Provider store={store}>
         <AppRoutes />
       </Provider>
     </AuthProvider>
+
+  
   </React.StrictMode>
 );

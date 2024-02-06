@@ -1,22 +1,14 @@
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
+import { Table, Button, Collapse, Row, Form, Col, Pagination } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
-import {
-  useGetItemsQuery,
-  useSearchItemByNameQuery,
-} from "../slices/itemsApiSlice";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
+import {useGetItemsQuery,useSearchItemByNameQuery,} from "../slices/itemsApiSlice";
+import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { Collapse } from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { useState } from "react";
-import { Pagination } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 import { setItemId } from "../slices/itemSlice";
 import { setCategoryId } from "../slices/categorySlice";
 
@@ -31,7 +23,7 @@ const ItemScreen = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  //Filter
+  //Filters
   const [categoryName, setCategoryName] = useState("");
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -43,10 +35,10 @@ const ItemScreen = () => {
 
   const [search, setSearch] = useState("");
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setSearch(value);
   };
-  //console.log('Hello',search)
+
 
   //api calls
   const {
@@ -68,7 +60,7 @@ const ItemScreen = () => {
     data: { data: categories } = {},
     isLoading3,
     isError3,
-  } = useGetCategoriesQuery();
+  } = useGetCategoriesOnlyQuery();
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -87,13 +79,12 @@ const ItemScreen = () => {
       </div>
 
       <div className="bg-white rounded p-4">
-        <div className="input-group d-flex mb-1">
+        <div className="input-group d-flex mb-3">
           <div className="input-group-prepend me-1">
             {/* Filter Action*/}
             <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -109,7 +100,7 @@ const ItemScreen = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="d-flex py-0 border border-solid d-flex rounded">
+          <div className="border border-solid d-flex py-0 rounded">
             <span className="input-group-text bg-white border-0">
               <FaSearch />
             </span>
@@ -123,7 +114,7 @@ const ItemScreen = () => {
               style={{ boxShadow: "none" }}
               autoComplete="off"
             />
-            <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-2">
+            <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-1 rounded">
               {itemSearchResults &&
                 itemSearchResults.map((result) => (
                   <LinkContainer
@@ -144,35 +135,50 @@ const ItemScreen = () => {
 
             {/* EDIT THIS SEARCH RESULT DISPLAY */}
           </div>
+
         </div>
 
-        {/* Filter Options*/}
-        <div className="input-group mb-3  ">
-          <Collapse in={open}>
-            <div id="example-collapse-text">
-              <DropdownButton
-                variant="white"
-                id="dropdown-menu show"
-                className="border border-solid rounded mt-2 lh-1"
-                title="Choose Category"
+        {/* Dropdown Filters*/}
+        <Collapse in={open}>
+          <div id="example-collapse-text">
+
+            <Row className="mb-3">
+
+              <Form.Group
+                as={Col}
+                controlId="formGridCategory"
+                md={2}
+                xs={6}
+                className="mb-2"
               >
-                <Dropdown.Item onClick={() => setCategoryName("")}>
-                  All
-                </Dropdown.Item>
+                <Form.Label>Category</Form.Label>
+                <Form.Select
+                  className="py-1 shadow-none"
+                  onChange={(e) =>
+                    setCategoryName(e.target.value)
+                  }
+                >
+                  <option defaultValue value="">
+                    All
+                  </option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option
+                        key={category.id}
+                        value={category.name}
+                        id={category.id}
+                      >
+                        {category.name}
+                      </option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+         
 
-                {categories &&
-                  categories.map((category) => (
-                    <Dropdown.Item
-                      key={category.id}
-                      onClick={() => setCategoryName(category.name)}
-                    >
-                      {category.name}
-                    </Dropdown.Item>
-                  ))}
-              </DropdownButton>
-            </div>
-          </Collapse>
-        </div>
+            </Row>
+          </div>
+        </Collapse>
+
 
         {/* <Message variant='danger'>test</Message> */}
         {isLoading ? (
@@ -185,7 +191,6 @@ const ItemScreen = () => {
           <Table responsive="sm">
             <thead className="bg-light">
               <tr>
-                {/* <th className="text-black border-0">Image</th> */}
                 <th className="text-black border-0">Name</th>
                 <th className="text-black border-0">Category</th>
                 <th className="text-black border-0">Brand Name</th>
@@ -198,15 +203,6 @@ const ItemScreen = () => {
               {items &&
                 items.map((item) => (
                   <tr key={item.id}>
-                    {/* <td>
-                            {item.image && (
-                              <img
-                                src={item.image} // Assuming item.image contains the URL
-                                alt={`Image for ${item.name}`}
-                                style={{ maxWidth: '100px', maxHeight: '100px' }} // Set max width and height as per your design
-                              />
-                            )}
-                            </td> */}
                     <LinkContainer
                       to={{ pathname: `/home/item/${item.name}` }}
                       onClick={() => dispatch(setItemId(item.id))}

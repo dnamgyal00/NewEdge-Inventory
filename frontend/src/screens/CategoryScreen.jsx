@@ -4,14 +4,13 @@ import {
   useSearchCategoriesByNameQuery,
 } from "../slices/categoriesApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button, Collapse } from "react-bootstrap";
+import { Table, Button, Collapse, Row, Form, Col } from "react-bootstrap";
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { FiFilter } from "react-icons/fi";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import Pagination from "react-bootstrap/Pagination";
 import { useDispatch } from "react-redux";
 import { setCategoryId } from "../slices/categorySlice";
+
 
 import { useState } from "react";
 import Loader from "../components/Loader";
@@ -29,27 +28,47 @@ const CategoryScreen = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  //Filters
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
+
+    setFilters({
+      order: "asc",
+      item_count: "",
+    })
   };
 
   const [search, setSearch] = useState("");
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setSearch(value);
   };
 
+  // State variables for filters
+  const [filters, setFilters] = useState({
+    order: "asc",
+    item_count: "",
+  });
+  const updateFilter = (key, value) => {
+    setFilters({
+      ...filters,
+      [key]: value,
+    });
+  };
+  console.log(filters);
+
   //api calls
   const {
-    data: { data: categories } = {},
+    data: { data: categories, msg: m } = {},
     refetch,
     isLoading,
     isError,
     error,
-  } = useGetCategoriesQuery(currentPage);
+  } = useGetCategoriesQuery({ currentPage, filters });
+  console.log(m)
 
   const {
     data: { data: CategorySearchResults } = {},
@@ -58,6 +77,8 @@ const CategoryScreen = () => {
     error2,
   } = useSearchCategoriesByNameQuery(search ? search : "1");
   console.log(CategorySearchResults);
+
+
 
   return (
     <>
@@ -84,12 +105,11 @@ const CategoryScreen = () => {
           </div>
 
           <div className="bg-white rounded p-4">
-            <div className="input-group d-flex mb-1">
+            <div className="input-group d-flex mb-3">
               <div className="input-group-prepend me-1">
                 <span
-                  className={`input-group-text  ${
-                    showFilters ? "bg-primary" : "bg-white"
-                  }`}
+                  className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                    }`}
                   onClick={toggleFilters}
                   aria-controls="example-collapse-text"
                   aria-expanded={open}
@@ -120,8 +140,7 @@ const CategoryScreen = () => {
                   style={{ boxShadow: "none" }}
                   autoComplete="off"
                 />
-                <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-2">
-                  {/* EDIT THIS SEARCH RESULT DISPLAY */}
+                <div className="search-results bg-white position-absolute top-100 translate-middle-x px-3 mt-1 rounded">
                   {CategorySearchResults &&
                     CategorySearchResults.map((result) => (
                       <LinkContainer
@@ -131,7 +150,7 @@ const CategoryScreen = () => {
                           search: `?id=${result.id}`,
                         }}
                       >
-                        <div key={result.id} className="border-0 py-1">
+                        <div key={result.id} className=" clickable-cell border-0 py-1 rounded">
                           {" "}
                           {result.name}{" "}
                         </div>
@@ -139,36 +158,70 @@ const CategoryScreen = () => {
                     ))}
                 </div>
               </div>
+
             </div>
 
-            <div className="input-group d-flex mb-3">
-              <Collapse in={open}>
-                <div id="example-collapse-text">
-                  <DropdownButton
-                    variant="white"
-                    id="dropdown-menu show"
-                    title="Choose Item"
-                    className="border border-solid rounded mt-2 lh-1"
+
+            {/* Dropdown Filters */}
+            <Collapse in={open}>
+              <div id="example-collapse-text">
+
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    controlId="formGridType"
+                    md={2}
+                    xs={6}
+                    className="mb-2"
                   >
-                    {categories &&
-                      categories.map((category) =>
-                        category.item.map((item) => (
-                          <Dropdown.Item href="#/action-1" key={item.id}>
-                            {item.name}
-                          </Dropdown.Item>
-                        ))
-                      )}
-                  </DropdownButton>
-                </div>
-              </Collapse>
-            </div>
+                    <Form.Label>Order</Form.Label>
+                    <Form.Select
+                      className="py-1 shadow-none"
+                      onChange={(e) =>
+                        updateFilter("order", e.target.value)
+                      }
+                    >
+                      <option defaultValue value="asc">A-Z</option>
+                      <option value="desc">Z-A</option>
+                    </Form.Select>
+
+                  </Form.Group>
+
+                  {/* <Form.Group
+                    as={Col}
+                    controlId="formGridType"
+                    md={2}
+                    xs={6}
+                    className="mb-2"
+                  >
+                    <Form.Label>No of Items</Form.Label>
+                    <Form.Select
+                      className="py-1 shadow-none"
+                      onChange={(e) =>
+                        updateFilter("item_count", e.target.value)
+                      }
+                    >
+                      <option defaultValue value="">None</option>
+                      <option value="desc">Greatest</option>
+                      <option value="asc">Smallest</option>
+                    </Form.Select>
+
+                  </Form.Group> */}
+
+                </Row>
+              </div>
+            </Collapse>
+
+            
             <Table responsive="sm">
               <thead className="bg-light">
                 <tr>
                   {/* <th className="text-black border-0"></th> */}
-                  <th className="text-black border-0">Category Name</th>
-                  <th className="text-black border-0 ">No of Items</th>
-                  <th className="text-black border-0">Description</th>
+                  <th className="text-black border-0" style={{ width: '50px' }}>Category Name</th>
+                  <th className="text-black border-0" style={{ width: '20px' }}>No of Items</th>
+                  <th className="text-black border-0" style={{ width: '800px' }}>Description</th>
+
+
 
                   {/* <th className="text-black border-0">Action</th> */}
                 </tr>

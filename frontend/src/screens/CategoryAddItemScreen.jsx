@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 function CategoryAddItemScreen() {
 
-  const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.category.categoryId);
   const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
@@ -95,11 +94,15 @@ function CategoryAddItemScreen() {
         name === "category_id" || name === "unit_price"
           ? Math.max(0, parseInt(value, 10))
           : name === "image"
-          ? files[0] // Set the selected file for the image
-          : value,
+            ? files[0] // Set the selected file for the image
+            : value,
     }));
   };
   console.log(formData);
+
+  const handleCancel = () => {
+    navigate(`/home/category/${category.name}`);
+  }
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
@@ -145,7 +148,7 @@ function CategoryAddItemScreen() {
                 <Form.Control
                   type="text"
                   readOnly
-                  value={category?.name}
+                  value={category.name}
                   className="py-1"
                   required
                 />
@@ -279,6 +282,7 @@ function CategoryAddItemScreen() {
             type="button"
             className="text-white py-1"
             disabled={isItemLoading}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
@@ -287,8 +291,8 @@ function CategoryAddItemScreen() {
             show={showModal}
             onHide={() => setShowModal(false)}
             onConfirm={handleModalAction}
-            title="Confirm Action"
-            body="Are you sure you want to perform this action?"
+            title="Confirm Add Item"
+            body="Are you sure you want to add this Item?"
           />
         </Form>
       </div>

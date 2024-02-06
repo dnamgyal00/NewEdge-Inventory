@@ -65,6 +65,10 @@ const CategoryDetailsScreen = () => {
   };
   const [showModal, setShowModal] = useState(false);
 
+  const [showDefaultImage, setShowDefaultImage] = useState(false);
+  console.log("Image url", showDefaultImage)
+
+
 
   return (
     <>
@@ -81,25 +85,29 @@ const CategoryDetailsScreen = () => {
               <h5 className="text-black mb-0"> Category Details</h5>
             </div>
           </div>
+
+
           <div className="container-fluid  px-1">
             <div className="bg-white rounded p-4">
               <Row>
-                <Col>
-                  {category.image ? (
+
+                <Col >
+                  {category.image && (
                     <Image
                       src={category.image} // Assuming category.image contains the URL
                       alt={`Image for ${category.name}`}
                       fluid
-                    />
-                  ) : (
-                    <Image
-                      src={testImage} // Replace testImage with your default image URL
-                      alt="Test"
-                      fluid
+                      onError={() => setShowDefaultImage(true)} // Add this line to handle image load error
                     />
                   )}
-                </Col>
 
+                  {/* <Image
+                    src={showDefaultImage ? testImage : undefined} // Show testImage if category.image is not available
+                    alt="Test"
+                    fluid
+                  /> */}
+
+                </Col>
                 <Col xs={6}>
                   <Dropdown className="d-flex justify-content-end">
                     <Dropdown.Toggle
@@ -163,6 +171,8 @@ const CategoryDetailsScreen = () => {
             </div>
           </div>
 
+
+
           <div className="container-fluid pt-3 px-1">
             <div className="bg-white text-center rounded p-4">
               <div className="d-flex align-items-center justify-content-between mb-4">
@@ -200,7 +210,7 @@ const CategoryDetailsScreen = () => {
                             to={{ pathname: `/home/item/${item.name}` }}
                             onClick={() => dispatch(setItemId(item.id))}
                           >
-                            <td>{item.name}</td>
+                            <td className="clickable-cell">{item.name}</td>
                           </LinkContainer>
                           {/* <td>{item.name}</td> */}
                           <td>{item.brand}</td>

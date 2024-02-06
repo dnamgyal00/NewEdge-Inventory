@@ -1,16 +1,7 @@
-import {
-  Row,
-  Col,
-  Image,
-  ListGroup,
-  Card,
-  Button,
-  Table,
-  Dropdown,
-} from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Card, Button, Table, Dropdown, } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import testImage from "../assets/laptop.jpg";
-import { useGetItemDetailsQuery,useDeleteItemMutation } from "../slices/itemsApiSlice";
+import { useGetItemDetailsQuery, useDeleteItemMutation } from "../slices/itemsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { Pagination } from "react-bootstrap";
@@ -50,20 +41,20 @@ const ItemDetailsScreen = () => {
 
   const [deleteItem, { isLoading2 }] = useDeleteItemMutation();
 
-    // Handle delete action
-    const handleDeleteAction = async () => {
-      const loadingToastId = toast.info("Deleting...");
-      try {
-        const result = await deleteItem(itemId);
-        toast.dismiss(loadingToastId);
-        toast.success("Item deleted successfully");
-        navigate("/home/item");
-        setShowModal(false);
-  
-      } catch (error) {
-        console.error("Error deleting category:", error);
-      }
-    };
+  // Handle delete action
+  const handleDeleteAction = async () => {
+    const loadingToastId = toast.info("Deleting...");
+    try {
+      const result = await deleteItem(itemId);
+      toast.dismiss(loadingToastId);
+      toast.success("Item deleted successfully");
+      navigate("/home/item");
+      setShowModal(false);
+
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
 
   // Modals
   const [showModal, setShowModal] = useState(false);
@@ -85,99 +76,109 @@ const ItemDetailsScreen = () => {
         </Message>
       ) : (
         <div>
-          <Row>
-            <Col md={4}>
-              {item.image ? (
-                <Image
-                  src={item.image} // Assuming item.image contains the URL
-                  alt={`Image for ${item.name}`}
-                  fluid
-                />
-              ) : (
-                <Image
-                  src={testImage} // Replace testImage with your default image URL
-                  alt="Test"
-                  fluid
-                />
-              )}
-            </Col>
-            <Col md={8}>
-              <Card className="p-3 border-0 shadow-none ">
-                <Dropdown className="position-absolute top-0 end-0 p-2 me-2 mb-2">
-                  <Dropdown.Toggle
-                    variant="transparent"
-                    className="p-0 shadow-none"
-                  >
-                    <BsThreeDotsVertical />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="shadow-none">
-                    <LinkContainer
-                      to={{ pathname: `/home/item/${item.name}/edit` }}
-                    >
-                      <Dropdown.Item>
-                        <a className="text-decoration-none text-dark">Edit</a>
-                      </Dropdown.Item>
-                    </LinkContainer>
 
-                    <Dropdown.Item onClick={() => setShowModal(true)}>
-                      Delete
-                    </Dropdown.Item>
-                    {/* ConfirmModal component */}
-                    <Modals
-                      show={showModal}
-                      onHide={() => setShowModal(false)}
-                      onConfirm={handleDeleteAction}
-                      title={
-                        <>
-                          Confirm Delete <IoWarningOutline className="mb-1" />
-                        </>
-                      }
-                      body="Are you sure you want to delete this item?"
+          {/* Item Detail Card */}
+          <div className="container-fluid px-1">
+            <div className="bg-white rounded p-4">
+              <Row>
+                <Col md={5}>
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={`Image for ${item.name}`}
+                      fluid
+
                     />
-                  </Dropdown.Menu>
-                </Dropdown>
-                <ListGroup variant="flush" className="p-2 mt-2">
-                  <ListGroup.Item className="lh-1">
-                    <h3>{item.name}</h3>
-                    <Row>
-                      <Col md={3}>Description:</Col>
-                      <Col md={5}>{item.description}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="lh-1">
-                    <Row>
-                      <Col md={3}>Category:</Col>
-                      <Col md={5}>{item.category.name}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="lh-1">
-                    <Row>
-                      <Col md={3}>Brand:</Col>
-                      <Col md={5}>{item.brand}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="lh-1">
-                    <Row>
-                      <Col md={3}>Price: </Col>
-                      <Col md={5}>Nu.{item.unit_price}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="lh-1">
-                    <Row>
-                      <Col md={3}>Created at:</Col>
-                      <Col md={5}>{item.created_at}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col md={3}>Quantity in Stock:</Col>
-                      <Col md={5}>{item.qty_on_hand}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card>
-            </Col>
-          </Row>
+                  ) : (
+                    <Image
+                      src={testImage}
+                      alt="Test"
+                      fluid
+
+                    />
+                  )}
+                </Col>
+                <Col md={7}>
+                  <Card className="p-3 border-0 shadow-none ">
+                    <Dropdown className="position-absolute top-0 end-0 p-2 me-2 mb-2">
+                      <Dropdown.Toggle
+                        variant="transparent"
+                        className="p-0 shadow-none"
+                      >
+                        <BsThreeDotsVertical />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="shadow-none">
+                        <LinkContainer
+                          to={{ pathname: `/home/item/${item.name}/edit` }}
+                        >
+                          <Dropdown.Item>
+                            <a className="text-decoration-none text-dark">Edit</a>
+                          </Dropdown.Item>
+                        </LinkContainer>
+
+                        <Dropdown.Item onClick={() => setShowModal(true)}>
+                          Delete
+                        </Dropdown.Item>
+                        {/* ConfirmModal component */}
+                        <Modals
+                          show={showModal}
+                          onHide={() => setShowModal(false)}
+                          onConfirm={handleDeleteAction}
+                          title={
+                            <>
+                              Confirm Delete <IoWarningOutline className="mb-1" />
+                            </>
+                          }
+                          body="Are you sure you want to delete this item?"
+                        />
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <ListGroup variant="flush" className="p-2 mt-2">
+                      <ListGroup.Item className="lh-1">
+                        <h3>{item.name}</h3>
+                        <Row>
+                          <Col md={3}>Description:</Col>
+                          <Col md={5}>{item.description}</Col>
+                        </Row>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="lh-1">
+                        <Row>
+                          <Col md={3}>Category:</Col>
+                          <Col md={5}>{item.category.name}</Col>
+                        </Row>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="lh-1">
+                        <Row>
+                          <Col md={3}>Brand:</Col>
+                          <Col md={5}>{item.brand}</Col>
+                        </Row>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="lh-1">
+                        <Row>
+                          <Col md={3}>Price: </Col>
+                          <Col md={5}>Nu.{item.unit_price}</Col>
+                        </Row>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="lh-1">
+                        <Row>
+                          <Col md={3}>Created at:</Col>
+                          <Col md={5}>{item.created_at}</Col>
+                        </Row>
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Quantity in Stock:</Col>
+                          <Col md={5}>{item.qty_on_hand}</Col>
+                        </Row>
+                      </ListGroup.Item>
+                    </ListGroup>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </div>
+
+          {/* Stock In and Out Button */}
           <div className="d-flex flex-column flex-md-row justify-content-end py-3 ">
             <LinkContainer
               to={{ pathname: `/home/item/${item.name}/stock-in` }}
@@ -303,7 +304,7 @@ const ItemDetailsScreen = () => {
                   )}
                 </Tab>
 
-                
+
               </Tabs>
             </div>
           </div>

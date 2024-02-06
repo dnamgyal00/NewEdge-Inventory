@@ -1,6 +1,6 @@
 import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
 import { useGetTransactionsExcelDataQuery } from "../slices/transactionsApiSlice";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
 import {
   FaPlus,
@@ -15,13 +15,10 @@ import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
 import { BsEye } from "react-icons/bs";
 import { useState } from "react";
-import { Row, Col, Form, Button, Table, Collapse } from "react-bootstrap";
+import { Row, Col, Form, Button, Table, Collapse, Pagination } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { parseISO, format } from "date-fns";
-import Pagination from "react-bootstrap/Pagination";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
-import { DownloadTableExcel } from "react-export-table-to-excel";
-import { useRef } from "react";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
@@ -64,7 +61,7 @@ const TransactionScreen = () => {
     data: { data: categories } = {},
     isLoading2,
     isError2,
-  } = useGetCategoriesQuery();
+  } = useGetCategoriesOnlyQuery();
   const {
     data: { data: items } = {},
     isLoading3,
@@ -190,9 +187,8 @@ const TransactionScreen = () => {
             <div className="input-group-prepend me-1">
               {/* Filter Action*/}
               <span
-                className={`input-group-text  ${
-                  showFilters ? "bg-primary" : "bg-white"
-                }`}
+                className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                  }`}
                 onClick={toggleFilters}
                 aria-controls="example-collapse-text"
                 aria-expanded={open}

@@ -85,7 +85,7 @@ const Charts = () => {
                               }}
                               onClick={() => dispatch(setItemId(item.id))}
                             >
-                              <td>{item.name}</td>
+                              <td className="clickable-cell">{item.name}</td>
                             </LinkContainer>
                             <td>Nu.{item.unit_price}</td>
                           </tr>

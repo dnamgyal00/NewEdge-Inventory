@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Row, Col, Button } from "react-bootstrap";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import { useCreateItemMutation } from "../slices/itemsApiSlice";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -18,7 +18,7 @@ const AddItemScreen = () => {
 
   //api calls
   const { data: { data: categories } = {}, isLoading: isCategoryLoading } =
-    useGetCategoriesQuery();
+    useGetCategoriesOnlyQuery();
   const [createItem, { isLoading: isItemLoading, isError, error }] =
     useCreateItemMutation();
 
@@ -32,7 +32,7 @@ const AddItemScreen = () => {
     description: "",
     image: null,
   });
-  const [imageData, setImageData] = useState(null);
+
 
   // form validation
   const [validated, setValidated] = useState(false);
@@ -53,12 +53,29 @@ const AddItemScreen = () => {
         name === "category_id" || name === "unit_price"
           ? parseInt(value, 10)
           : name === "image"
-          ? files[0] // Set the selected file for the image
-          : value,
+            ? files[0] // Set the selected file for the image
+            : value,
     }));
   };
 
   console.log(formData);
+
+  const handleCancel = () => {
+    setFormData({
+      name: "",
+      category_id: "",
+      unit: "",
+      unit_price: "",
+      brand: "",
+      description: "",
+      image: null,
+    });
+
+    // Reset the form to clear the file input
+    const form = document.getElementById("add-item-form");
+    form.reset();
+
+  }
 
   // Modal
   const [showModal, setShowModal] = useState(false);
@@ -127,29 +144,29 @@ const AddItemScreen = () => {
               </Form.Group>
             </Col>
             <Col sm={6} md={5}>
-            <Form.Group controlId="formGridChooseCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Select
-                    name="category_id"
-                    value={formData.category_id}
-                    onChange={handleInputChange}
-                    className="py-1"
-                    required
-                  >
-                    <option value="" disabled>
-                      Select a category
-                    </option>
-                    {categories &&
-                      categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                  </Form.Select>
-                  <Form.Control.Feedback type="invalid">
-                    Please choose a category.
-                  </Form.Control.Feedback>
-                </Form.Group>
+              <Form.Group controlId="formGridChooseCategory">
+                <Form.Label>Category</Form.Label>
+                <Form.Select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleInputChange}
+                  className="py-1"
+                  required
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Please choose a category.
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
           </Row>
           <Row className="mb-3 text-black">
@@ -280,6 +297,7 @@ const AddItemScreen = () => {
             type="button"
             className="text-white py-1"
             disabled={isItemLoading}
+            onClick={handleCancel}
           >
             Cancel
           </Button>

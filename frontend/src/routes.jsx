@@ -4,11 +4,11 @@ import "./assets/styles/bootstrap.custom.css";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
-    RouterProvider,
-  } from "react-router-dom";
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import AddCategoryScreen from "./screens/AddCategoryScreen.jsx";
@@ -127,9 +127,9 @@ export const router = createBrowserRouter(
   )
 );
 
-export const AppRoutes = ()=>{
+export const AppRoutes = () => {
   // const navigate = useNavigate();
-    const auth = useAuth();
+  const auth = useAuth();
   const { user } = auth;
   console.log("user", user);
   switch (auth.activeNavigator) {
@@ -143,19 +143,19 @@ export const AppRoutes = ()=>{
     return <div>Loading...</div>;
   }
 
-  if (auth.error) {
-    const test =1;
-    if(auth.error.message == "Popup closed by user" && test === 1) {
-      auth.signinPopup();
-      test++;
-    }
-    return <div>Oops... {auth.error.message}</div>;
-  }
+  // if (auth.error) {
+  //   const test =1;
+  //   if(auth.error.message == "Popup closed by user" && test === 1) {
+  //     auth.signinPopup();
+  //     test++;
+  //   }
+  //   return <div>Oops... {auth.error.message}</div>;
+  // }
 
-  if (!auth.isAuthenticated) {
-    auth.signinPopup();
-  }
-    return (
-        <RouterProvider router={router} />
-    );
+  // if (!auth.isAuthenticated) {
+  //   auth.signinPopup();
+  // }
+  return (
+    <RouterProvider router={router} />
+  );
 }

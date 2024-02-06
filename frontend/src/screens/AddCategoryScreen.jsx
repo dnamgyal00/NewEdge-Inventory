@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useCreateCategoryMutation } from "../slices/categoriesApiSlice";
 import { useNavigate } from "react-router-dom";
 import Modals from "../components/Modals";
 import { toast } from "react-toastify";
 
+
 const AddCategoryScreen = () => {
   const navigate = useNavigate();
-  const [createCategory, {isLoading }] = useCreateCategoryMutation();
 
+  //api call
+  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+
+
+  //form data
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     image: null,
   });
-
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prevData) => ({
@@ -23,8 +27,8 @@ const AddCategoryScreen = () => {
   };
   console.log(formData);
 
-  const [validated, setValidated] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+
+  //form actions
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,9 +40,23 @@ const AddCategoryScreen = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate(`/home/category`);
+    // setFormData({
+    //   name: "",
+    //   description: "",
+    //   image: null,
+    // })
+
+    // // Reset the form to clear the file input
+    // const form = document.getElementById("add-category-form");
+    // form.reset();
+  }
+
+  const [validated, setValidated] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
   const handleModelAction = async () => {
-    // Implement the logic for the confirmed action here
-    // console.log("Confirmed action");
     const loadingToastId = toast.info("Submitting...");
     try {
       const formDataObj = new FormData();
@@ -48,7 +66,7 @@ const AddCategoryScreen = () => {
       const result = await createCategory(formDataObj).unwrap();
       // refetch();
       toast.dismiss(loadingToastId);
-      toast.success("Item added successfully");
+      toast.success("Category created successfully");
       navigate("/home/category");
     } catch (err) {
       if (err.data) {
@@ -155,6 +173,7 @@ const AddCategoryScreen = () => {
             type="button"
             className="btn btn-danger text-white py-1"
             size="sm"
+            onClick={handleCancel}
           >
             Cancel
           </button>
@@ -163,8 +182,8 @@ const AddCategoryScreen = () => {
             show={showModal}
             onHide={() => setShowModal(false)}
             onConfirm={handleModelAction}
-            title="Add Confirm"
-            body="Are you sure you want to perform this action?"
+            title="Confirm Add Category"
+            body="Are you sure you want to add this category?"
           />
         </form>
       </div>
