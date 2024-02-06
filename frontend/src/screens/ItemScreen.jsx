@@ -121,6 +121,7 @@ const ItemScreen = () => {
               value={search}
               onChange={handleInputChange}
               style={{ boxShadow: "none" }}
+              autoComplete="off"
             />
             <div className="search-results bg-white position-absolute top-100  translate-middle-x px-3 mt-2">
               {itemSearchResults &&

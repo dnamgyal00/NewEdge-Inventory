@@ -25,7 +25,7 @@ const Charts = () => {
         </Message>
       ) : (
         <div className="container-fluid pt-4 px-4">
-          <div className="row g-4">
+          <div className="row g-4 text-black">
             <div className="col-sm-12 col-xl-6 rounded">
               <div className="bg-white rounded p-4 h-100">
                 <div className="d-flex align-items-center justify-content-between mb-4">
@@ -81,7 +81,7 @@ const Charts = () => {
                             </td> */}
                             <LinkContainer
                               to={{
-                                pathname: `/home/item/${item.name}`
+                                pathname: `/home/item/${item.name}`,
                               }}
                               onClick={() => dispatch(setItemId(item.id))}
                             >
