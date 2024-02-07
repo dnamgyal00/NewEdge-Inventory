@@ -39,6 +39,11 @@ const CategoryScreen = () => {
       order: "asc",
       item_count: "",
     })
+
+    const form = document.getElementById("filters");
+    if (form) {
+      form.reset();
+    }
   };
 
   const [search, setSearch] = useState("");
@@ -166,6 +171,9 @@ const CategoryScreen = () => {
             <Collapse in={open}>
               <div id="example-collapse-text">
 
+                <form
+                id="filters"
+                >
                 <Row className="mb-3">
                   <Form.Group
                     as={Col}
@@ -209,6 +217,7 @@ const CategoryScreen = () => {
                   </Form.Group> */}
 
                 </Row>
+                </form>
               </div>
             </Collapse>
 

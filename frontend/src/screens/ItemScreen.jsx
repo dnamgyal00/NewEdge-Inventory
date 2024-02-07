@@ -5,7 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import {useGetItemsQuery,useSearchItemByNameQuery,} from "../slices/itemsApiSlice";
+import { useGetItemsQuery, useSearchItemByNameQuery, } from "../slices/itemsApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -31,6 +31,11 @@ const ItemScreen = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
     setCategoryName("");
+
+    const form = document.getElementById("filters");
+    if (form) {
+      form.reset();
+    }
   };
 
   const [search, setSearch] = useState("");
@@ -142,40 +147,43 @@ const ItemScreen = () => {
         <Collapse in={open}>
           <div id="example-collapse-text">
 
-            <Row className="mb-3">
+            <form
+              id="filters">
+              <Row className="mb-3">
 
-              <Form.Group
-                as={Col}
-                controlId="formGridCategory"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Label>Category</Form.Label>
-                <Form.Select
-                  className="py-1 shadow-none"
-                  onChange={(e) =>
-                    setCategoryName(e.target.value)
-                  }
+                <Form.Group
+                  as={Col}
+                  controlId="formGridCategory"
+                  md={2}
+                  xs={6}
+                  className="mb-2"
                 >
-                  <option defaultValue value="">
-                    All
-                  </option>
-                  {categories &&
-                    categories.map((category) => (
-                      <option
-                        key={category.id}
-                        value={category.name}
-                        id={category.id}
-                      >
-                        {category.name}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Form.Group>
-         
+                  <Form.Label>Category</Form.Label>
+                  <Form.Select
+                    className="py-1 shadow-none"
+                    onChange={(e) =>
+                      setCategoryName(e.target.value)
+                    }
+                  >
+                    <option defaultValue value="">
+                      All
+                    </option>
+                    {categories &&
+                      categories.map((category) => (
+                        <option
+                          key={category.id}
+                          value={category.name}
+                          id={category.id}
+                        >
+                          {category.name}
+                        </option>
+                      ))}
+                  </Form.Select>
+                </Form.Group>
 
-            </Row>
+
+              </Row>
+            </form>
           </div>
         </Collapse>
 

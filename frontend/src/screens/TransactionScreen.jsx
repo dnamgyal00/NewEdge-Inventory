@@ -52,7 +52,7 @@ const TransactionScreen = () => {
 
   //Fetch paginated data for display
   const {
-    data: { data: paginatedTransactions } = {},
+    data: { data: paginatedTransactions, msg:msg } = {},
     isLoading: paginatedTransactionsLoading,
     isError: paginatedTransactionsError,
   } = useGetTransactionsQuery({ filters, currentPage });
@@ -95,6 +95,10 @@ const TransactionScreen = () => {
       itemName: "",
       transactionType: "",
     });
+    const form = document.getElementById("filters");
+    if (form) {
+      form.reset();
+    }
   };
 
   const handleDownloadExcel = () => {
@@ -226,6 +230,11 @@ const TransactionScreen = () => {
         {/* Dropdown Filters */}
         <Collapse in={open}>
           <div id="example-collapse-text">
+            <form
+             id="filters"
+
+            >
+
             <Row className="mb-3">
               <Form.Group
                 as={Col}
@@ -339,6 +348,7 @@ const TransactionScreen = () => {
                 </Form.Select>
               </Form.Group>
             </Row>
+            </form>
           </div>
         </Collapse>
 
