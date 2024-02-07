@@ -71,14 +71,34 @@ const TransactionScreen = () => {
 
   // Function to update a specific filter parameter
   const updateFilter = (key, value) => {
-    if (key === "startDate" || key === "endDate") {
-      value = format(value, "yyyy-MM-dd");
+    // Reset the "Item" filter if the "Category" filter is changed
+    if (key === "selectedCategory") {
+      setFilters({
+        ...filters,
+        [key]: value,
+        itemName: "", 
+      });
+    } 
+    // Reset the "Category" filter if the "Item" filter is changed
+    else if (key === "itemName") {
+      setFilters({
+        ...filters,
+        [key]: value,
+        selectedCategory: "", 
+      });
     }
-    setFilters({
-      ...filters,
-      [key]: value,
-    });
+    // For other filters, update as usual
+    else {
+      if (key === "startDate" || key === "endDate") {
+        value = format(value, "yyyy-MM-dd");
+      }
+      setFilters({
+        ...filters,
+        [key]: value,
+      });
+    }
   };
+  
 
   //for filter display
   const [open, setOpen] = useState(false);
