@@ -204,7 +204,7 @@ const ItemScreen = () => {
                 <th className="text-black border-0">Brand Name</th>
                 <th className="text-black border-0">Price</th>
                 <th className="text-black border-0">Unit</th>
-                <th className="text-black border-0">Qty</th>
+                <th className="text-black border-0">Instock qty</th>
               </tr>
             </thead>
             <tbody>
@@ -226,7 +226,7 @@ const ItemScreen = () => {
                       <td className="clickable-cell">{item.category.name}</td>
                     </LinkContainer>
                     <td>{item.brand}</td>
-                    <td>{item.unit_price}</td>
+                    <td>Nu.{item.unit_price}</td>
                     <td>{item.unit}</td>
                     <td>{item.qty_on_hand}</td>
                   </tr>

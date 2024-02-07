@@ -22,8 +22,12 @@ import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { setItemId } from "../slices/itemSlice";
+import { setCategoryId } from "../slices/categorySlice";
+import { useDispatch } from "react-redux";
 
 const TransactionScreen = () => {
+  const dispatch = useDispatch();
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -52,7 +56,7 @@ const TransactionScreen = () => {
 
   //Fetch paginated data for display
   const {
-    data: { data: paginatedTransactions, msg:msg } = {},
+    data: { data: paginatedTransactions, msg: msg } = {},
     isLoading: paginatedTransactionsLoading,
     isError: paginatedTransactionsError,
   } = useGetTransactionsQuery({ filters, currentPage });
@@ -76,15 +80,15 @@ const TransactionScreen = () => {
       setFilters({
         ...filters,
         [key]: value,
-        itemName: "", 
+        itemName: "",
       });
-    } 
+    }
     // Reset the "Category" filter if the "Item" filter is changed
     else if (key === "itemName") {
       setFilters({
         ...filters,
         [key]: value,
-        selectedCategory: "", 
+        selectedCategory: "",
       });
     }
     // For other filters, update as usual
@@ -98,7 +102,7 @@ const TransactionScreen = () => {
       });
     }
   };
-  
+
 
   //for filter display
   const [open, setOpen] = useState(false);
@@ -251,123 +255,125 @@ const TransactionScreen = () => {
         <Collapse in={open}>
           <div id="example-collapse-text">
             <form
-             id="filters"
+              id="filters"
 
             >
 
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                controlId="formGridDate"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Label>Start Date</Form.Label>
-                <DatePicker
-                  selected={
-                    filters.startDate ? new Date(filters.startDate) : null
-                  }
-                  onChange={(date) => updateFilter("startDate", date)}
-                  dateFormat="yyyy-MM-dd"
-                  placeholderText="Select Date"
-                  className="form-control py-1 shadow-none"
-                />
-              </Form.Group>
-
-              <Form.Group
-                as={Col}
-                controlId="formGridDate"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Label>End Date</Form.Label>
-                <DatePicker
-                  selected={filters.endDate ? new Date(filters.endDate) : null}
-                  onChange={(date) => updateFilter("endDate", date)}
-                  dateFormat="yyyy-MM-dd"
-                  placeholderText="Select Date"
-                  className="form-control py-1 shadow-none"
-                />
-              </Form.Group>
-
-              <Form.Group
-                as={Col}
-                controlId="formGridCategory"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Label>Category</Form.Label>
-                <Form.Select
-                  className="py-1 shadow-none"
-                  onChange={(e) =>
-                    updateFilter("selectedCategory", e.target.value)
-                  }
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  controlId="formGridDate"
+                  md={2}
+                  xs={6}
+                  className="mb-2"
                 >
-                  <option defaultValue value="">
-                    All
-                  </option>
-                  {categories &&
-                    categories.map((category) => (
-                      <option
-                        key={category.id}
-                        value={category.name}
-                        id={category.id}
-                      >
-                        {category.name}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Form.Group>
+                  <Form.Label>Start Date</Form.Label>
+                  <DatePicker
+                    selected={
+                      filters.startDate ? new Date(filters.startDate) : null
+                    }
+                    onChange={(date) => updateFilter("startDate", date)}
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText="Select Date"
+                    className="form-control py-1 shadow-none"
+                  />
+                </Form.Group>
 
-              <Form.Group
-                as={Col}
-                controlId="formGridItem"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Label>Item</Form.Label>
-                <Form.Select
-                  className="py-1 shadow-none"
-                  onChange={(e) => updateFilter("itemName", e.target.value)}
+                <Form.Group
+                  as={Col}
+                  controlId="formGridDate"
+                  md={2}
+                  xs={6}
+                  className="mb-2"
                 >
-                  <option defaultValue value="">
-                    All
-                  </option>
-                  {items &&
-                    items.map((item) => (
-                      <option key={item.id} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Form.Group>
+                  <Form.Label>End Date</Form.Label>
+                  <DatePicker
+                    selected={filters.endDate ? new Date(filters.endDate) : null}
+                    onChange={(date) => updateFilter("endDate", date)}
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText="Select Date"
+                    className="form-control py-1 shadow-none"
+                  />
+                </Form.Group>
 
-              <Form.Group
-                as={Col}
-                controlId="formGridType"
-                md={2}
-                xs={6}
-                className="mb-2"
-              >
-                <Form.Label>Type</Form.Label>
-                <Form.Select
-                  className="py-1 shadow-none"
-                  onChange={(e) =>
-                    updateFilter("transactionType", e.target.value)
-                  }
+                <Form.Group
+                  as={Col}
+                  controlId="formGridCategory"
+                  md={2}
+                  xs={6}
+                  className="mb-2"
                 >
-                  <option defaultValue value="">
-                    All
-                  </option>
-                  <option value="stockIn">Stock In</option>
-                  <option value="stockOut">Stock Out</option>
-                </Form.Select>
-              </Form.Group>
-            </Row>
+                  <Form.Label>Category</Form.Label>
+                  <Form.Select
+                    className="py-1 shadow-none"
+                    onChange={(e) =>
+                      updateFilter("selectedCategory", e.target.value)
+                    }
+                    value={filters.selectedCategory}
+                  >
+                    <option defaultValue value="">
+                      All
+                    </option>
+                    {categories &&
+                      categories.map((category) => (
+                        <option
+                          key={category.id}
+                          value={category.name}
+                          id={category.id}
+                        >
+                          {category.name}
+                        </option>
+                      ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group
+                  as={Col}
+                  controlId="formGridItem"
+                  md={2}
+                  xs={6}
+                  className="mb-2"
+                >
+                  <Form.Label>Item</Form.Label>
+                  <Form.Select
+                    className="py-1 shadow-none"
+                    onChange={(e) => updateFilter("itemName", e.target.value)}
+                    value={filters.itemName}
+                  >
+                    <option defaultValue value="">
+                      All
+                    </option>
+                    {items &&
+                      items.map((item) => (
+                        <option key={item.id} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group
+                  as={Col}
+                  controlId="formGridType"
+                  md={2}
+                  xs={6}
+                  className="mb-2"
+                >
+                  <Form.Label>Type</Form.Label>
+                  <Form.Select
+                    className="py-1 shadow-none"
+                    onChange={(e) =>
+                      updateFilter("transactionType", e.target.value)
+                    }
+                  >
+                    <option defaultValue value="">
+                      All
+                    </option>
+                    <option value="stockIn">Stock In</option>
+                    <option value="stockOut">Stock Out</option>
+                  </Form.Select>
+                </Form.Group>
+              </Row>
             </form>
           </div>
         </Collapse>
@@ -391,8 +397,23 @@ const TransactionScreen = () => {
               {paginatedTransactions &&
                 paginatedTransactions.map((transaction) => (
                   <tr key={transaction.id}>
-                    <td>{transaction.item.name}</td>
-                    <td>{transaction.item.category.name}</td>
+                    <LinkContainer
+                      key={transaction.item.id}
+                      to={{ pathname: `/home/item/${transaction.item.name}` }}
+                      onClick={() => dispatch(setItemId(transaction.item.id))}
+                    >
+                      <td className="clickable-cell">{transaction.item.name}</td>
+                    </LinkContainer>
+
+                    <LinkContainer
+                      to={{
+                        pathname: `/home/category/${transaction.item.category.name}`,
+                      }}
+                      onClick={() => dispatch(setCategoryId(transaction.item.category.id))}
+                    >
+                      <td className="clickable-cell">{transaction.item.category.name}</td>
+                    </LinkContainer>
+
                     <td>{transaction.transaction_type}</td>
                     <td>{transaction.qty}</td>
                     <td>Nu.{transaction.item.unit_price}</td>

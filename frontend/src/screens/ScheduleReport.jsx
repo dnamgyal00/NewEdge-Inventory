@@ -13,10 +13,9 @@ import { BsEye } from "react-icons/bs";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useGetReportQuery } from "../slices/reportApiSlice";
-import { useGetCategoriesQuery } from "../slices/categoriesApiSlice";
+import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import { useState } from "react";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
+
 
 
 const ScheduleReport = () => {
@@ -55,7 +54,7 @@ const ScheduleReport = () => {
     data: { data: categories } = {},
     isLoading2,
     isError2,
-  } = useGetCategoriesQuery();
+  } = useGetCategoriesOnlyQuery();
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
