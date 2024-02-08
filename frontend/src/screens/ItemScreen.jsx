@@ -1,11 +1,22 @@
-import { Table, Button, Collapse, Row, Form, Col, Pagination } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Collapse,
+  Row,
+  Form,
+  Col
+} from "react-bootstrap";
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import Pagination from '../components/Pagination';
 
-import { useGetItemsQuery, useSearchItemByNameQuery, } from "../slices/itemsApiSlice";
+import {
+  useGetItemsQuery,
+  useSearchItemByNameQuery,
+} from "../slices/itemsApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -16,11 +27,15 @@ const ItemScreen = () => {
   const dispatch = useDispatch();
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+
+  // const handleNextPage = () => {
+  //   setCurrentPage((prevPage) => prevPage + 1);
+  // };
+  // const handlePrevPage = () => {
+  //   setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  // };
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
   //Filters
@@ -44,14 +59,14 @@ const ItemScreen = () => {
     setSearch(value);
   };
 
-
   //api calls
   const {
-    data: { data: items } = {},
+    data: { data: items, totalPages } = {},
     isLoading,
     isError,
     error,
   } = useGetItemsQuery({ categoryName, currentPage });
+  console.log(totalPages);
 
   const {
     data: { data: itemSearchResults } = {},
@@ -88,8 +103,9 @@ const ItemScreen = () => {
           <div className="input-group-prepend me-1">
             {/* Filter Action*/}
             <span
-              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
-                }`}
+              className={`input-group-text  ${
+                showFilters ? "bg-primary" : "bg-white"
+              }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -140,17 +156,13 @@ const ItemScreen = () => {
 
             {/* EDIT THIS SEARCH RESULT DISPLAY */}
           </div>
-
         </div>
 
         {/* Dropdown Filters*/}
         <Collapse in={open}>
           <div id="example-collapse-text">
-
-            <form
-              id="filters">
+            <form id="filters">
               <Row className="mb-3">
-
                 <Form.Group
                   as={Col}
                   controlId="formGridCategory"
@@ -161,9 +173,7 @@ const ItemScreen = () => {
                   <Form.Label>Category</Form.Label>
                   <Form.Select
                     className="py-1 shadow-none"
-                    onChange={(e) =>
-                      setCategoryName(e.target.value)
-                    }
+                    onChange={(e) => setCategoryName(e.target.value)}
                   >
                     <option defaultValue value="">
                       All
@@ -180,13 +190,10 @@ const ItemScreen = () => {
                       ))}
                   </Form.Select>
                 </Form.Group>
-
-
               </Row>
             </form>
           </div>
         </Collapse>
-
 
         {/* <Message variant='danger'>test</Message> */}
         {isLoading ? (
@@ -235,7 +242,7 @@ const ItemScreen = () => {
           </Table>
         )}
 
-        {/* Pagination */}
+        {/* Pagination
         {items && items.length > 0 && (
           <nav aria-label="Page navigation example mb-5">
             <ul className="pagination justify-content-center">
@@ -251,6 +258,13 @@ const ItemScreen = () => {
               </Pagination>
             </ul>
           </nav>
+        )} */}
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         )}
       </div>
     </div>
