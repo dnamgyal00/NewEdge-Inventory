@@ -12,7 +12,7 @@ import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { LinkContainer } from "react-router-bootstrap";
-import { useGetReportQuery } from "../slices/reportApiSlice";
+import { useGetReportQuery, useGetPastYearQuery } from "../slices/reportApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import { useState } from "react";
 
@@ -36,12 +36,12 @@ const ScheduleReport = () => {
     setOpen(!open);
     setFilters({
       category: "",
-      year: "2024",
+      year: "2023",
     })
   };
   const [filters, setFilters] = useState({
     category: "",
-    year: "2024",
+    year: "2023",
   })
   const updateFilter = (key, value) => {
     setFilters({
@@ -50,14 +50,21 @@ const ScheduleReport = () => {
     });
 
   };
-  console.log(filters)
+
 
   //api calls
   const {
-    data: { data: reports } = {},
+    data: { data: reports, totalPages } = {},
     isLoading,
     isError
-  } = useGetReportQuery({ filters, page:currentPage });
+  } = useGetReportQuery({ filters, page: currentPage });
+  console.log(filters, currentPage, totalPages);
+
+  const {
+    data: { data: years } = {},
+    isLoading3,
+    isError3
+  } = useGetPastYearQuery();
 
   const {
     data: { data: categories } = {},
@@ -68,7 +75,7 @@ const ScheduleReport = () => {
   return (
     <div className="col-sm-12 col-xl-6 w-100">
       <div className="mb-3">
-        <h5 className="text-black mb-0"> Schedule Report</h5>
+        <h5 className="text-black mb-0"> Schedule Report: {filters.year}</h5>
         Manage your scheduled report
       </div>
 
@@ -146,19 +153,19 @@ const ScheduleReport = () => {
               </Form.Group>
 
 
-              {/* <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
+
+
+              <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
                 <Form.Label>Year</Form.Label>
                 <Form.Select
                   className="py-1 shadow-none"
                   onChange={(e) => updateFilter("year", e.target.value)}
                 >
-                  <option defaultValue value="">
-                    All
-                  </option>
-                  <option value="2024">2024</option>
-                  <option value="2023">2023</option>
+                  {years && years.map((year) => (
+                    <option key={year} value={year} id={year}>{year}</option>
+                  ))}
                 </Form.Select>
-              </Form.Group> */}
+              </Form.Group>
 
             </Row>
           </div>
@@ -171,8 +178,8 @@ const ScheduleReport = () => {
                 <th className="text-black border-0">Item Name</th>
                 <th className="text-black border-0">Category</th>
                 <th className="text-black border-0">Opening Balance</th>
-                <th className="text-black border-0">Stock In</th>
-                <th className="text-black border-0">Stock Out</th>
+                <th className="text-black border-0">Stock In qty</th>
+                <th className="text-black border-0">Stock Out qty</th>
                 <th className="text-black border-0">Closing Balance</th>
 
               </tr>
@@ -210,6 +217,7 @@ const ScheduleReport = () => {
               </ul>
             </nav>
           )}
+
         </div>
       </div>
     </div>
