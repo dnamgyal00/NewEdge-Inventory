@@ -52,8 +52,8 @@ const Header = () => {
                 <Dropdown className="d-flex custom-dropdown">
                   <div className=" d-flex text-white">
                     <Dropdown.Toggle variant="border-0 shadow-none text-white d-flex py-0">
-                      <FaUser className="me-2 mt-2" size={21} />
-                      <div className="d-flex flex-column align-items-start">
+                      <FaUser className="me-2 mt-md-2" size={21} />
+                      <div className="d-none d-md-flex flex-column align-items-start">
                         Dechen Namgyal
                         <div className="">Admin</div>
                       </div>

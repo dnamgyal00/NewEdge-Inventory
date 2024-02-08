@@ -31,7 +31,12 @@ const App = () => {
         <Container fluid>
           <Row className="wh-100">
             {/* Sidebar */}
-            <Col md={2} sm={3} className="d-flex bg-white p-md-1">
+            <Col
+              md={2}
+              sm={3}
+              xs={4}
+              className="d-flex bg-white p-md-1 p-0 overflow-sidebar"
+            >
               <Sidebar />
             </Col>
 
@@ -39,6 +44,7 @@ const App = () => {
             <Col
               md={10}
               sm={9}
+              xs={8}
               className={`main-content-container d-flex flex-column justify-content-between`}
             >
               <div>
