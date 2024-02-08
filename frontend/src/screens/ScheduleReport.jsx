@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Collapse, Row, Col } from "react-bootstrap";
+import { Form, Collapse, Row, Col, Pagination } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import {
   FaTimes,
@@ -19,6 +19,15 @@ import { useState } from "react";
 
 
 const ScheduleReport = () => {
+  //Pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
   //filters
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -48,7 +57,7 @@ const ScheduleReport = () => {
     data: { data: reports } = {},
     isLoading,
     isError
-  } = useGetReportQuery(filters);
+  } = useGetReportQuery({ filters, page:currentPage });
 
   const {
     data: { data: categories } = {},
@@ -165,7 +174,7 @@ const ScheduleReport = () => {
                 <th className="text-black border-0">Stock In</th>
                 <th className="text-black border-0">Stock Out</th>
                 <th className="text-black border-0">Closing Balance</th>
-                
+
               </tr>
             </thead>
             <tbody>
@@ -183,6 +192,24 @@ const ScheduleReport = () => {
                 ))}
             </tbody>
           </Table>
+
+          {/* Pagination */}
+          {reports && reports.length > 0 && (
+            <nav aria-label="Page navigation example mb-5">
+              <ul className="pagination justify-content-center">
+                <Pagination>
+                  <Pagination.Prev
+                    onClick={handlePrevPage}
+                    disabled={currentPage == 1}
+                  />
+                  <Pagination.Next
+                    onClick={handleNextPage}
+                    disabled={reports.length < 10}
+                  />
+                </Pagination>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </div>
