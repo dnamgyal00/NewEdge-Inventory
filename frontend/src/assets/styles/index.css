@@ -20,6 +20,10 @@ main {
   min-height: 80vh;
 }
 
+.overflow-sidebar {
+  height: 100vh;
+  overflow-y: auto;
+}
 .product-title {
   height: 2.5em; /* Set a fixed height */
   overflow: hidden; /* Hide overflow content */
@@ -29,12 +33,14 @@ main {
 
 /* Sidebar */
 .sidebar {
+  height: 100vh;
   background-color: #ffffff;
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .sub-list {
-  margin: 0rem 1.4rem;
+  margin: 0rem 1rem 0rem 1.4rem;
 }
 
 input.padding {

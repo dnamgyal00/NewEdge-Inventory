@@ -27,7 +27,7 @@ const InventoryStats = () => {
         </Message>
       ) : (
         <div className="container-fluid pt-4 px-4">
-          <div className="row bg-white rounded g-4 mx-1 pb-2 pb-md-0 text-black">
+          <div className="row bg-white rounded d-flex flex-column g-4 mx-1 pb-2 pb-md-0 text-black">
             <div className="d-flex flex-column flex-md-row bg-white px-4">
               <Form.Label className="me-3">Time Range: </Form.Label>
               <Form.Check
@@ -57,7 +57,7 @@ const InventoryStats = () => {
               />
             </div>
             <div className="d-flex flex-column flex-md-row mt-0 pb-2">
-              <div className="col-sm-6 col-xl-4 p-3">
+              <div className="col-sm-12 col-md-4 p-3">
                 <div className="bg-white rounded border border-solid d-flex align-items-center justify-content-between p-4">
                   <i className="fa fa-chart-bar fa-3x "></i>
                   <div className="ms-3">
@@ -66,7 +66,7 @@ const InventoryStats = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6 col-xl-4 p-3">
+              <div className="col-sm-12 col-md-4  p-3">
                 <div className="bg-white rounded border bordersolid d-flex align-items-center justify-content-between p-4">
                   <i className="fa fa-chart-line fa-3x "></i>
                   <div className="ms-3">
@@ -75,7 +75,7 @@ const InventoryStats = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6 col-xl-4 p-3">
+              <div className="col-sm-12 col-md-4 p-3">
                 <div className="bg-white rounded border border-solid d-flex align-items-center justify-content-between p-4">
                   <i className="fa fa-chart-area fa-3x"></i>
                   <div className="ms-3">

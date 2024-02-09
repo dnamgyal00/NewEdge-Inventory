@@ -11,7 +11,7 @@ import {
 
 const Sidebar = () => {
   return (
-    <Nav className="d-flex flex-column sidebar bg-white vh-100 lh-1">
+    <Nav className="d-block sidebar bg-white lh-1">
       {/* Dashboard Section */}
       <Nav.Item>
         <LinkContainer to="/home">
@@ -66,10 +66,10 @@ const Sidebar = () => {
           Transaction
         </Nav.Link>
 
-        <Nav className="ml-3 flex-column sub-list">
+        <Nav className="ml-3 mr-0 flex-column sub-list">
           <Nav.Item>
             <LinkContainer to="/transactions-history">
-              <Nav.Link className="ml-3 hover-cell">
+              <Nav.Link className="ml-3 me-0 hover-cell pr-0 mr-0">
                 Transaction History
               </Nav.Link>
             </LinkContainer>
@@ -103,7 +103,7 @@ const Sidebar = () => {
             </LinkContainer>
           </Nav.Item> */}
           <Nav.Item>
-            <LinkContainer to="/schedule-report">
+            <LinkContainer to="/schedule-report" className="mb-5">
               <Nav.Link className="ml-3 hover-cell">Schedule Report</Nav.Link>
             </LinkContainer>
           </Nav.Item>
