@@ -3,6 +3,15 @@ import { apiSlice } from "./apiSlice";
 
 export const reportApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    updateReport: builder.mutation({
+        query: ({formDataObj,year}) => ({
+          url: `${REPORT_URL}/generate?year=${year}`,
+          method: "POST",
+          body: formDataObj,
+        }),
+        invalidatesTags: ["Report"],
+      }),
+
     getReport: builder.query({
       query: ({ filters, page }) => ({
         url: `${REPORT_URL}?year=${filters.year}&category=${filters.category}&page=${page}`,
@@ -19,4 +28,4 @@ export const reportApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetReportQuery,useGetPastYearQuery } = reportApiSlice;
+export const { useGetReportQuery,useGetPastYearQuery , useUpdateReportMutation} = reportApiSlice;

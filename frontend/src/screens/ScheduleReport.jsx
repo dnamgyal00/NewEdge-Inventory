@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Collapse, Row, Col, Pagination } from "react-bootstrap";
+import { Form, Collapse, Row, Col, Pagination, Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import {
   FaTimes,
@@ -7,12 +7,15 @@ import {
   FaTrashAlt,
   FaFilePdf,
   FaPrint,
+  FaPlus,
+  FaMinus
 } from "react-icons/fa";
 import { FiFilter, FiEdit3 } from "react-icons/fi";
 import { BsEye } from "react-icons/bs";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
+import { MdOutlineInventory } from "react-icons/md";
 import { LinkContainer } from "react-router-bootstrap";
-import { useGetReportQuery, useGetPastYearQuery } from "../slices/reportApiSlice";
+import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation } from "../slices/reportApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import { useState } from "react";
 
@@ -36,12 +39,12 @@ const ScheduleReport = () => {
     setOpen(!open);
     setFilters({
       category: "",
-      year: "2023",
+      year: "2024",
     })
   };
   const [filters, setFilters] = useState({
     category: "",
-    year: "2023",
+    year: "2024",
   })
   const updateFilter = (key, value) => {
     setFilters({
@@ -51,12 +54,30 @@ const ScheduleReport = () => {
 
   };
 
+  //gen report
+  const handleGenRepo = async () =>{
+    const currentYear = new Date().getFullYear();
+    try {
+      const result = await updateReport({formDataObj:filters,year:currentYear}).unwrap();
+      console.log(result);
+      refetch();
+
+    } catch (error) {
+      console.error("Error generating updated report for current", error);
+    }
+
+  }
+
 
   //api calls
+  const [updateReport, { isLoading: isUpdateLoading, isError:updateError }] =
+    useUpdateReportMutation();
+
   const {
     data: { data: reports, totalPages } = {},
     isLoading,
-    isError
+    isError,
+    refetch
   } = useGetReportQuery({ filters, page: currentPage });
   console.log(filters, currentPage, totalPages);
 
@@ -72,12 +93,24 @@ const ScheduleReport = () => {
     isError2,
   } = useGetCategoriesOnlyQuery();
 
+
   return (
     <div className="col-sm-12 col-xl-6 w-100">
-      <div className="mb-3">
-        <h5 className="text-black mb-0"> Schedule Report: {filters.year}</h5>
-        Manage your scheduled report
+
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h5 className="text-black mb-0">  Scheduled Yearly Report: {filters.year}</h5>
+          Manage your scheduled report
+        </div>
+        <div className="d-flex flex-row">
+          <Button variant="primary" size="sm" className="px-md-4 py-1" onClick={handleGenRepo}>
+            {isUpdateLoading? "Generating...":"Generate Report"}
+            {" "}
+            <MdOutlineInventory />
+          </Button>
+        </div>
       </div>
+
 
       <div className="bg-white rounded p-4">
         <div className="input-group d-flex mb-3 justify-content-between">
@@ -160,6 +193,7 @@ const ScheduleReport = () => {
                 <Form.Select
                   className="py-1 shadow-none"
                   onChange={(e) => updateFilter("year", e.target.value)}
+                  value={filters.year}
                 >
                   {years && years.map((year) => (
                     <option key={year} value={year} id={year}>{year}</option>
