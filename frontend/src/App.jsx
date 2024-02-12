@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Navbar } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
@@ -31,20 +31,28 @@ const App = () => {
         theme="light"
         transition:Bounce
       />
-      <div className="app-container bg-light">
+      <div className={`app-container bg-light `}>
         <Header onToggleSidebar={toggleSidebar} />
 
         <Container fluid>
           <Row className="wh-100">
             {/* Sidebar */}
-            <Col className={` px-0 ${sidebarVisible ? "navCollapse" : ""}`}>
+            <Col
+              xs={4}
+              sm={3}
+              md={2}
+              className={` px-0 ${
+                sidebarVisible ? "navCollapse" : "d-none d-md-block"
+              }`}
+            >
               <Sidebar />
             </Col>
 
             {/* Main Content */}
             <Col
+              sm={9}
               md={10}
-              className={`main-content-container d-flex flex-column justify-content-between`}
+              className={`main-content-container d-flex flex-column justify-content-between `}
             >
               <div>
                 <main className="pt-2 pb-4 px-0 px-md-3 main-content">

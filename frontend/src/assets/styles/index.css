@@ -33,13 +33,15 @@ main {
 
 /* Sidebar */
 .sidebar {
-  min-height: 250px;
   max-width: 250px;
   background-color: #ffffff;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  transition: margin-left 0.4s ease;
 }
-
+/* .sidebar-width {
+  display: none;
+} */
 .sub-list {
   margin: 0rem 1rem 0rem 1.4rem;
 }
@@ -80,17 +82,6 @@ button.dropdown-toggle {
   left: auto !important;
   right: 0 !important;
 }
-
-/* Toggle sidebar */
-
-/* .sidebar-hidden {
-  margin-left: -250px; /* Set this value to the width of your sidebar */
-
-/* @media (min-width: 767px) {
-  .navCollapse {
-    display: none;
-  }
-} */
 
 .clickable-cell {
   cursor: pointer;
@@ -133,11 +124,16 @@ th {
 
 /* media query */
 
-@media screen and (max-width: 767px) {
-  .navCollapse {
-    margin-left: -250px;
+@media screen and (max-width: 768px) {
+  .navCollapse .sidebar {
+    display: block; /* show the sidebar when the navCollapse class is applied */
+    margin-left: 0px;
     position: fixed;
     min-height: 100vh;
     z-index: 1;
+  }
+
+  .navCollapse .main-content-container {
+    margin-left: 250px; /* Adjust to match sidebar width */
   }
 }
