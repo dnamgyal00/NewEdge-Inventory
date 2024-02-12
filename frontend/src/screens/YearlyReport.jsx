@@ -41,6 +41,7 @@ const YearlyReport = () => {
       category: "",
       year: "2024",
     })
+    setCurrentPage(1)
   };
   const [filters, setFilters] = useState({
     category: "",
