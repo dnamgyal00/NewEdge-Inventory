@@ -101,6 +101,8 @@ const TransactionScreen = () => {
         [key]: value,
       });
     }
+
+    setCurrentPage(1)
   };
 
 

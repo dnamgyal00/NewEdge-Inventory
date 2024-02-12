@@ -103,9 +103,8 @@ const ItemScreen = () => {
           <div className="input-group-prepend me-1">
             {/* Filter Action*/}
             <span
-              className={`input-group-text  ${
-                showFilters ? "bg-primary" : "bg-white"
-              }`}
+              className={`input-group-text  ${showFilters ? "bg-primary" : "bg-white"
+                }`}
               onClick={toggleFilters}
               aria-controls="example-collapse-text"
               aria-expanded={open}
@@ -173,7 +172,10 @@ const ItemScreen = () => {
                   <Form.Label>Category</Form.Label>
                   <Form.Select
                     className="py-1 shadow-none"
-                    onChange={(e) => setCategoryName(e.target.value)}
+                    onChange={(e) => {
+                      setCategoryName(e.target.value)
+                      setCurrentPage(1)
+                    }}
                   >
                     <option defaultValue value="">
                       All
