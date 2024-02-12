@@ -19,6 +19,15 @@ export const reportApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
 
+    getReportExcelData: builder.mutation({
+      query: (filters ) => ({
+        url: `${REPORT_URL}/excel?year=${filters.year}&category=${filters.category}`,
+        method: "POST",
+        body: filters,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+
     getPastYear: builder.query({
     query: () => ({
     url: `${REPORT_URL}/pastYear`,
@@ -28,4 +37,4 @@ export const reportApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetReportQuery,useGetPastYearQuery , useUpdateReportMutation} = reportApiSlice;
+export const { useGetReportQuery,useGetReportExcelDataMutation,useGetPastYearQuery , useUpdateReportMutation} = reportApiSlice;

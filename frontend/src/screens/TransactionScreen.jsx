@@ -249,7 +249,7 @@ const TransactionScreen = () => {
 
           {/* Print Options */}
           <div className="d-flex flex-row">
-            <PiMicrosoftExcelLogoFill size={25} onClick={handleDownloadExcel} />
+            <PiMicrosoftExcelLogoFill className="clickable-cell" size={25} onClick={handleDownloadExcel} />
           </div>
         </div>
 
