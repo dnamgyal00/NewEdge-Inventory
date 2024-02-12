@@ -1,19 +1,15 @@
-import React from "react";
-import { Form, Collapse, Row, Col, Pagination, Button } from "react-bootstrap";
-import Table from "react-bootstrap/Table";
-import {
-  FaTimes,
-  FaSearch,
-} from "react-icons/fa";
+import { React, useState } from "react";
+import { Form, Collapse, Row, Col, Pagination, Button, Table } from "react-bootstrap";
+import { FaTimes, FaSearch, } from "react-icons/fa";
 import { FiFilter } from "react-icons/fi";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { MdOutlineInventory } from "react-icons/md";
-import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation, useGetReportExcelDataMutation } from "../slices/reportApiSlice";
-import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
-import { useState } from "react";
-import Modals from "../components/Modals";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
+
+import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation, useGetReportExcelDataMutation } from "../slices/reportApiSlice";
+import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
+import Modals from "../components/Modals";
 
 
 
@@ -30,6 +26,16 @@ const YearlyReport = () => {
   };
 
   //filters
+  const [filters, setFilters] = useState({
+    category: "",
+    year: currentYear - 1,
+  })
+  const updateFilter = (key, value) => {
+    setFilters({
+      ...filters,
+      [key]: value,
+    });
+  };
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const toggleFilters = () => {
@@ -41,23 +47,12 @@ const YearlyReport = () => {
     })
     setCurrentPage(1)
   };
-  const [filters, setFilters] = useState({
-    category: "",
-    year: currentYear - 1,
-  })
-  const updateFilter = (key, value) => {
-    setFilters({
-      ...filters,
-      [key]: value,
-    });
-  };
 
-  //Modal action
+  //modal action (generate report)
   const [showModal, setShowModal] = useState(false);
   const handleModalAction = async () => {
     setShowModal(false);
     const loadingToastId = toast.info("Generating...");
-
     try {
       const result = await updateReport({ formDataObj: filters, year: currentYear }).unwrap();
       updateFilter("year", currentYear)
@@ -66,13 +61,13 @@ const YearlyReport = () => {
       refetch();
       refetchYear();
     } catch (error) {
-      console.error("Error generating report for current year:", error);
+      console.error("Error generating report:", error);
       toast.dismiss(loadingToastId);
-      toast.error("Error generating report for current year");
+      toast.error("Error generating report.", error);
     }
   };
 
-  //dowonload actions
+  //download actions
   const handleDownloadExcel = async () => {
     const loadingToastId = toast.info("Loading data...");
     try {
@@ -95,12 +90,11 @@ const YearlyReport = () => {
       XLSX.writeFile(wb, `InventoryYearlyReport${rows[1].year}.xlsx`);
 
     } catch (error) {
-      console.error("Error downloading Excel:", error);
+      console.error("Error downloading excel data:", error);
       toast.dismiss(loadingToastId);
-      toast.error("Error downloading Excel data");
+      toast.error("Error downloading excel data");
     }
   };
-
 
   //api calls
   const [updateReport, { isLoading: isUpdateLoading, isError: updateError }] =

@@ -5,7 +5,7 @@ export const reportApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     updateReport: builder.mutation({
         query: ({formDataObj,year}) => ({
-          url: `${REPORT_URL}/generate?year=${year}`,
+          url: `${REPORT_URL}/yearly/generate?year=${year}`,
           method: "POST",
           body: formDataObj,
         }),
@@ -14,14 +14,14 @@ export const reportApiSlice = apiSlice.injectEndpoints({
 
     getReport: builder.query({
       query: ({ filters, page }) => ({
-        url: `${REPORT_URL}?year=${filters.year}&category=${filters.category}&page=${page}`,
+        url: `${REPORT_URL}/yearly?year=${filters.year}&category=${filters.category}&page=${page}`,
       }),
       keepUnusedDataFor: 5,
     }),
 
     getReportExcelData: builder.mutation({
       query: (filters ) => ({
-        url: `${REPORT_URL}/excel?year=${filters.year}&category=${filters.category}`,
+        url: `${REPORT_URL}/yearly/excel?year=${filters.year}&category=${filters.category}`,
         method: "POST",
         body: filters,
       }),
@@ -30,7 +30,7 @@ export const reportApiSlice = apiSlice.injectEndpoints({
 
     getPastYear: builder.query({
     query: () => ({
-    url: `${REPORT_URL}/pastYear`,
+    url: `${REPORT_URL}/yearly/pastYear`,
     }),
     keepUnusedDataFor: 5,
     }),
