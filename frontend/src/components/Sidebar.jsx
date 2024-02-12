@@ -97,14 +97,14 @@ const Sidebar = () => {
           Report
         </Nav.Link>
         <Nav className="ml-3 flex-column sub-list">
-          {/* <Nav.Item>
-            <LinkContainer to="/inventory-report">
-              <Nav.Link className="ml-3 hover-cell">Inventory Report</Nav.Link>
-            </LinkContainer>
-          </Nav.Item> */}
           <Nav.Item>
-            <LinkContainer to="/schedule-report" className="mb-5">
+            <LinkContainer to="/yearly-report">
               <Nav.Link className="ml-3 hover-cell">Yearly Report</Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+          <Nav.Item>
+            <LinkContainer to="/monthly-report" className="mb-5">
+              <Nav.Link className="ml-3 hover-cell">Monthly Report</Nav.Link>
             </LinkContainer>
           </Nav.Item>
         </Nav>
@@ -115,4 +115,4 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-// };
+

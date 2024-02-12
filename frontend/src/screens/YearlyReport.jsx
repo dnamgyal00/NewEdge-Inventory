@@ -21,7 +21,7 @@ import { useState } from "react";
 
 
 
-const ScheduleReport = () => {
+const YearlyReport = () => {
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -258,4 +258,4 @@ const ScheduleReport = () => {
   );
 };
 
-export default ScheduleReport;
+export default YearlyReport;

@@ -19,7 +19,8 @@ import TransactionScreen from "./screens/TransactionScreen.jsx";
 import StockInScreen from "./screens/StockInScreen.jsx";
 import StockOutScreen from "./screens/StockOutScreen.jsx";
 import InventoryReport from "./screens/InventoryReport.jsx";
-import ScheduleReport from "./screens/ScheduleReport.jsx";
+import YearlyReport from "./screens/YearlyReport.jsx";
+import MonthlyReport from './screens/MonthlyReport.jsx';
 import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 import CategoryDetailsScreen from "./screens/CategoryDetailsScreen.jsx";
 import Error from "./Error404.jsx";
@@ -107,10 +108,14 @@ export const router = createBrowserRouter(
         />
         <Route
           index={true}
-          path="/schedule-report"
-          element={<ScheduleReport />}
+          path="/yearly-report"
+          element={<YearlyReport />}
         />
-
+        <Route
+        index={true}
+        path="/monthly-report"
+        element={<MonthlyReport />}
+        />
         {/* Admin users */}
         {/* <Route
           index={true}
