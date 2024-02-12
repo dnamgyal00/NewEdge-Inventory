@@ -55,10 +55,10 @@ const ScheduleReport = () => {
   };
 
   //gen report
-  const handleGenRepo = async () =>{
+  const handleGenRepo = async () => {
     const currentYear = new Date().getFullYear();
     try {
-      const result = await updateReport({formDataObj:filters,year:currentYear}).unwrap();
+      const result = await updateReport({ formDataObj: filters, year: currentYear }).unwrap();
       console.log(result);
       refetch();
 
@@ -70,7 +70,7 @@ const ScheduleReport = () => {
 
 
   //api calls
-  const [updateReport, { isLoading: isUpdateLoading, isError:updateError }] =
+  const [updateReport, { isLoading: isUpdateLoading, isError: updateError }] =
     useUpdateReportMutation();
 
   const {
@@ -99,12 +99,12 @@ const ScheduleReport = () => {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <h5 className="text-black mb-0">  Scheduled Yearly Report: {filters.year}</h5>
-          Manage your scheduled report
+          <h5 className="text-black mb-0"> Yearly Report: {filters.year}</h5>
+          Manage your yearly report
         </div>
         <div className="d-flex flex-row">
           <Button variant="primary" size="sm" className="px-md-4 py-1" onClick={handleGenRepo}>
-            {isUpdateLoading? "Generating...":"Generate Report"}
+            {isUpdateLoading ? "Generating..." : "Generate Report"}
             {" "}
             <MdOutlineInventory />
           </Button>

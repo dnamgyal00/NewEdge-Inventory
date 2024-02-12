@@ -104,7 +104,7 @@ const Sidebar = () => {
           </Nav.Item> */}
           <Nav.Item>
             <LinkContainer to="/schedule-report" className="mb-5">
-              <Nav.Link className="ml-3 hover-cell">Schedule Report</Nav.Link>
+              <Nav.Link className="ml-3 hover-cell">Yearly Report</Nav.Link>
             </LinkContainer>
           </Nav.Item>
         </Nav>
