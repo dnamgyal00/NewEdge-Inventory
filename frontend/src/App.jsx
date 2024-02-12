@@ -10,6 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "./components/Breadcrumbs";
 
 const App = () => {
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
   return (
     <>
       <ToastContainer
@@ -26,25 +32,18 @@ const App = () => {
         transition:Bounce
       />
       <div className="app-container bg-light">
-        <Header />
+        <Header onToggleSidebar={toggleSidebar} />
 
         <Container fluid>
           <Row className="wh-100">
             {/* Sidebar */}
-            <Col
-              md={2}
-              sm={3}
-              xs={4}
-              className="d-flex bg-white p-md-1 p-0 overflow-sidebar"
-            >
+            <Col className={` px-0 ${sidebarVisible ? "navCollapse" : ""}`}>
               <Sidebar />
             </Col>
 
             {/* Main Content */}
             <Col
               md={10}
-              sm={9}
-              xs={8}
               className={`main-content-container d-flex flex-column justify-content-between`}
             >
               <div>

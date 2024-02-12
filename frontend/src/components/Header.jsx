@@ -9,13 +9,7 @@ import { useAuth } from "react-oidc-context";
 // import { useState } from "react";
 // import Sidebar from "./Sidebar.jsx";
 
-const Header = () => {
-  // const [sidebarVisible, setSidebarVisible] = useState(false);
-
-  // const toggleSidebar = () => {
-  //   setSidebarVisible(!sidebarVisible);
-  // };
-
+const Header = ({ onToggleSidebar }) => {
   const auth = useAuth();
 
   const navigate = useNavigate();
@@ -35,10 +29,15 @@ const Header = () => {
           fluid
           className="d-flex justify-content-between align-items-center"
         >
-          {/* {" "}
-          <div className="d-flex align-items-center me-4">
-            <FaBars className="text-white" />
-          </div> */}
+          {" "}
+          <div className="d-flex d-md-none align-items-center me-4">
+            <FaBars
+              className="text-white clickable-cell"
+              onClick={(e) => {
+                onToggleSidebar();
+              }}
+            />
+          </div>
           <LinkContainer to="/home">
             <Navbar.Brand className="d-flex align-items-center">
               <MdOutlineWarehouse className="me-2 mb-1" size={30} />

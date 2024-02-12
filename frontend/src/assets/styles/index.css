@@ -33,7 +33,8 @@ main {
 
 /* Sidebar */
 .sidebar {
-  height: 100vh;
+  min-height: 250px;
+  max-width: 250px;
   background-color: #ffffff;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -128,4 +129,15 @@ th {
 /* bg-color for header */
 .custom-bg-color {
   background-color: #7d7d7d;
+}
+
+/* media query */
+
+@media screen and (max-width: 767px) {
+  .navCollapse {
+    margin-left: -250px;
+    position: fixed;
+    min-height: 100vh;
+    z-index: 1;
+  }
 }
