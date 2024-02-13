@@ -10,6 +10,7 @@ import * as XLSX from "xlsx";
 import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation, useGetReportExcelDataMutation } from "../slices/reportApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import Modals from "../components/Modals";
+import Loader from "../components/Loader";
 
 
 
@@ -57,8 +58,8 @@ const YearlyReport = () => {
       const result = await updateReport({ formDataObj: filters, year: currentYear }).unwrap();
       updateFilter("year", currentYear)
       toast.dismiss(loadingToastId);
-      toast.success(result.msg);
-      refetch();
+      toast.success(`Yearly report for ${currentYear} generated successfully`);
+      refetchReport();
       refetchYear();
     } catch (error) {
       console.error("Error generating report:", error);
@@ -104,9 +105,9 @@ const YearlyReport = () => {
 
   const {
     data: { data: reports, totalPages } = {},
-    isLoading,
-    isError,
-    refetch
+    isLoading: isLoadingReport,
+    isError: isErrorReport,
+    refetch: refetchReport,
   } = useGetReportQuery({ filters, page: currentPage });
 
   const {
@@ -122,7 +123,7 @@ const YearlyReport = () => {
     refetch: refetchYear,
   } = useGetPastYearQuery();
   console.log(years)
-  console.log(typeof(years))
+  console.log(typeof (years))
 
 
   return (
@@ -148,7 +149,9 @@ const YearlyReport = () => {
             onHide={() => setShowModal(false)}
             onConfirm={handleModalAction}
             title="Generate/Update Report"
-            body={`Are you sure you want to update/generate report for current year : ${new Date().getFullYear()} ?`}
+            body={
+              `Yearly reports are auto generated or updated at the end of each year for all items. 
+          Are you sure you want to update/generate report for current year :${new Date().getFullYear()}, right now?`}
           />
 
 
@@ -265,20 +268,28 @@ const YearlyReport = () => {
 
               </tr>
             </thead>
-            <tbody>
-              {reports &&
-                reports.map((report) => (
-                  <tr key={report.id}>
-                    <td>{report.itemName}</td>
-                    <td>{report.categoryName}</td>
-                    <td>{report.opening_bal}</td>
-                    <td>{report.stock_in_qty}</td>
-                    <td>{report.stock_out_qty}</td>
-                    <td>{report.closing_bal}</td>
-
-                  </tr>
-                ))}
-            </tbody>
+            {isLoadingReport ? (
+              <Loader />
+            ) : isErrorReport ? (
+              <Message variant="danger">
+                {error?.code?.message || error.error}
+              </Message>
+            ) : (
+              <tbody>
+                {reports &&
+                  reports.map((report) => (
+                    <tr key={report.id}>
+                      <td>{report.itemName}</td>
+                      <td>{report.categoryName}</td>
+                      <td>{report.opening_bal}</td>
+                      <td>{report.stock_in_qty}</td>
+                      <td>{report.stock_out_qty}</td>
+                      <td>{report.closing_bal}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            )
+            }
           </Table>
 
           {/* Pagination */}
@@ -301,7 +312,7 @@ const YearlyReport = () => {
 
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

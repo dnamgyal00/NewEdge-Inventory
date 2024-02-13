@@ -82,7 +82,7 @@ const MonthlyReport = () => {
         "month": currentMonth
       })
       toast.dismiss(loadingToastId);
-      toast.success(`Monthly report for ${m[currentMonth - 1]},  ${currentYear} generated sucessfully`);
+      toast.success(`Monthly report for ${m[currentMonth - 1]},  ${currentYear} generated successfully`);
       refetchReport();
       refetchYear();
     } catch (error) {
@@ -182,7 +182,7 @@ const MonthlyReport = () => {
             onHide={() => setShowModal(false)}
             onConfirm={handleModalAction}
             title="Generate/Update Report"
-            body={`Are you sure you want to update/generate report for current month : ${m[currentMonth - 1]} ?`}
+            body={`Monthly reports are auto generated at the end of each month for all items. Are you sure you want to update/generate report for current month : ${m[currentMonth - 1]}, right now?`}
           />
 
 
@@ -334,12 +334,10 @@ const MonthlyReport = () => {
                       <td>{report.stock_in_qty}</td>
                       <td>{report.stock_out_qty}</td>
                       <td>{report.closing_bal}</td>
-
                     </tr>
                   ))}
               </tbody>
             )
-
             }
 
           </Table>
