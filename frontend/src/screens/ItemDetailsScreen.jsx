@@ -234,7 +234,9 @@ const ItemDetailsScreen = () => {
                       <tbody>
                         {item.transactions &&
                           item.transactions.map((transaction) => (
-                            <tr>
+                            <tr
+                              key={transaction.id}
+                            >
                               <td>{transaction.transaction_type}</td>
                               <td>{transaction.type}</td>
                               <td>{transaction.qty}</td>

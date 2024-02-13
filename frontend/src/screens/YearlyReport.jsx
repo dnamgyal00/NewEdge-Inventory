@@ -121,6 +121,8 @@ const YearlyReport = () => {
     isError3,
     refetch: refetchYear,
   } = useGetPastYearQuery();
+  console.log(years)
+  console.log(typeof(years))
 
 
   return (

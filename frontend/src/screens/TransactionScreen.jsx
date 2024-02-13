@@ -92,6 +92,7 @@ const TransactionScreen = () => {
       itemName: "",
       transactionType: "",
     });
+    setCurrentPage(1);
     const form = document.getElementById("filters");
     if (form) {
       form.reset();
