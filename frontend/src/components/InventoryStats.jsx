@@ -39,7 +39,6 @@ const InventoryStats = () => {
                 className="me-3"
               />
               <Form.Check
-                defaultChecked
                 type="radio"
                 label="Weekly"
                 value="week"

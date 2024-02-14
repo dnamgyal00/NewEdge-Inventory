@@ -18,7 +18,7 @@ const RecentTransactions = () => {
     error,
   } = useGetRecentTransactionsQuery();
 
-  console.log(transactions);
+  //console.log(transactions);
   return (
     <>
       {isLoading ? (
@@ -51,7 +51,7 @@ const RecentTransactions = () => {
                 <tbody>
                   {transactions &&
                     transactions.map((transaction) => (
-                      <tr>
+                      <tr key={transaction.id}>
                         <LinkContainer
                           to={{
                             pathname: `/home/item/${transaction.item.name}`,

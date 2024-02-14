@@ -1,5 +1,4 @@
 import React from "react";
-// import Sidebar from "../components/Sidebar";
 import InventoryStats from "../components/InventoryStats";
 import RecentTransactions from "../components/RecentTransactions";
 import Charts from "../components/Charts";

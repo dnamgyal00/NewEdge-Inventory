@@ -326,7 +326,7 @@ const MonthlyReport = () => {
             ) : isErrorReport ? (
               <Message variant="danger">
                 {/* {error?.code?.message || error.error} */}
-                Failed to Fetch
+                {/* Failed to Fetch */}
               </Message>
             ) : (
               <tbody>
