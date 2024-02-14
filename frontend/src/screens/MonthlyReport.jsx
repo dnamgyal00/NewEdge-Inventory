@@ -12,6 +12,7 @@ import { useGetPastYearQuery, useGetPastMonthQuery, useGetMonthReportQuery, useG
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import Modals from "../components/Modals";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 
 
@@ -134,6 +135,7 @@ const MonthlyReport = () => {
     isLoading: isLoadingReport,
     isError: isErrorReport,
     refetch: refetchReport,
+    error,
   } = useGetMonthReportQuery({ filters, page: currentPage });
   //console.log(reports);
 
@@ -164,7 +166,9 @@ const MonthlyReport = () => {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <h5 className="text-black mb-0"> Monthly Report: {m[filters.month - 1]},{filters.year}</h5>
+          <h5 className="text-black mb-0"> Monthly Report:
+            <i> {m[filters.month - 1]}, {filters.year}</i>
+          </h5>
           Manage your monthly report
         </div>
         <div className="d-flex flex-row">
@@ -321,7 +325,8 @@ const MonthlyReport = () => {
               <Loader />
             ) : isErrorReport ? (
               <Message variant="danger">
-                {error?.code?.message || error.error}
+                {/* {error?.code?.message || error.error} */}
+                Failed to Fetch
               </Message>
             ) : (
               <tbody>

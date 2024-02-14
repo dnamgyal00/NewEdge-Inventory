@@ -11,6 +11,7 @@ import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation, useGet
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import Modals from "../components/Modals";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 
 
@@ -131,7 +132,9 @@ const YearlyReport = () => {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <h5 className="text-black mb-0"> Yearly Report: {filters.year}</h5>
+          <h5 className="text-black mb-0"> Yearly Report:
+            <i> {filters.year}</i>
+          </h5>
           Manage your yearly report
         </div>
         <div className="d-flex flex-row">
@@ -272,7 +275,8 @@ const YearlyReport = () => {
               <Loader />
             ) : isErrorReport ? (
               <Message variant="danger">
-                {error?.code?.message || error.error}
+                {/* {error?.code?.message || error.error} */}
+                Failed to Fetch
               </Message>
             ) : (
               <tbody>
