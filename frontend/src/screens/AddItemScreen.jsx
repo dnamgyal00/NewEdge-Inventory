@@ -258,7 +258,7 @@ const AddItemScreen = () => {
               onChange={handleInputChange}
               className="py-1"
               accept="image/*"
-              required
+              //required
             />
             <Form.Control.Feedback type="invalid">
               Please upload an image.
@@ -272,7 +272,7 @@ const AddItemScreen = () => {
             onClick={() => {
               const form = document.getElementById("add-item-form");
               const formFields = form.querySelectorAll(
-                "input, select, textarea"
+                "select, textarea"
               );
 
               // Check if the form is valid and all fields are filled

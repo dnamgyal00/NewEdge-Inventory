@@ -243,7 +243,7 @@ function CategoryAddItemScreen() {
               name="image"
               onChange={handleInputChange}
               className="py-1"
-              required
+              // required
             />
             <Form.Control.Feedback type="invalid">
               Please upload an image.
@@ -257,7 +257,7 @@ function CategoryAddItemScreen() {
             onClick={() => {
               const form = document.getElementById("category-add-item-form");
               const formFields = form.querySelectorAll(
-                "input, select, textarea"
+                "select, textarea"
               );
 
               // Check if the form is valid and all fields are filled

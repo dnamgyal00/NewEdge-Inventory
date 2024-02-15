@@ -79,8 +79,10 @@ export const getGraphData = async (req, res) => {
   try {
     const { timeInterval } = req.query;
 
-    let startDate = subMonths(startOfYear(Date()),2);
+    let startDate = subMonths(startOfYear(Date()),0);
     console.log(startDate);
+    console.log(Date())
+
     let interval;
     switch (timeInterval) {
       case "day":
@@ -88,16 +90,20 @@ export const getGraphData = async (req, res) => {
       break;
     
     case "week":
-      interval = eachWeekOfInterval({start:startDate, end:Date()})
+      interval = eachWeekOfInterval({start:startDate, end:Date()});
       break;
 
     case "month":
-      interval = eachMonthOfInterval({start:startDate, end:Date()})
+      interval = eachMonthOfInterval({start:startDate, end:Date()});
       break;
 
     default:
-      return res.status(400).json({ status: 400, msg: "Invalid time interval. Supported values: day, week, month." });
+      return res.json({ status: 400, msg: "Invalid time interval. Supported values: day, week, month." });
     }
+
+    
+
+    
 
     // Fetch StockIn data for the specified interval
     const stockInData = await prisma.stockIn.findMany({
@@ -124,7 +130,11 @@ export const getGraphData = async (req, res) => {
     // Combine StockIn and StockOut counts
     const combinedData = combineStockData(stockInCounts, stockOutCounts, interval);
 
-    return res.json({ status: 200, data: combinedData });
+    return res.json({ status: 200, 
+    data: combinedData,
+    
+    //interval:interval,
+   });
     
   } catch (error) {
     console.error("Error fetching stock data for line graph:", error);

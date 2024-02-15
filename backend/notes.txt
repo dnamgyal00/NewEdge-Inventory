@@ -39,3 +39,12 @@ To run server use command
 
 
 
+make .env file:
+DATABASE_URL="postgresql://postgres:root@localhost:5432/invDB?schema=public"
+
+# DATABASE_URL='postgres://postgres.orojqhimfmkoexmztite:eF,5zrdFNL(N&83@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
+
+IP='192.168.131.122'
+
+
+

@@ -7,7 +7,7 @@ const transcationRoutes = Router();
 
 transcationRoutes.get("/",getTransaction); 
 // /transactions?startDate=2023-01-01&endDate=2023-12-31&category=Electronics&item=Laptop&transactionType=stockIn
-transcationRoutes.get("/excel",getTransactionExcelData); 
+transcationRoutes.post("/excel",getTransactionExcelData); 
 
 
 transcationRoutes.get("/stockIn",fetchStockIns);

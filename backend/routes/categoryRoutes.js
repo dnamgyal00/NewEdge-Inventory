@@ -13,15 +13,16 @@ var storage = multer.diskStorage({
   var upload = multer({ storage: storage });
 
 
-
 const categoryRoutes = Router();
 //CATEGORY
 categoryRoutes.get("/search",searchCategory); //?name=----
 
 categoryRoutes.post("/",upload.single('image'),createCategory);
 categoryRoutes.get("/",fetchCategories);
+//categoryRoutes.get("/t",fetchCategoriess);
+
 categoryRoutes.get("/:id",fetchCategory);
-categoryRoutes.put("/:id",updateCategory);
+categoryRoutes.put("/:id",upload.single('image'),updateCategory);
 categoryRoutes.delete("/:id",deleteCategory);
 
 export default categoryRoutes;

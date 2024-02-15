@@ -138,7 +138,7 @@ const AddCategoryScreen = () => {
               name="image"
               onChange={handleInputChange}
               accept="image/*"
-              required
+              // required
             />
             <div className="invalid-feedback">Please upload an image.</div>
           </div>
@@ -149,7 +149,8 @@ const AddCategoryScreen = () => {
             onClick={() => {
               const form = document.getElementById("add-category-form");
               const formFields = form.querySelectorAll(
-                "input, select, textarea"
+                // "input, select, textarea"
+                "select, textarea"
               );
 
               // Check if the form is valid and all fields are filled
