@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import App from "./App.jsx";
 import "./assets/styles/bootstrap.custom.css";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ import StockInScreen from "./screens/StockInScreen.jsx";
 import StockOutScreen from "./screens/StockOutScreen.jsx";
 import InventoryReport from "./screens/InventoryReport.jsx";
 import YearlyReport from "./screens/YearlyReport.jsx";
-import MonthlyReport from './screens/MonthlyReport.jsx';
+import MonthlyReport from "./screens/MonthlyReport.jsx";
 import ItemDetailsScreen from "./screens/ItemDetailsScreen.jsx";
 import CategoryDetailsScreen from "./screens/CategoryDetailsScreen.jsx";
 import Error from "./Error404.jsx";
@@ -106,15 +106,11 @@ export const router = createBrowserRouter(
           path="/inventory-report"
           element={<InventoryReport />}
         />
+        <Route index={true} path="/yearly-report" element={<YearlyReport />} />
         <Route
           index={true}
-          path="/yearly-report"
-          element={<YearlyReport />}
-        />
-        <Route
-        index={true}
-        path="/monthly-report"
-        element={<MonthlyReport />}
+          path="/monthly-report"
+          element={<MonthlyReport />}
         />
         {/* Admin users */}
         {/* <Route
@@ -149,16 +145,14 @@ export const AppRoutes = () => {
   }
 
   if (auth.error) {
-    if(auth.error.message == "Popup closed by user") {
+    if (auth.error.message == "Popup closed by user") {
       auth.signinPopup();
     }
     return <div>Oops... {auth.error.message}</div>;
   }
 
-  // if (!auth.isAuthenticated) {
-  //   auth.signinPopup();
-  // }
-    return (
-        <RouterProvider router={router} />
-    );
-}
+  if (!auth.isAuthenticated) {
+    auth.signinPopup();
+  }
+  return <RouterProvider router={router} />;
+};
