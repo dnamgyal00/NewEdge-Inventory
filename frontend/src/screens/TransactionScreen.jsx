@@ -1,5 +1,4 @@
-import { useGetTransactionsQuery } from "../slices/transactionsApiSlice";
-import { useGetTransactionsExcelDataQuery } from "../slices/transactionsApiSlice";
+import { useGetTransactionsQuery, useGetTransactionsExcelDataMutation } from "../slices/transactionsApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
 import { useGetItemsQuery } from "../slices/itemsApiSlice";
 import {
@@ -25,9 +24,11 @@ import "jspdf-autotable";
 import { setItemId } from "../slices/itemSlice";
 import { setCategoryId } from "../slices/categorySlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const TransactionScreen = () => {
   const dispatch = useDispatch();
+
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -37,7 +38,8 @@ const TransactionScreen = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  // State variables for filters
+
+  //filters
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -45,35 +47,6 @@ const TransactionScreen = () => {
     itemName: "",
     transactionType: "",
   });
-
-  // API CALLS
-  // Fetch all data for Excel export
-  const {
-    data: { data: allTransactions } = {},
-    isLoading: allTransactionsLoading,
-    isError: allTransactionsError,
-  } = useGetTransactionsExcelDataQuery({ filters });
-
-  //Fetch paginated data for display
-  const {
-    data: { data: paginatedTransactions, msg: msg } = {},
-    isLoading: paginatedTransactionsLoading,
-    isError: paginatedTransactionsError,
-  } = useGetTransactionsQuery({ filters, currentPage });
-
-  const {
-    data: { data: categories } = {},
-    isLoading2,
-    isError2,
-  } = useGetCategoriesOnlyQuery();
-  const {
-    data: { data: items } = {},
-    isLoading3,
-    isError3,
-    error,
-  } = useGetItemsQuery({});
-
-  // Function to update a specific filter parameter
   const updateFilter = (key, value) => {
     // Reset the "Item" filter if the "Category" filter is changed
     if (key === "selectedCategory") {
@@ -101,15 +74,13 @@ const TransactionScreen = () => {
         [key]: value,
       });
     }
-
     setCurrentPage(1)
   };
 
 
-  //for filter display
+  //fiter dropdowns
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     setOpen(!open);
@@ -121,15 +92,20 @@ const TransactionScreen = () => {
       itemName: "",
       transactionType: "",
     });
+    setCurrentPage(1);
     const form = document.getElementById("filters");
     if (form) {
       form.reset();
     }
   };
 
-  const handleDownloadExcel = () => {
+  //download actions
+  const handleDownloadExcel = async () => {
+    const loadingToastId = toast.info("Loading data...");
     try {
-      const rows = allTransactions.map((t) => ({
+      const allTransactions = await getTransactionsExcelDataMutation(filters).unwrap();
+      toast.dismiss(loadingToastId);
+      const rows = allTransactions.data.map((t) => ({
         id: t.id,
         item_name: t.item.name,
         item_id: t.item.id,
@@ -147,9 +123,10 @@ const TransactionScreen = () => {
       XLSX.writeFile(wb, "Transactions.xlsx");
     } catch (error) {
       console.error("Error downloading Excel:", error);
+      toast.dismiss(loadingToastId);
+      toast.error("Error downloading excel data");
     }
   };
-
   const handleDownloadPDF = () => {
     try {
       const pdf = new jsPDF();
@@ -181,6 +158,27 @@ const TransactionScreen = () => {
       console.error("Error downloading PDF:", error);
     }
   };
+
+  //api calls
+  const [getTransactionsExcelDataMutation, { isLoading: isLoadingExcel, isError: isErrorExcel }] = useGetTransactionsExcelDataMutation();
+
+  const {
+    data: { data: paginatedTransactions, msg: msg } = {},
+    isLoading: paginatedTransactionsLoading,
+    isError: paginatedTransactionsError,
+  } = useGetTransactionsQuery({ filters, currentPage });
+
+  const {
+    data: { data: categories } = {},
+    isLoading2,
+    isError2,
+  } = useGetCategoriesOnlyQuery();
+  const {
+    data: { data: items } = {},
+    isLoading3,
+    isError3,
+    error,
+  } = useGetItemsQuery({});
 
   return (
     <div className=" col-sm-12 col-xl-6 w-100">
@@ -249,7 +247,7 @@ const TransactionScreen = () => {
 
           {/* Print Options */}
           <div className="d-flex flex-row">
-            <PiMicrosoftExcelLogoFill size={25} onClick={handleDownloadExcel} />
+            <PiMicrosoftExcelLogoFill className="clickable-cell" size={25} onClick={handleDownloadExcel} />
           </div>
         </div>
 

@@ -1,177 +1,144 @@
 import prisma from "../utils/db.config.js";
 import fs from 'fs';
-import { Client } from "minio";
-const minioClient = new Client({
-    endPoint: '192.168.131.225',
-    port: 9000, 
-    useSSL: false, 
-    accessKey: 'T7Lkgx2o2VhJ4ImC4Fx3',
-    secretKey: '0SrFBOLulHLbPYVV6pcHpx1Zxh4LvG4GdIdt6tVd',
-});
+import minioClient from "../utils/minioClient.js";
 
 
 //CREATE
 export const createItem = async (req, res) => {
-  try{
-    const { category_id, name, unit, description, brand,unit_price } = req.body;
+  try {
+    const { category_id, name, unit, description, brand, unit_price } = req.body;
     const file = req.file;
-    console.log(req)
-    
-if(!req.file){
-  res.send({
-    status:false,
-    message:"No file uploaded"
-  })
-}else{ //upload image to Minio
-  minioClient.fPutObject('inventory', file.originalname, `public/item/${file.originalname}`,  (err, etag) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'File upload failed.' });
-    }else{
-       // Delete the local file after successful Minio upload
-  fs.unlink(`public/item/${file.originalname}`, (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('Local file deleted successfully.');
+
+    let url = null; // Initialize url variable
+
+    if (file) {
+      // If file is uploaded
+      try {
+        const newFileName = await handleImageUpload(file, name, brand);
+        url = await minioClient.presignedGetObject('inventory', newFileName);
+        console.log(`Pre-signed URL: ${url}`);
+      } catch (error) {
+        console.error(error);
+        await handleImageUploadError(file);
+        return res.status(500).json({ status: 500, msg: `Error creating item. ${error.message}` });
+      }
     }
-  });
+
+    try {
+      // Increment item counter in category
+      await prisma.category.update({
+        where: {
+          id: Number(category_id),
+        },
+        data: {
+          item_count: {
+            increment: 1,
+          },
+        },
+      });
+
+      const newItem = await prisma.item.create({
+        data: {
+          category_id: Number(category_id),
+          name: name,
+          unit: unit,
+          brand: brand,
+          unit_price: Number(unit_price),
+          description: description,
+          image: url,
+        },
+      });
+
+      return res.json({ status: 200, data: newItem, msg: 'Item Created!' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: 500, msg: `Internal server error. ${error.message}` });
     }
-  });
-
-  const url = await minioClient.presignedGetObject('inventory', file.originalname);
-  console.log(`Pre-signed URL: ${url}`);
-
-  //* increment item counter in category
-  await prisma.category.update({
-    where: {
-      id: Number(category_id),
-    },
-    data: {
-      item_count: {
-        increment: 1,
-      },
-    },
-  });
-
-  const newItem = await prisma.item.create({
-    data: {
-      category_id: Number(category_id),
-      name: name,
-      unit: unit,
-      brand: brand,
-      unit_price:Number(unit_price),
-      description: description,
-      image: url, // Set the image path
-    },
-  });
-
-  return res.json({ status: 200, data: newItem, msg: "Item Created!" });}
-
-  }catch(error){
+  } catch (error) {
     console.error(error);
-    return res.status(500).json({ status: 500, msg: "Internal server error" });
+    return res.status(500).json({ status: 500, msg: `Internal server error. ${error.message}` });
   }
 };
 
-// export const createItem= async (req, res) => {
-//   try{
-//     const { category_id, name, unit, description, brand,unit_price } = req.body;
+async function handleImageUpload(file, itemName, brand) {
+  const lastDotIndex = file.originalname.lastIndexOf('.');
+  const fileExtension = file.originalname.slice(lastDotIndex + 1);
 
-//     //console.log(req);
-//     console.log(req);
+  const newFileName = `${itemName.replace(/ /g, '_')}_${brand}_image.${fileExtension}`;
+  console.log(newFileName);
 
-//     return res.json({ status: 200, data: req.body, msg: "Item Reached!" });
+  await minioClient.fPutObject('inventory', newFileName, `public/item/${file.originalname}`);
+  return newFileName;
+}
 
+async function handleImageUploadError(file) {
+  await deleteLocalImage(file.originalname);
+}
 
-
-//   // //* increment item counter in category
-//   // await prisma.category.update({
-//   //   where: {
-//   //     id: Number(category_id),
-//   //   },
-//   //   data: {
-//   //     item_count: {
-//   //       increment: 1,
-//   //     },
-//   //   },
-//   // });
-
-//   // const newItem = await prisma.item.create({
-//   //   data: {
-//   //     category_id: Number(category_id),
-//   //     name: name,
-//   //     unit: unit,
-//   //     brand: brand,
-//   //     unit_price:Number(unit_price),
-//   //     description: description,
-//   //   },
-//   // });
-//   // return res.json({ status: 200, data: newItem, msg: "Item Created!" });
-
-//   }catch(error){
-//     console.error(error);
-//     return res.status(500).json({ status: 500, msg: "Internal server error" });
-//   }
-// };
-
+async function deleteLocalImage(localImageName) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(`public/item/${localImageName}`, (err) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        console.log('Local file deleted successfully.');
+        resolve();
+      }
+    });
+  });
+}
 
 //READ
 export const fetchItems = async (req, res) => {
-  try{
-  const page = req.query.page || 1;
-  const pageSize = 10;
-  const skip = (page - 1) * pageSize;
+  try {
+    const page = req.query.page || 1;
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
 
-  const { categoryName, brandName } = req.query;
+    const { categoryName, brandName } = req.query;
 
-  // Define a base query object for item retrieval
-  const baseQuery = {
-    orderBy: {
-      name: "asc",
-    },
-    include: {
-      category: true,
-    },
-  };
-
-  // Define filters based on the provided query parameters
-  const filters = {};
-
-  if (categoryName) {
-    filters.category = {
-      name: categoryName,
+    // Define a base query object for item retrieval
+    const baseQuery = {
+      orderBy: {
+        name: "asc",
+      },
+      include: {
+        category: true,
+      },
     };
-  }
 
-  if (brandName) {
-    filters.brand = brandName;
-  }
+    // Define filters based on the provided query parameters
+    const filters = {};
 
-  // Fetch items with applied filters and pagination
-  if(req.query.page>=1){
+    if (categoryName) {
+      filters.category = {
+        name: categoryName,
+      };
+    }
+
+    if (brandName) {
+      filters.brand = brandName;
+    }
+
+    // Fetch total count of items
+    const totalCount = await prisma.item.count({
+      where: { ...filters },
+    });
+
+    // Calculate total number of pages
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    // Fetch items with applied filters and pagination
     const items = await prisma.item.findMany({
       ...baseQuery,
-      where: {
-        ...filters,
-      },
+      where: { ...filters },
       skip,
       take: pageSize,
     });
-  
-    return res.json({ status: 200, data: items });
-  }
 
-  //No pagenation
-  const items = await prisma.item.findMany({
-    ...baseQuery,
-    where: {
-      ...filters,
-    },
-  });
-  return res.json({ status: 200, data: items });
-
-  }catch(error){
+    return res.json({ status: 200, data: items, totalPages:totalPages });
+  } catch (error) {
     return res.json({ status: 404, msg: error });
   }
 };
@@ -179,10 +146,15 @@ export const fetchItems = async (req, res) => {
 export const fetchItem = async (req, res) => {
   try {
     const itemId = req.params.id;
-    const page = req.query.page || 1;
-    const itemsPerPage = 10;
-    const skip = (page - 1) * itemsPerPage;
+    const pageT = req.query.pageT || 1;
+    const itemsPerPageT = 5;
+    const skipT = (pageT - 1) * itemsPerPageT;
 
+    const pageI = req.query.pageI || 1;
+    const itemsPerPageI = 10;
+    const skipI = (pageI - 1) * itemsPerPageI;
+
+  
     const item = await prisma.item.findFirst({
       where: {
         id: Number(itemId),
@@ -193,16 +165,16 @@ export const fetchItem = async (req, res) => {
           orderBy: {
             id: "asc",
           },
-          skip,
-          take: itemsPerPage,
+          skip:skipI,
+          take: itemsPerPageI,
         },
         stock_in:{
-          skip,
-          take: itemsPerPage,
+          skip:skipT,
+          take: itemsPerPageT,
         },
         stock_out:{
-          skip,
-          take: itemsPerPage,
+          skip:skipT,
+          take: itemsPerPageT,
         }
       },
     });
@@ -223,6 +195,7 @@ export const fetchItem = async (req, res) => {
     const combinedData = [...stockInDataWithTransactionType, ...stockOutDataWithTransactionType];
     // Order the combined data by created_at timestamp in descending order (latest first)
     combinedData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
     const formatData = {
       id: item.id,
       category_id:item.category_id,
@@ -247,59 +220,172 @@ export const fetchItem = async (req, res) => {
 };
 
 
-
-//UPDATE
+// UPDATE
 export const updateItem = async (req, res) => {
-  const ItemId = req.params.id;
-  const { name, unit,brand,unit_price, description,category_id } = req.body;
+  try {
+    const itemId = req.params.id;
+    const {name, brand, unit, unit_price, description} = req.body;
+    const file = req.file;
 
-  const Item = await prisma.item.update({
-    where: {
-      id: Number(ItemId),
-    },
-    data: {
-        category_id:category_id,
-        name: name,
-        unit: unit,
-        brand: brand,
-        unit_price:Number(unit_price),
-        description: description,
-    },
-  });
-  res.json({ status: 200, data: Item, message: "Item update sucessfull!" });
-};
-//DELETE
-export const deleteItem = async (req, res) => {
-  const ItemId = req.params.id;
-
-  const category_id = await prisma.item.findFirst({
-    where: {
-      id: Number(ItemId),
-    },
-  });
-  //* decrement item count in category
-  await prisma.category.update({
-    where: {
-      id: Number(category_id.category_id),
-    },
-    data: {
-      item_count: {
-        decrement: 1,
+    // Check if an item with the provided ID exists
+    const existingItem = await prisma.item.findUnique({
+      where: {
+        id: Number(itemId),
       },
-    },
-  });
+    });
 
-  await prisma.item.delete({
-    where: {
-      id: Number(ItemId),
-    },
-  });
+    if (!existingItem) {
+      return res.status(404).json({ status: 404, msg: 'Item not found' });
+    }
 
-  return res.json({ status: 200, message: "Item deleted successfully" });
+    // If the user provided a new image file, update the image
+    if (file) {
+      // Delete the existing image from Minio
+      if (existingItem.image) {
+        const url = new URL(existingItem.image);
+        const pathSegments = url.pathname.split('/');
+        const existingImageName = pathSegments[pathSegments.length - 1];
+        console.log("Delete: ", existingImageName);
+
+        minioClient.removeObject('inventory', existingImageName, (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ status: 500, msg: 'Error deleting existing image from Minio.' });
+          } else {
+            console.log('Existing image deleted from Minio successfully.');
+          }
+        });
+      }
+
+      // Extract the file extension from the original filename
+      const lastDotIndex = file.originalname.lastIndexOf('.');
+      const fileExtension = file.originalname.slice(lastDotIndex + 1);
+
+      // Create a new filename with the desired format (e.g., replacing spaces with underscores)
+      const newFileName = `${name.replace(/ /g, '_')}_${brand}_image.${fileExtension}`;
+
+      // Upload the new image to Minio
+      try {
+        await minioClient.fPutObject('inventory', `${newFileName}`, `public/item/${file.originalname}`);
+      } catch (uploadError) {
+        console.error(uploadError);
+        fs.unlink(`public/item/${file.originalname}`, (err) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log('Local file deleted successfully.');
+          }
+        });
+        return res.status(500).json({ status: 500, msg: 'Error uploading new image to Minio.' });
+      }
+
+      // Delete the local file after successful Minio upload
+      fs.unlink(`public/item/${file.originalname}`, (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('Local file deleted successfully.');
+        }
+      });
+
+      const url = await minioClient.presignedGetObject('inventory', newFileName);
+      console.log(`Pre-signed URL: ${url}`);
+      // Update the item information with the new image URL
+      const updatedItem = await prisma.item.update({
+        where: {
+          id: Number(itemId),
+        },
+        data: {
+          //category_id: category_id,
+          name: name,
+          unit: unit,
+          brand: brand,
+          unit_price: Number(unit_price),
+          description: description,
+          image: url,
+        },
+      });
+
+      return res.status(200).json({ status: 200, data: updatedItem, msg: 'Item updated successfully' });
+    } else {
+      // If no new image is provided, update only the text information
+      const updatedItem = await prisma.item.update({
+        where: {
+          id: Number(itemId),
+        },
+        data: {
+          //category_id: category_id,
+          name: name,
+          unit: unit,
+          brand: brand,
+          unit_price: Number(unit_price),
+          description: description,
+        },
+      });
+      return res.status(200).json({ status: 200, data: updatedItem, msg: 'Item updated successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 500, msg: 'Internal server error' });
+  }
 };
 
 
+// DELETE
+export const deleteItem = async (req, res) => {
+  try {
+    const itemId = req.params.id;
 
+    // Get the category_id of the item before deleting it
+    const item = await prisma.item.findUnique({
+      where: {
+        id: Number(itemId),
+      },
+    });
+
+    // Decrement the item count in the category
+    await prisma.category.update({
+      where: {
+        id: Number(item.category_id),
+      },
+      data: {
+        item_count: {
+          decrement: 1,
+        },
+      },
+    });
+
+    // Delete the item from the database
+    await prisma.item.delete({
+      where: {
+        id: Number(itemId),
+      },
+    });
+
+    // If the item has an image, delete it from Minio
+    if (item && item.image) {
+      // Extract the image name from the URL
+      const url = new URL(item.image);
+      const pathSegments = url.pathname.split('/');
+      const imageName = pathSegments[pathSegments.length - 1];
+      console.log("Delete: ", imageName);
+
+      minioClient.removeObject('inventory', imageName, (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ status: 500, msg: 'Error deleting image from Minio.' });
+        } else {
+          console.log('Image deleted from Minio successfully.');
+        }
+      });
+    }
+
+    return res.json({ status: 200, message: 'Item deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 500, msg: "Internal server error" });
+  }
+};
 
 
 
@@ -320,14 +406,16 @@ export const searchItem = async (req, res) => {
           mode: 'insensitive', // Case-insensitive search
         },
       },
-      include:{
-        category:true
-      },
       orderBy:{
         name:"asc"
       }
 
     });
+
+   console.log(foundItems.length)
+   if (foundItems.length === 0) {
+     return res.json({ status: 404, msg: "Item not found" });
+   }
     return res.json({ status: 200, data: foundItems });
 
   } catch (error) {

@@ -1,27 +1,23 @@
-import React from "react";
-import { Form, Collapse, Row, Col, Pagination, Button } from "react-bootstrap";
-import Table from "react-bootstrap/Table";
-import {
-  FaTimes,
-  FaSearch,
-  FaTrashAlt,
-  FaFilePdf,
-  FaPrint,
-  FaPlus,
-  FaMinus
-} from "react-icons/fa";
-import { FiFilter, FiEdit3 } from "react-icons/fi";
-import { BsEye } from "react-icons/bs";
+import { React, useState } from "react";
+import { Form, Collapse, Row, Col, Pagination, Button, Table } from "react-bootstrap";
+import { FaTimes, FaSearch, } from "react-icons/fa";
+import { FiFilter } from "react-icons/fi";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { MdOutlineInventory } from "react-icons/md";
-import { LinkContainer } from "react-router-bootstrap";
-import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation } from "../slices/reportApiSlice";
+import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
+
+import { useGetReportQuery, useGetPastYearQuery, useUpdateReportMutation, useGetReportExcelDataMutation } from "../slices/reportApiSlice";
 import { useGetCategoriesOnlyQuery } from "../slices/categoriesApiSlice";
-import { useState } from "react";
+import Modals from "../components/Modals";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 
 
 const YearlyReport = () => {
+  const currentYear = new Date().getFullYear();
+
   //Pagenation
   const [currentPage, setCurrentPage] = useState(1);
   const handleNextPage = () => {
@@ -32,6 +28,16 @@ const YearlyReport = () => {
   };
 
   //filters
+  const [filters, setFilters] = useState({
+    category: "",
+    year: currentYear - 1,
+  })
+  const updateFilter = (key, value) => {
+    setFilters({
+      ...filters,
+      [key]: value,
+    });
+  };
   const [open, setOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const toggleFilters = () => {
@@ -39,54 +45,71 @@ const YearlyReport = () => {
     setOpen(!open);
     setFilters({
       category: "",
-      year: "2024",
+      year: currentYear - 1,
     })
     setCurrentPage(1)
   };
-  const [filters, setFilters] = useState({
-    category: "",
-    year: "2024",
-  })
-  const updateFilter = (key, value) => {
-    setFilters({
-      ...filters,
-      [key]: value,
-    });
 
-  };
-
-  //gen report
-  const handleGenRepo = async () => {
-    const currentYear = new Date().getFullYear();
+  //modal action (generate report)
+  const [showModal, setShowModal] = useState(false);
+  const handleModalAction = async () => {
+    setShowModal(false);
+    const loadingToastId = toast.info("Generating...");
     try {
       const result = await updateReport({ formDataObj: filters, year: currentYear }).unwrap();
-      console.log(result);
-      refetch();
+      updateFilter("year", currentYear)
+      toast.dismiss(loadingToastId);
+      toast.success(`Yearly report for ${currentYear} generated successfully`);
+      refetchReport();
+      refetchYear();
+    } catch (error) {
+      console.error("Error generating report:", error);
+      toast.dismiss(loadingToastId);
+      toast.error("Error generating report.", error);
+    }
+  };
+
+  //download actions
+  const handleDownloadExcel = async () => {
+    const loadingToastId = toast.info("Loading data...");
+    try {
+      const result = await getReportExcelDataMutation(filters).unwrap();
+      toast.dismiss(loadingToastId);
+
+      const rows = result.data.map((t) => ({
+        item_name: t.itemName,
+        category_name: t.categoryName,
+        opening_bal: t.opening_bal,
+        stock_in_qty: t.stock_in_qty,
+        stock_out_qty: t.stock_out_qty,
+        closing_bal: t.closing_bal,
+        year: t.year
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, `${rows[1].year}`);
+      XLSX.writeFile(wb, `InventoryYearlyReport${rows[1].year}.xlsx`);
 
     } catch (error) {
-      console.error("Error generating updated report for current", error);
+      console.error("Error downloading excel data:", error);
+      toast.dismiss(loadingToastId);
+      toast.error("Error downloading excel data");
     }
-
-  }
-
+  };
 
   //api calls
   const [updateReport, { isLoading: isUpdateLoading, isError: updateError }] =
     useUpdateReportMutation();
 
-  const {
-    data: { data: reports, totalPages } = {},
-    isLoading,
-    isError,
-    refetch
-  } = useGetReportQuery({ filters, page: currentPage });
-  console.log(filters, currentPage, totalPages);
+  const [getReportExcelDataMutation, { isLoading: isLoadingExcel, isError: isErrorExcel }] = useGetReportExcelDataMutation();
 
   const {
-    data: { data: years } = {},
-    isLoading3,
-    isError3
-  } = useGetPastYearQuery();
+    data: { data: reports, totalPages } = {},
+    isLoading: isLoadingReport,
+    isError: isErrorReport,
+    refetch: refetchReport,
+  } = useGetReportQuery({ filters, page: currentPage });
 
   const {
     data: { data: categories } = {},
@@ -94,21 +117,47 @@ const YearlyReport = () => {
     isError2,
   } = useGetCategoriesOnlyQuery();
 
+  const {
+    data: { data: years } = {},
+    isLoading3,
+    isError3,
+    refetch: refetchYear,
+  } = useGetPastYearQuery();
+  console.log(years)
+  console.log(typeof (years))
+
 
   return (
     <div className="col-sm-12 col-xl-6 w-100">
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <h5 className="text-black mb-0"> Yearly Report: {filters.year}</h5>
+          <h5 className="text-black mb-0"> Yearly Report:
+            <i> {filters.year}</i>
+          </h5>
           Manage your yearly report
         </div>
         <div className="d-flex flex-row">
-          <Button variant="primary" size="sm" className="px-md-4 py-1" onClick={handleGenRepo}>
+          <Button variant="primary" size="sm" className="px-md-4 py-1" onClick={() => {
+            setShowModal(true)
+          }}>
             {isUpdateLoading ? "Generating..." : "Generate Report"}
             {" "}
             <MdOutlineInventory />
           </Button>
+
+          {/* ConfirmModal component */}
+          <Modals
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            onConfirm={handleModalAction}
+            title="Generate/Update Report"
+            body={
+              `Yearly reports are auto generated or updated at the end of each year for all items. 
+          Are you sure you want to update/generate report for current year :${new Date().getFullYear()}, right now?`}
+          />
+
+
         </div>
       </div>
 
@@ -152,9 +201,11 @@ const YearlyReport = () => {
 
           {/* Print options */}
           <div>
-            {/* <FaFilePdf size={25} />
-            <PiMicrosoftExcelLogoFill size={25} />{" "}
-            <FaPrint size={25} /> */}
+            {/* <FaFilePdf size={25} className="clickable-cell" /> */}
+            <PiMicrosoftExcelLogoFill size={25} className="clickable-cell"
+              onClick={handleDownloadExcel}
+            />{" "}
+            {/* <FaPrint size={25} className="clickable-cell" /> */}
           </div>
 
         </div>
@@ -187,8 +238,6 @@ const YearlyReport = () => {
               </Form.Group>
 
 
-
-
               <Form.Group as={Col} controlId="formGridType" md={2} xs={6} className="mb-2">
                 <Form.Label>Year</Form.Label>
                 <Form.Select
@@ -196,6 +245,9 @@ const YearlyReport = () => {
                   onChange={(e) => updateFilter("year", e.target.value)}
                   value={filters.year}
                 >
+                  <option disabled value="">
+                    ...
+                  </option>
                   {years && years.map((year) => (
                     <option key={year} value={year} id={year}>{year}</option>
                   ))}
@@ -219,20 +271,29 @@ const YearlyReport = () => {
 
               </tr>
             </thead>
-            <tbody>
-              {reports &&
-                reports.map((report) => (
-                  <tr key={report.id}>
-                    <td>{report.itemName}</td>
-                    <td>{report.categoryName}</td>
-                    <td>{report.opening_bal}</td>
-                    <td>{report.stock_in_qty}</td>
-                    <td>{report.stock_out_qty}</td>
-                    <td>{report.closing_bal}</td>
-
-                  </tr>
-                ))}
-            </tbody>
+            {isLoadingReport ? (
+              <Loader />
+            ) : isErrorReport ? (
+              <Message variant="danger">
+                {/* {error?.code?.message || error.error} */}
+                Failed to Fetch
+              </Message>
+            ) : (
+              <tbody>
+                {reports &&
+                  reports.map((report) => (
+                    <tr key={report.id}>
+                      <td>{report.itemName}</td>
+                      <td>{report.categoryName}</td>
+                      <td>{report.opening_bal}</td>
+                      <td>{report.stock_in_qty}</td>
+                      <td>{report.stock_out_qty}</td>
+                      <td>{report.closing_bal}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            )
+            }
           </Table>
 
           {/* Pagination */}
@@ -255,7 +316,7 @@ const YearlyReport = () => {
 
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

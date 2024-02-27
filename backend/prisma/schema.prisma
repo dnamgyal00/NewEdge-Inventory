@@ -34,7 +34,8 @@ model Item {
   item_instance ItemInstance[]
   stock_in      StockIn[]
   stock_out     StockOut[]
-  stock_report  YearReport[]
+  stock_year_report  YearReport[]
+  stock_month_report  MonthReport[]
   created_at    DateTime       @default(now())
   image String?
 }
@@ -88,4 +89,20 @@ model YearReport{
   stock_in_qty Int
   stock_out_qty Int
   created_at DateTime @default(now())
+}
+
+
+model MonthReport {
+  id            Int      @id @default(autoincrement())
+  item          Item     @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id       Int
+  year          Int
+  month         Int
+  opening_bal   Int      @default(0)
+  closing_bal   Int
+  stock_in_qty  Int
+  stock_out_qty Int
+  created_at    DateTime @default(now())
+
+  @@unique([item_id, year, month], name: "unique_item_year_month")
 }

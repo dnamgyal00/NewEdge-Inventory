@@ -48,10 +48,45 @@ export const getTransaction = async (req, res) => {
       };
     }
 
-    if (transactionType) {
-      const isStockIn = transactionType.toLowerCase() === "stockin";
-      filters.type = isStockIn ? "Purchased" : "Sales";
+    if (transactionType=='stockIn') {
+      console.log("Hello In");
+      const stockInData = await prisma.stockIn.findMany({
+        ...baseQuery,
+        where: {
+          ...filters,
+        },
+        skip:(page - 1) * 10,
+        take: 10,
+      });
+      const stockInDataWithTransactionType = stockInData.map((entry) => ({
+        ...entry,
+        transaction_type: "in",
+      }));
+      return res.json({ status: 200, data:stockInDataWithTransactionType, msg:"from stock in" });
+
+
+    }else if(transactionType=='stockOut'){
+      console.log("Hello Out");
+      const stockOutData = await prisma.stockOut.findMany({
+        ...baseQuery,
+        where: {
+          ...filters,
+        },
+        skip:(page - 1) * 10,
+        take: 10,
+      });
+      const stockOutDataWithTransactionType = stockOutData.map((entry) => ({
+        ...entry,
+        transaction_type: "out",
+      }));
+      return res.json({ status: 200, data:stockOutDataWithTransactionType, msg:"from stock out" });
+
     }
+
+
+
+    console.log("FIlters: ",filters);
+ 
 
       // Fetch StockIn data with applied filters and pagination
       const stockInData = await prisma.stockIn.findMany({
@@ -98,6 +133,8 @@ export const getTransaction = async (req, res) => {
   }
 };
 
+
+
 export const getTransactionExcelData = async (req, res) => {
   try {
     const { startDate, endDate, category, item, transactionType } = req.query;
@@ -139,9 +176,39 @@ export const getTransactionExcelData = async (req, res) => {
       };
     }
 
-    if (transactionType) {
-      const isStockIn = transactionType.toLowerCase() === "stockin";
-      filters.type = isStockIn ? "Purchased" : "Sales";
+    if (transactionType=='stockIn') {
+      console.log("Hello In");
+      const stockInData = await prisma.stockIn.findMany({
+        ...baseQuery,
+        where: {
+          ...filters,
+        },
+        skip:(page - 1) * 10,
+        take: 10,
+      });
+      const stockInDataWithTransactionType = stockInData.map((entry) => ({
+        ...entry,
+        transaction_type: "in",
+      }));
+      return res.json({ status: 200, data:stockInDataWithTransactionType, msg:"from stock in" });
+
+
+    }else if(transactionType=='stockOut'){
+      console.log("Hello Out");
+      const stockOutData = await prisma.stockOut.findMany({
+        ...baseQuery,
+        where: {
+          ...filters,
+        },
+        skip:(page - 1) * 10,
+        take: 10,
+      });
+      const stockOutDataWithTransactionType = stockOutData.map((entry) => ({
+        ...entry,
+        transaction_type: "out",
+      }));
+      return res.json({ status: 200, data:stockOutDataWithTransactionType, msg:"from stock out" });
+
     }
 
       // Fetch StockIn data with applied filters and pagination

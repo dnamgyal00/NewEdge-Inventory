@@ -9,9 +9,11 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
             }),
             keepUnusedDataFor: 5
         }),
-        getTransactionsExcelData: builder.query({
-            query: ({filters,currentPage}) => ({
+        getTransactionsExcelData: builder.mutation({
+            query: (filters) => ({
                 url:  `${TRANSACTION_URL}/excel?transactionType=${filters.transactionType}&category=${filters.selectedCategory}&item=${filters.itemName}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
+                method: "POST",
+                body: filters,
             }),
             keepUnusedDataFor: 5
         }),
@@ -34,5 +36,5 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetTransactionsQuery, useCreateStockInMutation ,useCreateStockOutMutation,useGetTransactionsExcelDataQuery} = transactionsApiSlice; 
+export const { useGetTransactionsQuery, useCreateStockInMutation ,useCreateStockOutMutation,useGetTransactionsExcelDataMutation} = transactionsApiSlice; 
 
