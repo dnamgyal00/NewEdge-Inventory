@@ -14,7 +14,7 @@ const oidcConfig = {
 };
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     
     <AuthProvider {...oidcConfig}>
       <Provider store={store}>
@@ -23,5 +23,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </AuthProvider>
 
   
-  </React.StrictMode>
+  // </React.StrictMode>
 );

@@ -12,6 +12,8 @@ import { useAuth } from "react-oidc-context";
 const Header = ({ onToggleSidebar }) => {
   const auth = useAuth();
 
+  const { user } = auth;
+  // console.log(user.profile.name);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -52,10 +54,15 @@ const Header = ({ onToggleSidebar }) => {
                   <div className=" d-flex text-white">
                     <Dropdown.Toggle variant="border-0 shadow-none text-white d-flex py-0">
                       <FaUser className="me-2 mt-md-2" size={21} />
-                      <div className="d-none d-md-flex flex-column align-items-start">
-                        Dechen Namgyal
-                        <div className="">Admin</div>
-                      </div>
+
+                      {user && (
+                        <div className="d-none d-md-flex flex-column align-items-start">
+                          {/* Dechen Namgyal */}
+                          {user.profile.name}
+
+                          <div className="">Admin</div>
+                        </div>
+                      )}
                     </Dropdown.Toggle>
                   </div>
                   <div>
